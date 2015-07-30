@@ -9,10 +9,10 @@ run: release
 main: release
 
 debug: main.cxx matrix.cxx
-	$(CC) $(D_FLAGS) -o $@ *.cxx
+	$(CC) $(D_FLAGS) -o main *.cxx
 
 release: main.cxx matrix.cxx
-	$(CC) $(R_FLAGS) -o $@ *.cxx
+	$(CC) $(R_FLAGS) -o main *.cxx
 
 clean:
 	rm -f main

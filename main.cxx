@@ -22,7 +22,7 @@ int main()
     }
 
     VectorMatrix wrapped = VectorMatrix::wrapVectors(v);
-    int ans = getNumberOfAllLevelComponentsBinary(wrapped);
+    int ans = ProfileCounter<VectorMatrix>(wrapped).getComponentsCount();
 
     cout << ans << endl;
 
