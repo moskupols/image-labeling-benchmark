@@ -1,14 +1,18 @@
 CC=clang++
-CXXFLAGS=--std=c++11 -fstack-protector -O0 -ggdb
+COMMON_FLAGS=--std=c++11
+D_FLAGS=$(COMMON_FLAGS) -O0 -fstack-protector -ggdb
+R_FLAGS=$(COMMON_FLAGS) -O3
 
-run: main
+run: release
 	./main
 
-main: main.cxx matrix.cxx
-	$(CC) $(CXXFLAGS) -o $@ *.cxx
+main: release
 
-debug: main
-release: main
+debug: main.cxx matrix.cxx
+	$(CC) $(D_FLAGS) -o $@ *.cxx
+
+release: main.cxx matrix.cxx
+	$(CC) $(R_FLAGS) -o $@ *.cxx
 
 clean:
 	rm -f main
