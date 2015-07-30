@@ -1,21 +1,21 @@
 #include "matrix.h"
 
-Matrix Matrix::wrapVectors(VectorBasedMatrix &data)
+VectorMatrix VectorMatrix::wrapVectors(Vectors &data)
 {
-    return Matrix(data);
+    return VectorMatrix(data);
 }
 
-int Matrix::getMatrixWidth() const
+int VectorMatrix::getMatrixWidth() const
 {
     return data[0].size();
 }
 
-int Matrix::getMatrixHeight() const
+int VectorMatrix::getMatrixHeight() const
 {
     return data.size();
 }
 
-int Matrix::getNumber(int row, int col) const
+int VectorMatrix::getNumber(int row, int col) const
 {
     return data[row][col];
 }

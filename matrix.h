@@ -5,23 +5,23 @@
 
 using std::vector;
 
-class Matrix  // adapter over vector of vectors
+class VectorMatrix  // adapter over vector of vectors
 {
 public:
-    typedef vector<vector<int>> VectorBasedMatrix;
+    typedef vector<vector<int>> Vectors;
 
-    static Matrix wrapVectors(VectorBasedMatrix &data);
+    static VectorMatrix wrapVectors(Vectors &data);
 
     int getMatrixWidth() const;
     int getMatrixHeight() const;
     int getNumber(int row, int col) const;
 
 private:
-    explicit Matrix(VectorBasedMatrix &data):
+    explicit VectorMatrix(Vectors &data):
         data(data)
     {}
 
-    VectorBasedMatrix &data;
+    Vectors &data;
 };
 
 #endif

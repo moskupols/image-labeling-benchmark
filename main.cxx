@@ -21,7 +21,7 @@ int main()
                 r[i] = 1;
     }
 
-    Matrix wrapped = Matrix::wrapVectors(v);
+    VectorMatrix wrapped = VectorMatrix::wrapVectors(v);
     int ans = getNumberOfAllLevelComponentsBinary(wrapped);
 
     cout << ans << endl;
