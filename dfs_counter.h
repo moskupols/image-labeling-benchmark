@@ -22,7 +22,7 @@ public:
     {
         std::fill(std::begin(used), std::end(used), 0);
         int ans = 0;
-        for (int i = 0; i < rows * cols)
+        for (int i = 0; i < rows * cols; ++i)
             if (matrix.getNumber(i / cols, i % cols) && !used[i])
                 paint(i);
         return ans;
