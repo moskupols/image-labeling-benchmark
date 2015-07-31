@@ -1,4 +1,4 @@
-CC=clang++
+CC=g++
 COMMON_FLAGS=--std=c++11
 D_FLAGS=$(COMMON_FLAGS) -O0 -fstack-protector -ggdb
 R_FLAGS=$(COMMON_FLAGS) -O3
@@ -25,7 +25,7 @@ test-counters: counters-test
 	./counters-test
 
 counters-test: counters-test.cxx $(SOURCES)
-	$(CC) $(D_FLAGS) $(GTEST_FLAGS) counters-test.cxx matrix.cxx -o $@
+	$(CC) $(R_FLAGS) $(GTEST_FLAGS) counters-test.cxx matrix.cxx -o $@
 
 clean:
 	rm -f main
