@@ -21,8 +21,7 @@ int main()
                 r[i] = 1;
     }
 
-    VectorMatrix wrapped = VectorMatrix::wrapVectors(v);
-    int ans = ProfileCounter<VectorMatrix>(wrapped).getComponentsCount();
+    int ans = ProfileCounter<VectorMatrix>(VectorMatrix(v)).getComponentsCount();
 
     cout << ans << endl;
 

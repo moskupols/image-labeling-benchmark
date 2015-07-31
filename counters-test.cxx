@@ -27,7 +27,7 @@ TYPED_TEST(CounterTestFixture, Trivial)
     for (int i = 0; i < 2; ++i)
     {
         vector<vector<int>> m = {{i}};
-        VectorMatrix matrix = VectorMatrix::wrapVectors(m);
+        VectorMatrix matrix(m);
         TypeParam counter(matrix);
         ASSERT_EQ(i, counter.getComponentsCount());
     }
@@ -67,7 +67,7 @@ TYPED_TEST(CounterTestFixture, Manual)
     };
     for (auto t : tests)
     {
-        VectorMatrix matrix = VectorMatrix::wrapVectors(t.first);
+        VectorMatrix matrix(t.first);
         TypeParam counter(matrix);
         ASSERT_EQ(t.second, counter.getComponentsCount());
     }

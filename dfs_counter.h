@@ -15,7 +15,7 @@ public:
         used(rows * cols)
     {}
 
-    int getComponentsCount()
+    int getComponentsCount() const
     {
         std::fill(std::begin(used), std::end(used), 0);
         int ans = 0;
@@ -36,12 +36,12 @@ public:
 protected:
     static const int DELTAS[8][2];
 
-    bool isOk(int r, int c)
+    bool isOk(int r, int c) const
     {
         return r >= 0 && c >= 0 && r < rows && c < cols;
     }
 
-    void paint(int r, int c)
+    void paint(int r, int c) const
     {
         int v = r * cols + c;
         used[v] = 1;
@@ -55,9 +55,9 @@ protected:
     }
 
 private:
-    int rows, cols;
+    const int rows, cols;
     const Matrix &matrix;
-    IntArray used;
+    mutable IntArray used;
 };
 
 template<class M, class I>

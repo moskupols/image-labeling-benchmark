@@ -10,18 +10,17 @@ class VectorMatrix  // adapter over vector of vectors
 public:
     typedef vector<vector<int>> Vectors;
 
-    static VectorMatrix wrapVectors(Vectors &data);
+    VectorMatrix(int rows, int cols, int value = 0);
+    explicit VectorMatrix(Vectors data);
+    explicit VectorMatrix(Vectors &&data);
 
     int getMatrixWidth() const;
     int getMatrixHeight() const;
     int getNumber(int row, int col) const;
 
 private:
-    explicit VectorMatrix(Vectors &data):
-        data(data)
-    {}
 
-    Vectors &data;
+    Vectors data;
 };
 
 #endif

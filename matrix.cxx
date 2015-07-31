@@ -1,9 +1,16 @@
 #include "matrix.h"
 
-VectorMatrix VectorMatrix::wrapVectors(Vectors &data)
-{
-    return VectorMatrix(data);
-}
+VectorMatrix::VectorMatrix(int rows, int cols, int value):
+    data(rows, vector<int>(cols, value))
+{}
+
+VectorMatrix::VectorMatrix(Vectors data):
+    data(data)
+{}
+
+VectorMatrix::VectorMatrix(Vectors &&data):
+    data(data)
+{}
 
 int VectorMatrix::getMatrixWidth() const
 {

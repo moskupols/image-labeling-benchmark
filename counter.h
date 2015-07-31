@@ -9,11 +9,11 @@ template<class Matrix, class IntArray=vector<int>>
 class ProfileCounter
 {
 public:
-    explicit ProfileCounter(Matrix &m):
+    explicit ProfileCounter(const Matrix &m):
         m(m)
     {}
 
-    int getComponentsCount()
+    int getComponentsCount() const
     {
         int ht = m.getMatrixHeight();
         int wd = m.getMatrixWidth();
@@ -233,7 +233,7 @@ public:
     }//getNumberOfAllLevelComponentsBinary
 
 private:
-    Matrix &m;
+    const Matrix &m;
 };
 
 #endif
