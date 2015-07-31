@@ -4,9 +4,7 @@
 #include <vector>
 #include <algorithm>
 
-using std::vector;
-
-template<class Matrix, class IntArray=vector<int>>
+template<class Matrix, class IntArray=std::vector<int>>
 class DfsCounter
 {
 public:
@@ -14,8 +12,7 @@ public:
         rows(matrix.getMatrixHeight()),
         cols(matrix.getMatrixWidth()),
         matrix(matrix),
-        used(matrix.getMatrixHeight() * matrix.getMatrixWidth()),
-        deltas{-cols-1, -cols, -cols+1, 1, cols+1, cols, cols-1, -1}
+        used(rows * cols)
     {}
 
     int getComponentsCount()
@@ -23,25 +20,37 @@ public:
         std::fill(std::begin(used), std::end(used), 0);
         int ans = 0;
         for (int i = 0; i < rows * cols; ++i)
-            if (matrix.getNumber(i / cols, i % cols) && !used[i])
-                paint(i);
+        {
+            if (used[i])
+                continue;
+            int r = i / cols, c = i % cols;
+            if (matrix.getNumber(r, c))
+            {
+                ++ans;
+                paint(r, c);
+            }
+        }
         return ans;
     }
 
 protected:
-    bool isOk(int at)
+    static const int DELTAS[8][2];
+
+    bool isOk(int r, int c)
     {
-        return at >= 0 && at < cols * rows;
+        return r >= 0 && c >= 0 && r < rows && c < cols;
     }
 
-    void paint(int v)
+    void paint(int r, int c)
     {
+        int v = r * cols + c;
         used[v] = 1;
-        for (int d : deltas)
+        for (auto d : DELTAS)
         {
-            int u = v + d;
-            if (isOk(u) && matrix.getNumber(u / cols, u % cols))
-                paint(u);
+            int new_r = r + d[0], new_c = c + d[1];
+            int u = v + d[0] * cols + d[1];
+            if (isOk(new_r, new_c) && !used[u] && matrix.getNumber(new_r, new_c))
+                paint(new_r, new_c);
         }
     }
 
@@ -49,8 +58,20 @@ private:
     int rows, cols;
     const Matrix &matrix;
     IntArray used;
-    const int deltas[8];
 };
+
+template<class M, class I>
+const int DfsCounter<M, I>::DELTAS[8][2] =
+    {
+        {-1, -1},
+        {-1, 0},
+        {-1, 1},
+        {0, 1},
+        {1, 1},
+        {1, 0},
+        {1, -1},
+        {0, -1}
+    };
 
 #endif
 
