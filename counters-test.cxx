@@ -5,6 +5,7 @@
 #include "matrix.h"
 #include "counter.h"
 #include "dfs_counter.h"
+#include "testgen.h"
 
 using namespace std;
 
@@ -18,8 +19,8 @@ class CommonCounterTest : public testing::Test
 typedef testing::Types<
     ProfileCounter<>,
     DfsCounter<>
-    > TESTED_COUNTERS;
-TYPED_TEST_CASE(CommonCounterTest, TESTED_COUNTERS);
+    > TestedCounters;
+TYPED_TEST_CASE(CommonCounterTest, TestedCounters);
 
 TYPED_TEST(CommonCounterTest, Trivial)
 {
@@ -72,10 +73,24 @@ TYPED_TEST(CommonCounterTest, Manual)
     }
 }
 
-typedef DfsCounter<> ExemplaryCounter;
 
 template<class C>
-class ComparativeCounterTest : testing::Test
+class ComparativeCounterTest : public testing::Test
+{};
+
+typedef DfsCounter<> ExemplaryCounter;
+typedef testing::Types<ProfileCounter<>> ComparativeTestedCounters;
+TYPED_TEST_CASE(ComparativeCounterTest, ComparativeTestedCounters);
+
+TYPED_TEST(ComparativeCounterTest, SmallRandom)
 {
-};
+    ExemplaryCounter exemplary;
+    TypeParam tested;
+    for (int seed = 0; seed < 500; ++seed)
+    {
+        RandomMatrixGenerator<VectorMatrix> gen(seed);
+        VectorMatrix m = gen.nextNotLargerThan(20);
+        ASSERT_EQ(exemplary.getComponentsCount(m), tested.getComponentsCount(m));
+    }
+}
 
