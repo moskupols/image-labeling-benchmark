@@ -12,28 +12,27 @@ using namespace std;
 // http://code.google.com/p/googletest/wiki/V1_7_AdvancedGuide#Typed_Tests
 
 template<class C>
-class CounterTestFixture : public testing::Test
-{
-};
+class CommonCounterTest : public testing::Test
+{};
 
 typedef testing::Types<
-    ProfileCounter<VectorMatrix>,
-    DfsCounter<VectorMatrix>
+    ProfileCounter<>,
+    DfsCounter<>
     > TESTED_COUNTERS;
-TYPED_TEST_CASE(CounterTestFixture, TESTED_COUNTERS);
+TYPED_TEST_CASE(CommonCounterTest, TESTED_COUNTERS);
 
-TYPED_TEST(CounterTestFixture, Trivial)
+TYPED_TEST(CommonCounterTest, Trivial)
 {
     for (int i = 0; i < 2; ++i)
     {
         vector<vector<int>> m = {{i}};
         VectorMatrix matrix(m);
-        TypeParam counter(matrix);
-        ASSERT_EQ(i, counter.getComponentsCount());
+        TypeParam counter;
+        ASSERT_EQ(i, counter.getComponentsCount(matrix));
     }
 }
 
-TYPED_TEST(CounterTestFixture, Manual)
+TYPED_TEST(CommonCounterTest, Manual)
 {
     pair<vector<vector<int>>, int> tests[] =
     {
@@ -68,8 +67,15 @@ TYPED_TEST(CounterTestFixture, Manual)
     for (auto t : tests)
     {
         VectorMatrix matrix(t.first);
-        TypeParam counter(matrix);
-        ASSERT_EQ(t.second, counter.getComponentsCount());
+        TypeParam counter;
+        ASSERT_EQ(t.second, counter.getComponentsCount(matrix));
     }
 }
+
+typedef DfsCounter<> ExemplaryCounter;
+
+template<class C>
+class ComparativeCounterTest : testing::Test
+{
+};
 

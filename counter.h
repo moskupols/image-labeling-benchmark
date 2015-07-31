@@ -5,15 +5,12 @@
 
 using std::vector;
 
-template<class Matrix, class IntArray=vector<int>>
+template<class IntArray=vector<int>>
 class ProfileCounter
 {
 public:
-    explicit ProfileCounter(const Matrix &m):
-        m(m)
-    {}
-
-    int getComponentsCount() const
+    template<class Matrix>
+    int getComponentsCount(const Matrix &m) const
     {
         int ht = m.getMatrixHeight();
         int wd = m.getMatrixWidth();
@@ -231,9 +228,6 @@ public:
         }//i
         return numUpperComponents;
     }//getNumberOfAllLevelComponentsBinary
-
-private:
-    const Matrix &m;
 };
 
 #endif

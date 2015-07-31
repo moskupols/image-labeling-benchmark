@@ -4,11 +4,11 @@
 #include <vector>
 #include <algorithm>
 
-template<class Matrix, class IntArray=std::vector<int>>
-class DfsCounter
+template<class Matrix, class IntArray>
+class DfsCounterImpl
 {
 public:
-    explicit DfsCounter(const Matrix &matrix):
+    explicit DfsCounterImpl(const Matrix &matrix):
         rows(matrix.getMatrixHeight()),
         cols(matrix.getMatrixWidth()),
         matrix(matrix),
@@ -61,7 +61,7 @@ private:
 };
 
 template<class M, class I>
-const int DfsCounter<M, I>::DELTAS[8][2] =
+const int DfsCounterImpl<M, I>::DELTAS[8][2] =
     {
         {-1, -1},
         {-1, 0},
@@ -72,6 +72,17 @@ const int DfsCounter<M, I>::DELTAS[8][2] =
         {1, -1},
         {0, -1}
     };
+
+template<class IntArray=vector<int>>
+class DfsCounter
+{
+public:
+    template<class Matrix>
+    int getComponentsCount(const Matrix &m) const
+    {
+        return DfsCounterImpl<Matrix, IntArray>(m).getComponentsCount();
+    }
+};
 
 #endif
 
