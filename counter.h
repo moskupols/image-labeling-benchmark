@@ -106,53 +106,16 @@ public:
                     }               
                 }
             }//0-0
-            if ( ( m.getNumber( down, 0 ) == 1 &&  m.getNumber( up, 1 ) == 1 ) && ( vectorDown[ 0 ] != vectorUp[ 1 ]  ) )//0-1
+
+            if (wd > 1)
             {
-                ++ joining;
-                ++ numerator;
-                int newnumerator = numerator;
-                int upOldNumerator = vectorUp[ 1 ];
-                int downOldNumerator = vectorDown[ 0 ];
-                for ( int k = 0; k < wd; ++ k )
-                {
-                    if ( ( vectorUp[ k ] == upOldNumerator ) || ( vectorUp[ k ] == downOldNumerator ) )
-                    {
-                        vectorUp[ k ] = newnumerator;
-                    }
-                    if ( ( vectorDown[ k ] == downOldNumerator ) || ( vectorDown[ k ] == upOldNumerator ) )
-                    {
-                        vectorDown[ k ] = newnumerator;
-                    }               
-                }
-            }//0-1
-            for ( int j = 1; j < wd - 1; ++ j )
-            {
-                if ( ( m.getNumber( down, j ) == 1 &&  m.getNumber( up, j - 1 ) == 1 ) && ( vectorDown[ j ] != vectorUp[ j - 1 ]  ) )//j-j-1
+                if ( ( m.getNumber( down, 0 ) == 1 &&  m.getNumber( up, 1 ) == 1 ) && ( vectorDown[ 0 ] != vectorUp[ 1 ]  ) )//0-1
                 {
                     ++ joining;
                     ++ numerator;
                     int newnumerator = numerator;
-                    int upOldNumerator = vectorUp[ j - 1 ];
-                    int downOldNumerator = vectorDown[ j ];
-                    for ( int k = 0; k < wd; ++ k )
-                    {
-                        if ( ( vectorUp[ k ] == upOldNumerator ) || ( vectorUp[ k ] == downOldNumerator )  )
-                        {
-                            vectorUp[ k ] = newnumerator;
-                        }
-                        if ( ( vectorDown[ k ] == downOldNumerator ) || ( vectorDown[ k ] == upOldNumerator )  )
-                        {
-                            vectorDown[ k ] = newnumerator;
-                        }               
-                    }
-                }//j-j-1
-                if ( ( m.getNumber( down, j ) == 1 && m.getNumber( up, j ) == 1 ) && ( vectorDown[ j ] != vectorUp[ j ]  ) )//j-j
-                {
-                    ++ joining;
-                    ++ numerator;
-                    int newnumerator = numerator;
-                    int upOldNumerator = vectorUp[ j ];
-                    int downOldNumerator = vectorDown[ j ];
+                    int upOldNumerator = vectorUp[ 1 ];
+                    int downOldNumerator = vectorDown[ 0 ];
                     for ( int k = 0; k < wd; ++ k )
                     {
                         if ( ( vectorUp[ k ] == upOldNumerator ) || ( vectorUp[ k ] == downOldNumerator ) )
@@ -164,17 +127,77 @@ public:
                             vectorDown[ k ] = newnumerator;
                         }               
                     }
-                }//j-j
-                if ( ( m.getNumber( down, j ) == 1 && m.getNumber( up, j + 1 ) == 1 ) && ( vectorDown[ j ] != vectorUp[ j + 1 ]  ) )//j-j+1
+                }//0-1
+                for ( int j = 1; j < wd - 1; ++ j )
+                {
+                    if ( ( m.getNumber( down, j ) == 1 &&  m.getNumber( up, j - 1 ) == 1 ) && ( vectorDown[ j ] != vectorUp[ j - 1 ]  ) )//j-j-1
+                    {
+                        ++ joining;
+                        ++ numerator;
+                        int newnumerator = numerator;
+                        int upOldNumerator = vectorUp[ j - 1 ];
+                        int downOldNumerator = vectorDown[ j ];
+                        for ( int k = 0; k < wd; ++ k )
+                        {
+                            if ( ( vectorUp[ k ] == upOldNumerator ) || ( vectorUp[ k ] == downOldNumerator )  )
+                            {
+                                vectorUp[ k ] = newnumerator;
+                            }
+                            if ( ( vectorDown[ k ] == downOldNumerator ) || ( vectorDown[ k ] == upOldNumerator )  )
+                            {
+                                vectorDown[ k ] = newnumerator;
+                            }               
+                        }
+                    }//j-j-1
+                    if ( ( m.getNumber( down, j ) == 1 && m.getNumber( up, j ) == 1 ) && ( vectorDown[ j ] != vectorUp[ j ]  ) )//j-j
+                    {
+                        ++ joining;
+                        ++ numerator;
+                        int newnumerator = numerator;
+                        int upOldNumerator = vectorUp[ j ];
+                        int downOldNumerator = vectorDown[ j ];
+                        for ( int k = 0; k < wd; ++ k )
+                        {
+                            if ( ( vectorUp[ k ] == upOldNumerator ) || ( vectorUp[ k ] == downOldNumerator ) )
+                            {
+                                vectorUp[ k ] = newnumerator;
+                            }
+                            if ( ( vectorDown[ k ] == downOldNumerator ) || ( vectorDown[ k ] == upOldNumerator ) )
+                            {
+                                vectorDown[ k ] = newnumerator;
+                            }               
+                        }
+                    }//j-j
+                    if ( ( m.getNumber( down, j ) == 1 && m.getNumber( up, j + 1 ) == 1 ) && ( vectorDown[ j ] != vectorUp[ j + 1 ]  ) )//j-j+1
+                    {
+                        ++ joining;
+                        ++ numerator;
+                        int newnumerator = numerator;
+                        int upOldNumerator = vectorUp[ j + 1 ];
+                        int downOldNumerator = vectorDown[ j ];
+                        for ( int k = 0; k < wd; ++ k )
+                        {
+                            if ( ( vectorUp[ k ] == upOldNumerator ) || ( vectorUp[ k ] == downOldNumerator ) )
+                            {
+                                vectorUp[ k ] = newnumerator;
+                            }
+                            if ( ( vectorDown[ k ] == downOldNumerator ) || ( vectorDown[ k ] == upOldNumerator )  )
+                            {
+                                vectorDown[ k ] = newnumerator;
+                            }               
+                        }
+                    }//j-j+1
+                }//for j < wd - 1
+                if ( ( m.getNumber( down, wd - 1 ) == 1 && m.getNumber( up, wd - 2 ) == 1 ) && ( vectorDown[ wd - 1 ] != vectorUp[ wd - 2 ]  ) )//wd-1-wd-2
                 {
                     ++ joining;
                     ++ numerator;
                     int newnumerator = numerator;
-                    int upOldNumerator = vectorUp[ j + 1 ];
-                    int downOldNumerator = vectorDown[ j ];
+                    int upOldNumerator = vectorUp[ wd - 2 ];
+                    int downOldNumerator = vectorDown[ wd - 1 ];
                     for ( int k = 0; k < wd; ++ k )
                     {
-                        if ( ( vectorUp[ k ] == upOldNumerator ) || ( vectorUp[ k ] == downOldNumerator ) )
+                        if ( ( vectorUp[ k ] == upOldNumerator ) || ( vectorUp[ k ] == downOldNumerator )  )
                         {
                             vectorUp[ k ] = newnumerator;
                         }
@@ -183,46 +206,28 @@ public:
                             vectorDown[ k ] = newnumerator;
                         }               
                     }
-                }//j-j+1
-            }//for j < wd - 1
-            if ( ( m.getNumber( down, wd - 1 ) == 1 && m.getNumber( up, wd - 2 ) == 1 ) && ( vectorDown[ wd - 1 ] != vectorUp[ wd - 2 ]  ) )//wd-1-wd-2
-            {
-                ++ joining;
-                ++ numerator;
-                int newnumerator = numerator;
-                int upOldNumerator = vectorUp[ wd - 2 ];
-                int downOldNumerator = vectorDown[ wd - 1 ];
-                for ( int k = 0; k < wd; ++ k )
+                }//wd-1-wd-2
+                if ( ( m.getNumber( down, wd - 1 ) == 1 && m.getNumber( up, wd - 1 ) == 1 ) && ( vectorDown[ wd - 1 ] != vectorUp[ wd - 1 ]  ) )//wd-1-wd-1
                 {
-                    if ( ( vectorUp[ k ] == upOldNumerator ) || ( vectorUp[ k ] == downOldNumerator )  )
+                    ++ joining;
+                    ++ numerator;
+                    int newnumerator = numerator;
+                    int upOldNumerator = vectorUp[ wd - 1 ];
+                    int downOldNumerator = vectorDown[ wd - 1 ];
+                    for ( int k = 0; k < wd; ++ k )
                     {
-                        vectorUp[ k ] = newnumerator;
+                        if ( ( vectorUp[ k ] == upOldNumerator ) || ( vectorUp[ k ] == downOldNumerator ) )
+                        {
+                            vectorUp[ k ] = newnumerator;
+                        }
+                        if ( ( vectorDown[ k ] == downOldNumerator ) || ( vectorDown[ k ] == upOldNumerator ) )
+                        {
+                            vectorDown[ k ] = newnumerator;
+                        }               
                     }
-                    if ( ( vectorDown[ k ] == downOldNumerator ) || ( vectorDown[ k ] == upOldNumerator )  )
-                    {
-                        vectorDown[ k ] = newnumerator;
-                    }               
-                }
-            }//wd-1-wd-2
-            if ( ( m.getNumber( down, wd - 1 ) == 1 && m.getNumber( up, wd - 1 ) == 1 ) && ( vectorDown[ wd - 1 ] != vectorUp[ wd - 1 ]  ) )//wd-1-wd-1
-            {
-                ++ joining;
-                ++ numerator;
-                int newnumerator = numerator;
-                int upOldNumerator = vectorUp[ wd - 1 ];
-                int downOldNumerator = vectorDown[ wd - 1 ];
-                for ( int k = 0; k < wd; ++ k )
-                {
-                    if ( ( vectorUp[ k ] == upOldNumerator ) || ( vectorUp[ k ] == downOldNumerator ) )
-                    {
-                        vectorUp[ k ] = newnumerator;
-                    }
-                    if ( ( vectorDown[ k ] == downOldNumerator ) || ( vectorDown[ k ] == upOldNumerator ) )
-                    {
-                        vectorDown[ k ] = newnumerator;
-                    }               
-                }
-            }//wd-1-wd-1
+                }//wd-1-wd-1
+            }
+
             numUpperComponents = numUpperComponents + numDownLineComponents - joining;
             vectorUp = vectorDown;
         }//i

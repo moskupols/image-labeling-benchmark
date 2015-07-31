@@ -102,7 +102,7 @@ TYPED_TEST(ComparativeCounterTest, SmallRandom)
 {
     ExemplaryCounter exemplary;
     TypeParam tested;
-    for (int seed = 0; seed < 500; ++seed)
+    for (int seed = 0; seed < 5000; ++seed)
     {
         SCOPED_TRACE(seed);
         RandomMatrixGenerator<VectorMatrix> gen(seed);
