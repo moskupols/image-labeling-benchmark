@@ -1,5 +1,7 @@
 #include "matrix.h"
 
+#include <cassert>
+
 VectorMatrix::VectorMatrix(int rows, int cols, int value):
     data(rows, vector<int>(cols, value))
 {}
@@ -24,6 +26,8 @@ int VectorMatrix::getMatrixHeight() const
 
 int VectorMatrix::getNumber(int row, int col) const
 {
+    assert(row >= 0 && row < getMatrixHeight());
+    assert(col >= 0 && col < getMatrixWidth());
     return data[row][col];
 }
 

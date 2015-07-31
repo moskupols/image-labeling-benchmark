@@ -29,7 +29,7 @@ TYPED_TEST(CommonCounterTest, Trivial)
         vector<vector<int>> m = {{i}};
         VectorMatrix matrix(m);
         TypeParam counter;
-        ASSERT_EQ(i, counter.getComponentsCount(matrix));
+        EXPECT_EQ(i, counter.getComponentsCount(matrix));
     }
 }
 
@@ -69,8 +69,24 @@ TYPED_TEST(CommonCounterTest, Manual)
     {
         VectorMatrix matrix(t.first);
         TypeParam counter;
-        ASSERT_EQ(t.second, counter.getComponentsCount(matrix));
+        EXPECT_EQ(t.second, counter.getComponentsCount(matrix));
     }
+}
+
+TYPED_TEST(CommonCounterTest, OneColumn)
+{
+    vector<vector<int>> m = {{0}, {1}, {0}, {1}};
+    VectorMatrix matrix(m);
+    TypeParam counter;
+    EXPECT_EQ(2, counter.getComponentsCount(matrix));
+}
+
+TYPED_TEST(CommonCounterTest, OneRow)
+{
+    vector<vector<int>> m = {{0, 1, 0, 1}};
+    VectorMatrix matrix(m);
+    TypeParam counter;
+    EXPECT_EQ(2, counter.getComponentsCount(matrix));
 }
 
 
@@ -88,9 +104,10 @@ TYPED_TEST(ComparativeCounterTest, SmallRandom)
     TypeParam tested;
     for (int seed = 0; seed < 500; ++seed)
     {
+        SCOPED_TRACE(seed);
         RandomMatrixGenerator<VectorMatrix> gen(seed);
-        VectorMatrix m = gen.nextNotLargerThan(20);
-        ASSERT_EQ(exemplary.getComponentsCount(m), tested.getComponentsCount(m));
+        const VectorMatrix m = gen.nextNotLargerThan(20);
+        EXPECT_EQ(exemplary.getComponentsCount(m), tested.getComponentsCount(m));
     }
 }
 

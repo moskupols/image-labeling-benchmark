@@ -3,10 +3,14 @@
 
 #include <random>
 #include <vector>
+#include <algorithm>
+#include <cstring>
+#include <cassert>
 
 using std::vector;
 using std::begin;
 using std::end;
+using std::shuffle;
 
 template<class Matrix>
 class RandomMatrixGenerator
