@@ -4,6 +4,8 @@
 #include <vector>
 #include <algorithm>
 
+using std::vector;
+
 template<class Matrix, class IntArray>
 class DfsCounterImpl
 {
