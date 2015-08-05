@@ -6,21 +6,22 @@
 
 using std::vector;
 
-template<class Matrix, class IntArray>
+template<class Matrix, class IntArrayProvider>
 class DfsCounterImpl
 {
 public:
     explicit DfsCounterImpl(const Matrix &matrix):
         rows(matrix.getMatrixHeight()),
         cols(matrix.getMatrixWidth()),
-        matrix(matrix),
-        used(rows * cols)
+        matrix(matrix)
     {}
 
     int getComponentsCount() const
     {
-        std::fill(std::begin(used), std::end(used), 0);
+        IntArrayProvider provider;
+        used = provider.create(rows * cols);
         int ans = 0;
+        timer = 0;
         for (int i = 0; i < rows * cols; ++i)
         {
             if (used[i])
@@ -38,15 +39,16 @@ public:
 protected:
     static const int DELTAS[8][2];
 
-    bool isOk(int r, int c) const
+    inline bool isOk(int r, int c) const
     {
         return r >= 0 && c >= 0 && r < rows && c < cols;
     }
 
-    void paint(int r, int c) const
+    inline void paint(int r, int c) const
     {
         int v = r * cols + c;
         used[v] = 1;
+        assert(timer++ < rows * cols);
         for (auto d : DELTAS)
         {
             int new_r = r + d[0], new_c = c + d[1];
@@ -57,9 +59,10 @@ protected:
     }
 
 private:
+    mutable int timer;
     const int rows, cols;
     const Matrix &matrix;
-    mutable IntArray used;
+    mutable typename IntArrayProvider::IntArray used;
 };
 
 template<class M, class I>
@@ -75,14 +78,14 @@ const int DfsCounterImpl<M, I>::DELTAS[8][2] =
         {0, -1}
     };
 
-template<class IntArray=vector<int>>
+template<class IntArrayProvider=IntVectorProvider>
 class DfsCounter
 {
 public:
     template<class Matrix>
     int getComponentsCount(const Matrix &m) const
     {
-        return DfsCounterImpl<Matrix, IntArray>(m).getComponentsCount();
+        return DfsCounterImpl<Matrix, IntArrayProvider>(m).getComponentsCount();
     }
 };
 

@@ -3,19 +3,23 @@
 
 #include <vector>
 
+#include "int_array.h"
+
 using std::vector;
 
-template<class IntArray=vector<int>>
+template<class IntArrayProvider=IntVectorProvider>
 class ProfileCounter
 {
 public:
     template<class Matrix>
     int getComponentsCount(const Matrix &m) const
     {
+        IntArrayProvider arrayProvider;
+
         int ht = m.getMatrixHeight();
         int wd = m.getMatrixWidth();
         long int numerator;
-        vector< int > vectorUp( wd );
+        auto vectorUp = arrayProvider.create(wd);
         int numUpperComponents;
         if ( m.getNumber( 0, 0 ) == 1 )
         {
@@ -50,11 +54,12 @@ public:
             }
         }
 
+        auto vectorDown = arrayProvider.create(wd);
         for ( int i = 0; i < ( ht - 1 ); ++ i )
         {
             int up = i;
             int down = i + 1;
-            vector< int > vectorDown( wd );
+            // vector< int > vectorDown( wd );
             int numDownLineComponents = 0;
             if ( m.getNumber( i + 1, 0 ) == 1 )
             {
@@ -229,7 +234,8 @@ public:
             }
 
             numUpperComponents = numUpperComponents + numDownLineComponents - joining;
-            vectorUp = vectorDown;
+            arrayProvider.swap(vectorUp, vectorDown);
+            // vectorUp = vectorDown;
         }//i
         return numUpperComponents;
     }//getNumberOfAllLevelComponentsBinary

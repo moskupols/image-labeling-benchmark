@@ -5,11 +5,10 @@ D_FLAGS=$(COMMON_FLAGS) -O0 -ggdb
 R_FLAGS=$(COMMON_FLAGS) -O3
 
 GTEST_FLAGS=-lgtest_main -lgtest -pthread
-
-SOURCES=matrix.cxx matrix.h counter.h dfs_counter.h
-COMPILED_SOURCES=matrix.cxx
-
 BENCH_FLAGS=-lbenchmark -pthread
+
+SOURCES=matrix.cxx matrix.h int_array.cxx int_array.h counter.h dfs_counter.h
+COMPILED_SOURCES=matrix.cxx int_array.cxx
 
 run: main
 	./main
@@ -25,10 +24,11 @@ release: $(SOURCES) main.cxx
 test: test-counters
 
 test-counters: counters-test
+	ulimit -s 100500
 	./counters-test
 
 counters-test: counters-test.cxx $(SOURCES)
-	$(CC) $(R_FLAGS) counters-test.cxx matrix.cxx $(GTEST_FLAGS) -o $@
+	$(CC) $(R_FLAGS) counters-test.cxx $(COMPILED_SOURCES) $(GTEST_FLAGS) -o $@
 
 bench: benchmark
 	./benchmark

@@ -5,6 +5,7 @@
 #include "matrix.h"
 #include "counter.h"
 #include "dfs_counter.h"
+#include "int_array.h"
 #include "testgen.h"
 
 using namespace std;
@@ -12,14 +13,19 @@ using namespace std;
 // typed tests, see
 // http://code.google.com/p/googletest/wiki/V1_7_AdvancedGuide#Typed_Tests
 
+typedef testing::Types<
+    ProfileCounter<>, ProfileCounter<IntArrayProvider>,
+    DfsCounter<>, DfsCounter<IntArrayProvider>>
+        TestedCounters;
+typedef DfsCounter<> ExemplaryCounter;
+
+
 template<class C>
-class CommonCounterTest : public testing::Test
+class CounterSanityTest : public testing::Test
 {};
+TYPED_TEST_CASE(CounterSanityTest, TestedCounters);
 
-typedef testing::Types<ProfileCounter<>, DfsCounter<>> TestedCounters;
-TYPED_TEST_CASE(CommonCounterTest, TestedCounters);
-
-TYPED_TEST(CommonCounterTest, Trivial)
+TYPED_TEST(CounterSanityTest, Trivial)
 {
     for (int i = 0; i < 2; ++i)
     {
@@ -30,7 +36,7 @@ TYPED_TEST(CommonCounterTest, Trivial)
     }
 }
 
-TYPED_TEST(CommonCounterTest, Manual)
+TYPED_TEST(CounterSanityTest, Manual)
 {
     pair<vector<vector<int>>, int> tests[] =
     {
@@ -70,7 +76,7 @@ TYPED_TEST(CommonCounterTest, Manual)
     }
 }
 
-TYPED_TEST(CommonCounterTest, OneColumn)
+TYPED_TEST(CounterSanityTest, OneColumn)
 {
     vector<vector<int>> m = {{0}, {1}, {0}, {1}};
     VectorMatrix matrix(m);
@@ -78,7 +84,7 @@ TYPED_TEST(CommonCounterTest, OneColumn)
     EXPECT_EQ(2, counter.getComponentsCount(matrix));
 }
 
-TYPED_TEST(CommonCounterTest, OneRow)
+TYPED_TEST(CounterSanityTest, OneRow)
 {
     vector<vector<int>> m = {{0, 1, 0, 1}};
     VectorMatrix matrix(m);
@@ -91,8 +97,6 @@ template<class TestedCounter>
 class ComparativeCounterTest : public testing::Test
 {
 public:
-    typedef DfsCounter<> ExemplaryCounter;
-
     void randomComparativeTest(int seed, size_t maxSize)
     {
         SCOPED_TRACE(seed);
@@ -114,8 +118,15 @@ public:
     }
 };
 
-typedef testing::Types<ProfileCounter<>> ComparativeTestedCounters;
-TYPED_TEST_CASE(ComparativeCounterTest, ComparativeTestedCounters);
+template<>
+void ComparativeCounterTest<ExemplaryCounter>::randomComparativeTest(int, size_t)
+{}
+
+template<>
+void ComparativeCounterTest<ExemplaryCounter>::randomTestBatch(size_t, size_t)
+{}
+
+TYPED_TEST_CASE(ComparativeCounterTest, TestedCounters);
 
 TYPED_TEST(ComparativeCounterTest, SmallRandom)
 {
