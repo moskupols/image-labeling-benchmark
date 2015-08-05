@@ -33,6 +33,7 @@ public:
                 paint(r, c);
             }
         }
+        provider.destroy(used);
         return ans;
     }
 

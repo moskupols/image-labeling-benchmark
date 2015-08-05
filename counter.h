@@ -237,6 +237,10 @@ public:
             arrayProvider.swap(vectorUp, vectorDown);
             // vectorUp = vectorDown;
         }//i
+
+        arrayProvider.destroy(vectorUp);
+        arrayProvider.destroy(vectorDown);
+
         return numUpperComponents;
     }//getNumberOfAllLevelComponentsBinary
 };

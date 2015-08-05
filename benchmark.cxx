@@ -63,10 +63,12 @@ void BM(benchmark::State& state)
 #define INSTANTIATE_TEST(m, r, c, s) \
     typedef StaticRandomTest<m, r, c, s> m##_##r##x##c##_##s; \
     volatile StaticRandomTest<m, r, c, s> m##_##r##x##c##_##s##_singleton; \
-    BENCHMARK_TEMPLATE(BM, DfsCounter<IntVectorProvider>, m##_##r##x##c##_##s); \
     BENCHMARK_TEMPLATE(BM, DfsCounter<IntArrayProvider>, m##_##r##x##c##_##s); \
-    BENCHMARK_TEMPLATE(BM, ProfileCounter<IntVectorProvider>, m##_##r##x##c##_##s); \
-    BENCHMARK_TEMPLATE(BM, ProfileCounter<IntArrayProvider>, m##_##r##x##c##_##s);
+    BENCHMARK_TEMPLATE(BM, DfsCounter<UniqueIntArrayProvider>, m##_##r##x##c##_##s); \
+    BENCHMARK_TEMPLATE(BM, DfsCounter<IntVectorProvider>, m##_##r##x##c##_##s); \
+    BENCHMARK_TEMPLATE(BM, ProfileCounter<IntArrayProvider>, m##_##r##x##c##_##s); \
+    BENCHMARK_TEMPLATE(BM, ProfileCounter<UniqueIntArrayProvider>, m##_##r##x##c##_##s); \
+    BENCHMARK_TEMPLATE(BM, ProfileCounter<IntVectorProvider>, m##_##r##x##c##_##s);
 
 #define INSTANTIATE_VECTOR_TEST(r, c, s) \
     INSTANTIATE_TEST(VectorMatrix, r, c, s)
