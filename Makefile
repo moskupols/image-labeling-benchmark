@@ -1,6 +1,7 @@
 CC=g++
-COMMON_FLAGS=--std=c++11
-D_FLAGS=$(COMMON_FLAGS) -O0 -fstack-protector -ggdb
+COMMON_FLAGS=--std=c++11 -fstack-protector -fsanitize=address -fsanitize=undefined
+
+D_FLAGS=$(COMMON_FLAGS) -O0 -ggdb
 R_FLAGS=$(COMMON_FLAGS) -O3
 
 GTEST_FLAGS=-lgtest_main -lgtest -pthread
@@ -16,7 +17,7 @@ run: main
 main: debug
 
 debug: $(SOURCES)
-	$(CC) $(D_FLAGS) -o main main.cxx $(COMPILED_SOURCES) 
+	$(CC) $(D_FLAGS) -o main main.cxx $(COMPILED_SOURCES)
 
 release: $(SOURCES) main.cxx
 	$(CC) $(R_FLAGS) -o main main.cxx $(COMPILED_SOURCES)
