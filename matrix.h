@@ -10,6 +10,7 @@ class VectorMatrix  // adapter over vector of vectors
 public:
     typedef vector<vector<int>> Vectors;
 
+    VectorMatrix();
     VectorMatrix(int rows, int cols, int value = 0);
     explicit VectorMatrix(Vectors data);
     explicit VectorMatrix(Vectors &&data);
@@ -19,7 +20,6 @@ public:
     int getNumber(int row, int col) const;
 
 private:
-
     Vectors data;
 };
 

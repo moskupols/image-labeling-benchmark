@@ -20,11 +20,17 @@ public:
         rng(seed)
     {}
 
+    void setSeed(int newSeed)
+    {
+        rng = std::mt19937(newSeed);
+    }
+
     Matrix next(size_t rows, size_t cols)
     {
-        return next(rows, cols, rng() % (rows * cols + 1));
+        return nextWithOnes(rows, cols, rng() % (rows * cols + 1));
     }
-    Matrix next(size_t rows, size_t cols, size_t ones)
+
+    Matrix nextWithOnes(size_t rows, size_t cols, size_t ones)
     {
         size_t size = rows * cols;
         assert(ones <= size);

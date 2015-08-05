@@ -2,6 +2,10 @@
 
 #include <cassert>
 
+VectorMatrix::VectorMatrix():
+    data()
+{}
+
 VectorMatrix::VectorMatrix(int rows, int cols, int value):
     data(rows, vector<int>(cols, value))
 {}
