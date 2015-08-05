@@ -21,7 +21,6 @@ public:
         IntArrayProvider provider;
         used = provider.create(rows * cols);
         int ans = 0;
-        timer = 0;
         for (int i = 0; i < rows * cols; ++i)
         {
             if (used[i])
@@ -49,7 +48,6 @@ protected:
     {
         int v = r * cols + c;
         used[v] = 1;
-        assert(timer++ < rows * cols);
         for (auto d : DELTAS)
         {
             int new_r = r + d[0], new_c = c + d[1];
