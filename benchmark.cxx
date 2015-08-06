@@ -3,6 +3,7 @@
 #include "profile_counter.h"
 #include "dfs_counter.h"
 #include "dsu_counter.h"
+#include "twoline_dsu_counter.h"
 #include "int_array.h"
 #include "matrix.h"
 #include "testgen.h"
@@ -68,7 +69,9 @@ void BM(benchmark::State& state)
     BENCHMARK_TEMPLATE(BM, ProfileCounter<IntArrayProvider>, test); \
     BENCHMARK_TEMPLATE(BM, ProfileCounter<UniqueIntArrayProvider>, test); \
     BENCHMARK_TEMPLATE(BM, ProfileCounter<IntVectorProvider>, test); \
-    BENCHMARK_TEMPLATE(BM, DsuCounter, test);
+    BENCHMARK_TEMPLATE(BM, DsuCounter, test); \
+    BENCHMARK_TEMPLATE(BM, TwolineDsuCounter, test);
+
 
 #define INSTANTIATE_TEST(test) \
     volatile test test##_singleton; \
