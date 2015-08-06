@@ -10,6 +10,11 @@ BENCH_FLAGS=-lbenchmark -pthread
 SOURCES=matrix.cxx matrix.h int_array.cxx int_array.h counter.h dfs_counter.h
 COMPILED_SOURCES=matrix.cxx int_array.cxx
 
+ULIMITED=ulimit -s 6100500 &&
+
+BENCH_FILTER=<IntArray
+REPORT_FILE=report.csv
+
 run: main
 	./main
 
@@ -21,23 +26,22 @@ debug: $(SOURCES)
 release: $(SOURCES) main.cxx
 	$(CC) $(R_FLAGS) -o main main.cxx $(COMPILED_SOURCES)
 
-test: test-counters
-
-test-counters: counters-test
-	ulimit -s 100500
-	./counters-test
+test: counters-test
+	$(ULIMITED) ./counters-test
 
 counters-test: counters-test.cxx $(SOURCES)
 	$(CC) $(R_FLAGS) counters-test.cxx $(COMPILED_SOURCES) $(GTEST_FLAGS) -o $@
 
 bench: benchmark
-	./benchmark --benchmark_filter='<IntArray'
-
-bench-all: benchmark
-	./benchmark
+	$(ULIMITED) ./benchmark --benchmark_filter='$(BENCH_FILTER)'
 
 benchmark: benchmark.cxx $(SOURCES)
 	$(CC) $(R_FLAGS) benchmark.cxx $(BENCH_FLAGS) $(COMPILED_SOURCES) -o $@
+
+report: $(REPORT_FILE)
+
+$(REPORT_FILE): report.py benchmark
+	$(ULIMITED) ./benchmark --benchmark_format=json --benchmark_filter='$(BENCH_FILTER)' | ./report.py >$@
 
 clean:
 	rm -f main
