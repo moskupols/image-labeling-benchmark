@@ -6,6 +6,7 @@
 #include "profile_counter.h"
 #include "dfs_counter.h"
 #include "dsu_counter.h"
+#include "twoline_dsu_counter.h"
 #include "int_array.h"
 #include "testgen.h"
 
@@ -19,7 +20,8 @@ typedef testing::Types<
     ProfileCounter<UniqueIntArrayProvider>,
     DfsCounter<>, DfsCounter<IntArrayProvider>,
     DfsCounter<UniqueIntArrayProvider>,
-    DsuCounter>
+    DsuCounter,
+    TwolineDsuCounter>
         TestedCounters;
 typedef DfsCounter<> ExemplaryCounter;
 
