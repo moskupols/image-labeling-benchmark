@@ -20,16 +20,17 @@ DisjointSetUnion::~DisjointSetUnion()
     delete[] rank;
 }
 
-DisjointSetUnion::elem_t DisjointSetUnion::join(elem_t a, elem_t b)
+bool DisjointSetUnion::join(elem_t a, elem_t b)
 {
     a = getRepresentative(a);
     b = getRepresentative(b);
     if (a == b)
-        return a;
+        return false;
     if (rank[a] < rank[b])  // rank heuristic
         std::swap(a, b);
     rank[a] += rank[b];
-    return parent[b] = a;
+    parent[b] = a;
+    return true;
 }
 
 DisjointSetUnion::elem_t DisjointSetUnion::getRepresentative(elem_t v) const

@@ -16,7 +16,7 @@ public:
     explicit DisjointSetUnion(std::size_t size);
     ~DisjointSetUnion();
 
-    elem_t join(elem_t a, elem_t b);  // amortized O(\alpha(size))
+    bool join(elem_t a, elem_t b);  // amortized O(\alpha(size))
     // where \alpha is the inverse Ackermann function (practically small constant)
 
     elem_t getRepresentative(elem_t v) const;  // amortized O(\alpha(size))
