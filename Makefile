@@ -1,5 +1,5 @@
 CC=g++
-COMMON_FLAGS=--std=c++11 -fstack-protector -fsanitize=address -fsanitize=undefined
+COMMON_FLAGS=-Wall -Wextra --std=c++11 -fstack-protector -fsanitize=address -fsanitize=undefined
 
 D_FLAGS=$(COMMON_FLAGS) -O0 -ggdb
 R_FLAGS=$(COMMON_FLAGS) -O3
@@ -7,7 +7,8 @@ R_FLAGS=$(COMMON_FLAGS) -O3
 GTEST_FLAGS=-lgtest_main -lgtest -pthread
 BENCH_FLAGS=-lbenchmark -pthread
 
-SOURCES= matrix.* int_array.* profile_counter.h dfs_counter.h dsu.* dsu_counter.h counters_common.*
+SOURCES = matrix.* int_array.* profile_counter.h dfs_counter.h dsu.* dsu_counter.h
+SOURCES += testgen.h counters_common.*
 COMPILED_SOURCES=matrix.cxx int_array.cxx counters_common.cxx dsu.cxx
 
 ULIMITED=ulimit -s 6100500 &&

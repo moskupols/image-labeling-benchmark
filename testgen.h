@@ -41,7 +41,7 @@ public:
         shuffle(perm, perm + size, rng);
 
         vector<vector<int>> res(rows, vector<int>(cols));
-        for (int i = 0; i < size; ++i)
+        for (size_t i = 0; i < size; ++i)
             res[i/cols][i % cols] = perm[i];
 
         return Matrix(res);
