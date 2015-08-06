@@ -2,11 +2,7 @@
 #define DFS_COUNTER_H
 
 #include "counters_common.h"
-
-#include <vector>
-#include <algorithm>
-
-using std::vector;
+#include "int_array.h"
 
 template<class Matrix, class IntArrayProvider>
 class DfsCounterImpl
@@ -69,7 +65,7 @@ class DfsCounter
 {
 public:
     template<class Matrix>
-    int getComponentsCount(const Matrix &m) const
+    static int getComponentsCount(const Matrix &m)
     {
         return DfsCounterImpl<Matrix, IntArrayProvider>(m).getComponentsCount();
     }
