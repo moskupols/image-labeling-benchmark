@@ -12,7 +12,9 @@ DisjointSetUnion::DisjointSetUnion(size_t size):
     size(size),
     parent(new elem_t[size]),
     rank(new size_t[size])
-{}
+{
+    reset();
+}
 
 DisjointSetUnion::~DisjointSetUnion()
 {

@@ -7,12 +7,12 @@ R_FLAGS=$(COMMON_FLAGS) -O3
 GTEST_FLAGS=-lgtest_main -lgtest -pthread
 BENCH_FLAGS=-lbenchmark -pthread
 
-SOURCES= matrix.* int_array.* profile_counter.h dfs_counter.h counters_common.*
-COMPILED_SOURCES=matrix.cxx int_array.cxx counters_common.cxx
+SOURCES= matrix.* int_array.* profile_counter.h dfs_counter.h dsu.* dsu_counter.h counters_common.*
+COMPILED_SOURCES=matrix.cxx int_array.cxx counters_common.cxx dsu.cxx
 
 ULIMITED=ulimit -s 6100500 &&
 
-BENCH_FILTER=<IntArray
+BENCH_FILTER=DsuCounter|<IntArray
 REPORT_FILE=report.csv
 
 run: main

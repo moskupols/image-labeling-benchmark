@@ -46,10 +46,10 @@ protected:
         used[v] = 1;
         for (auto d : DELTAS)
         {
-            int new_r = r + d[0], new_c = c + d[1];
+            int newR = r + d[0], newC = c + d[1];
             int u = v + d[0] * cols + d[1];
-            if (isOk(new_r, new_c) && !used[u] && matrix.getNumber(new_r, new_c))
-                paint(new_r, new_c);
+            if (isOk(newR, newC) && !used[u] && matrix.getNumber(newR, newC))
+                paint(newR, newC);
         }
     }
 

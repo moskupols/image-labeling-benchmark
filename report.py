@@ -7,7 +7,7 @@ import re
 
 NAME_RE = re.compile(
         '^BM<' +
-        '(?P<counter>\w+)<(?P<array>\w+)>' +
+        '(?P<counter>\w+)(<(?P<array>\w+)>)?' +
         ',\s*' +
         '(?P<type>\w+)_(?P<matrix>\w+)_(?P<height>\d+)x(?P<width>\d+)' +
         '_(?P<id>(\d|\w|_)*)' +
