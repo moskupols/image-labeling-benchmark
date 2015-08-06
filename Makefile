@@ -31,6 +31,9 @@ counters-test: counters-test.cxx $(SOURCES)
 	$(CC) $(R_FLAGS) counters-test.cxx $(COMPILED_SOURCES) $(GTEST_FLAGS) -o $@
 
 bench: benchmark
+	./benchmark --benchmark_filter='<IntArray'
+
+bench-all: benchmark
 	./benchmark
 
 benchmark: benchmark.cxx $(SOURCES)

@@ -47,6 +47,11 @@ public:
         return Matrix(res);
     }
 
+    Matrix nextWithDensity(size_t rows, size_t cols, double density)
+    {
+        return nextWithOnes(rows, cols, rows * cols * density);
+    }
+
     Matrix nextNotLargerThan(size_t n)
     {
         size_t rows = unsigned(rng()) % n + 1;

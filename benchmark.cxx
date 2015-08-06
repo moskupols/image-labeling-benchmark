@@ -8,14 +8,14 @@
 
 using namespace std;
 
-template<class M, size_t ROWS, size_t COLS, int SEED=0>
+template<class M, size_t ROWS, size_t COLS, int SEED=0, int DENSITY=50>
 class StaticRandomTest
 {
 public:
     typedef M Matrix;
 
     StaticRandomTest():
-        m(gen(ROWS, COLS, SEED))
+        m(gen())
     {
         assert(!singleton);
         singleton = this;
@@ -27,21 +27,21 @@ public:
     }
 
 protected:
-    static StaticRandomTest<Matrix, ROWS, COLS, SEED>* singleton;
+    static StaticRandomTest<Matrix, ROWS, COLS, SEED, DENSITY>* singleton;
 
-    static Matrix gen(size_t rows, size_t cols, int seed)
+    static Matrix gen()
     {
-        RandomMatrixGenerator<Matrix> g(seed);
-        return g.next(rows, cols);
+        RandomMatrixGenerator<Matrix> g(SEED);
+        return g.nextWithDensity(ROWS, COLS, DENSITY / 100.);
     }
 
 private:
     const Matrix m;
 };
 
-template<class M, size_t ROWS, size_t COLS, int SEED>
-StaticRandomTest<M, ROWS, COLS, SEED>*
-StaticRandomTest<M, ROWS, COLS, SEED>::singleton = nullptr;
+template<class M, size_t ROWS, size_t COLS, int SEED, int DENSITY>
+StaticRandomTest<M, ROWS, COLS, SEED, DENSITY>*
+StaticRandomTest<M, ROWS, COLS, SEED, DENSITY>::singleton = nullptr;
 
 template<class Counter, class Matrix>
 void runTest(benchmark::State& state, const Counter& counter, const Matrix& m)
@@ -60,25 +60,39 @@ void BM(benchmark::State& state)
     runTest(state, counter, m);
 }
 
-#define INSTANTIATE_TEST(m, r, c, s) \
-    typedef StaticRandomTest<m, r, c, s> m##_##r##x##c##_##s; \
-    volatile StaticRandomTest<m, r, c, s> m##_##r##x##c##_##s##_singleton; \
-    BENCHMARK_TEMPLATE(BM, DfsCounter<IntArrayProvider>, m##_##r##x##c##_##s); \
-    BENCHMARK_TEMPLATE(BM, DfsCounter<UniqueIntArrayProvider>, m##_##r##x##c##_##s); \
-    BENCHMARK_TEMPLATE(BM, DfsCounter<IntVectorProvider>, m##_##r##x##c##_##s); \
-    BENCHMARK_TEMPLATE(BM, ProfileCounter<IntArrayProvider>, m##_##r##x##c##_##s); \
-    BENCHMARK_TEMPLATE(BM, ProfileCounter<UniqueIntArrayProvider>, m##_##r##x##c##_##s); \
-    BENCHMARK_TEMPLATE(BM, ProfileCounter<IntVectorProvider>, m##_##r##x##c##_##s);
+#define BENCH_ALL(test) \
+    BENCHMARK_TEMPLATE(BM, DfsCounter<IntArrayProvider>, test); \
+    BENCHMARK_TEMPLATE(BM, DfsCounter<UniqueIntArrayProvider>, test); \
+    BENCHMARK_TEMPLATE(BM, DfsCounter<IntVectorProvider>, test); \
+    BENCHMARK_TEMPLATE(BM, ProfileCounter<IntArrayProvider>, test); \
+    BENCHMARK_TEMPLATE(BM, ProfileCounter<UniqueIntArrayProvider>, test); \
+    BENCHMARK_TEMPLATE(BM, ProfileCounter<IntVectorProvider>, test);
 
-#define INSTANTIATE_VECTOR_TEST(r, c, s) \
-    INSTANTIATE_TEST(VectorMatrix, r, c, s)
+#define INSTANTIATE_TEST(test) \
+    volatile test test##_singleton; \
+    BENCH_ALL(test);
 
-INSTANTIATE_VECTOR_TEST(200, 600, 0);
-INSTANTIATE_VECTOR_TEST(600, 200, 1);
-INSTANTIATE_VECTOR_TEST(500, 500, 2);
-INSTANTIATE_VECTOR_TEST(10, 10000, 3);
-INSTANTIATE_VECTOR_TEST(10000, 10, 4);
+#define INSTANTIATE_TEST_RANDOM(m, r, c, s, d) \
+    typedef StaticRandomTest<m, r, c, s, d> RANDOM_##m##_##r##x##c##_##s##_##d; \
+    INSTANTIATE_TEST(RANDOM_##m##_##r##x##c##_##s##_##d);
 
+INSTANTIATE_TEST_RANDOM(VectorMatrix, 200, 600, 0, 20);
+INSTANTIATE_TEST_RANDOM(VectorMatrix, 600, 200, 1, 20);
+INSTANTIATE_TEST_RANDOM(VectorMatrix, 500, 500, 2, 20);
+INSTANTIATE_TEST_RANDOM(VectorMatrix, 10, 10000, 3, 20);
+INSTANTIATE_TEST_RANDOM(VectorMatrix, 10000, 10, 4, 20);
+
+INSTANTIATE_TEST_RANDOM(VectorMatrix, 200, 600, 0, 50);
+INSTANTIATE_TEST_RANDOM(VectorMatrix, 600, 200, 1, 50);
+INSTANTIATE_TEST_RANDOM(VectorMatrix, 500, 500, 2, 50);
+INSTANTIATE_TEST_RANDOM(VectorMatrix, 10, 10000, 3, 50);
+INSTANTIATE_TEST_RANDOM(VectorMatrix, 10000, 10, 4, 50);
+
+INSTANTIATE_TEST_RANDOM(VectorMatrix, 200, 600, 5, 80);
+INSTANTIATE_TEST_RANDOM(VectorMatrix, 600, 200, 6, 80);
+INSTANTIATE_TEST_RANDOM(VectorMatrix, 500, 500, 7, 80);
+INSTANTIATE_TEST_RANDOM(VectorMatrix, 10, 10000, 8, 80);
+INSTANTIATE_TEST_RANDOM(VectorMatrix, 10000, 10, 9, 80);
 
 BENCHMARK_MAIN();
 
