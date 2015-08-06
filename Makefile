@@ -7,8 +7,8 @@ R_FLAGS=$(COMMON_FLAGS) -O3
 GTEST_FLAGS=-lgtest_main -lgtest -pthread
 BENCH_FLAGS=-lbenchmark -pthread
 
-SOURCES=matrix.cxx matrix.h int_array.cxx int_array.h counter.h dfs_counter.h
-COMPILED_SOURCES=matrix.cxx int_array.cxx
+SOURCES= matrix.* int_array.* profile_counter.h dfs_counter.h counters_common.*
+COMPILED_SOURCES=matrix.cxx int_array.cxx counters_common.cxx
 
 ULIMITED=ulimit -s 6100500 &&
 

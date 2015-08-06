@@ -5,8 +5,6 @@
 
 #include "int_array.h"
 
-using std::vector;
-
 template<class IntArrayProvider=IntVectorProvider>
 class ProfileCounter
 {

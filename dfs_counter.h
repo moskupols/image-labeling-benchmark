@@ -1,6 +1,8 @@
 #ifndef DFS_COUNTER_H
 #define DFS_COUNTER_H
 
+#include "counters_common.h"
+
 #include <vector>
 #include <algorithm>
 
@@ -37,8 +39,6 @@ public:
     }
 
 protected:
-    static const int DELTAS[8][2];
-
     inline bool isOk(int r, int c) const
     {
         return r >= 0 && c >= 0 && r < rows && c < cols;
@@ -63,19 +63,6 @@ private:
     const Matrix &matrix;
     mutable typename IntArrayProvider::IntArray used;
 };
-
-template<class M, class I>
-const int DfsCounterImpl<M, I>::DELTAS[8][2] =
-    {
-        {-1, -1},
-        {-1, 0},
-        {-1, 1},
-        {0, 1},
-        {1, 1},
-        {1, 0},
-        {1, -1},
-        {0, -1}
-    };
 
 template<class IntArrayProvider=IntVectorProvider>
 class DfsCounter

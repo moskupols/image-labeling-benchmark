@@ -1,6 +1,6 @@
 #include "benchmark/benchmark_api.h"
 
-#include "counter.h"
+#include "profile_counter.h"
 #include "dfs_counter.h"
 #include "int_array.h"
 #include "matrix.h"
@@ -81,11 +81,11 @@ void BM(benchmark::State& state)
     INSTANTIATE_RANDOM_TEST(m, r, c, s, 50); \
     INSTANTIATE_RANDOM_TEST(m, r, c, s, 80);
 
-INSTANTIATE_RANDOM_TEST_W_DENSITIES(VectorMatrix, 200, 600, 0);
-INSTANTIATE_RANDOM_TEST_W_DENSITIES(VectorMatrix, 600, 200, 1);
-INSTANTIATE_RANDOM_TEST_W_DENSITIES(VectorMatrix, 500, 500, 2);
-INSTANTIATE_RANDOM_TEST_W_DENSITIES(VectorMatrix, 10, 10000, 3);
-INSTANTIATE_RANDOM_TEST_W_DENSITIES(VectorMatrix, 10000, 10, 4);
+INSTANTIATE_RANDOM_TEST_3_DENSITIES(VectorMatrix, 200, 600, 0);
+INSTANTIATE_RANDOM_TEST_3_DENSITIES(VectorMatrix, 600, 200, 1);
+INSTANTIATE_RANDOM_TEST_3_DENSITIES(VectorMatrix, 500, 500, 2);
+INSTANTIATE_RANDOM_TEST_3_DENSITIES(VectorMatrix, 10, 10000, 3);
+INSTANTIATE_RANDOM_TEST_3_DENSITIES(VectorMatrix, 10000, 10, 4);
 
 BENCHMARK_MAIN();
 

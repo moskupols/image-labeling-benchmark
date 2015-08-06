@@ -3,7 +3,7 @@
 #include "gtest/gtest.h"
 
 #include "matrix.h"
-#include "counter.h"
+#include "profile_counter.h"
 #include "dfs_counter.h"
 #include "int_array.h"
 #include "testgen.h"
