@@ -3,9 +3,9 @@
 
 #include <cstddef>
 
-// DSU, as described p.e. at
+// DSU, as described at
 // https://en.wikipedia.org/wiki/Disjoint-set_data_structure
-// and in the book by T. Cormen et al.
+// and in the book by T. H. Cormen et al.
 class DisjointSetUnion
 {
 public:

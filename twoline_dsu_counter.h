@@ -14,7 +14,7 @@ public:
     {
         int rows = m.getMatrixHeight();
         int cols = m.getMatrixWidth();
-        int maxId = cols * 2;
+        int maxId = (cols+1) / 2;
 
         DisjointSetUnion dsu = DisjointSetUnion(maxId+1);
 
@@ -33,20 +33,28 @@ public:
             for (int c = 0; c < cols; ++c)
                 if (m.getNumber(r, c))
                 {
-                    ++answer;
-                    while (idUsed[numerator])
-                        ++numerator;
-                    mark[1][c] = numerator;
-                    idUsed[numerator++] = true;
+                    int& newMark = mark[1][c];
                     for (auto d : UPPER_DELTAS)
                     {
                         int newRId = 1 + d[0];
                         int newR = r + d[0], newC = c + d[1];
                         if (newR >= 0  // we don't look lower, so newR < rows
                                 && newC >=0 && newC < cols
-                                && mark[newRId][newC]  // mark != 0 <=> getNumber(r, c)
-                                && dsu.join(mark[newRId][newC], mark[1][c]))
-                            --answer;
+                                && mark[newRId][newC])  // mark != 0 <=> getNumber(r, c)
+                        {
+                            if (!newMark)
+                                newMark = mark[newRId][newC];
+                            else if (dsu.join(mark[newRId][newC], newMark))
+                                --answer;
+                        }
+                    }
+                    if (!newMark)
+                    {
+                        ++answer;
+                        while (idUsed[numerator])
+                            ++numerator;
+                        newMark = numerator;
+                        idUsed[numerator++] = true;
                     }
                 }
 
