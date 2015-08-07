@@ -66,12 +66,13 @@ void BM(benchmark::State& state)
     BENCHMARK_TEMPLATE(BM, DfsCounter<IntArrayProvider>, test); \
     BENCHMARK_TEMPLATE(BM, DfsCounter<UniqueIntArrayProvider>, test); \
     BENCHMARK_TEMPLATE(BM, DfsCounter<IntVectorProvider>, test); \
-    BENCHMARK_TEMPLATE(BM, ProfileCounter<IntArrayProvider>, test); \
-    BENCHMARK_TEMPLATE(BM, ProfileCounter<UniqueIntArrayProvider>, test); \
-    BENCHMARK_TEMPLATE(BM, ProfileCounter<IntVectorProvider>, test); \
     BENCHMARK_TEMPLATE(BM, DsuCounter, test); \
     BENCHMARK_TEMPLATE(BM, TwolineDsuCounter, test);
-
+   /*
+    * BENCHMARK_TEMPLATE(BM, ProfileCounter<IntArrayProvider>, test); \
+    * BENCHMARK_TEMPLATE(BM, ProfileCounter<UniqueIntArrayProvider>, test); \
+    * BENCHMARK_TEMPLATE(BM, ProfileCounter<IntVectorProvider>, test);
+    */
 
 #define INSTANTIATE_TEST(test) \
     volatile test test##_singleton; \

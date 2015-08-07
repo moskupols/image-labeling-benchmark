@@ -16,8 +16,8 @@ using namespace std;
 // http://code.google.com/p/googletest/wiki/V1_7_AdvancedGuide#Typed_Tests
 
 typedef testing::Types<
-    ProfileCounter<>, ProfileCounter<IntArrayProvider>,
-    ProfileCounter<UniqueIntArrayProvider>,
+    // ProfileCounter<>, ProfileCounter<IntArrayProvider>,
+    // ProfileCounter<UniqueIntArrayProvider>,
     DfsCounter<>, DfsCounter<IntArrayProvider>,
     DfsCounter<UniqueIntArrayProvider>,
     DsuCounter,

@@ -42,7 +42,7 @@ public:
                     {
                         int newRId = 1 + d[0];
                         int newR = r + d[0], newC = c + d[1];
-                        if (newR >= 0  // we don't look lower
+                        if (newR >= 0  // we don't look lower, so newR < rows
                                 && newC >=0 && newC < cols
                                 && mark[newRId][newC]  // mark != 0 <=> getNumber(r, c)
                                 && dsu.join(mark[newRId][newC], mark[1][c]))

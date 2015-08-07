@@ -54,7 +54,6 @@ protected:
     }
 
 private:
-    mutable int timer;
     const int rows, cols;
     const Matrix &matrix;
     mutable typename IntArrayProvider::IntArray used;
