@@ -1,12 +1,13 @@
 CC=g++
 COMMON_FLAGS = -Wall -Wextra --std=c++11 -fstack-protector -fsanitize=address -fsanitize=undefined
-COMMON_FLAGS += -Icounters
+COMMON_FLAGS += -Icounters -I.
 
 D_FLAGS=$(COMMON_FLAGS) -O0 -ggdb
 R_FLAGS=$(COMMON_FLAGS) -O3
 
 GTEST_FLAGS=-lgtest_main -lgtest -pthread
 BENCH_FLAGS=-lbenchmark -pthread
+CIMG_FLAGS=-lX11 -pthread
 
 SOURCES = counters/* utils/testgen.h
 COMPILED_SOURCES = counters/*.cxx
@@ -40,8 +41,8 @@ bench: benchmark
 	$(ULIMITED) $(BUILD_DIR)/benchmark --benchmark_filter='$(BENCH_FILTER)'
 
 benchmark: $(BUILD_DIR)/benchmark
-$(BUILD_DIR)/benchmark: benchmark.cxx $(SOURCES)
-	$(CC) $(R_FLAGS) benchmark.cxx $(BENCH_FLAGS) $(COMPILED_SOURCES) -o $@
+$(BUILD_DIR)/benchmark: benchmarks/* $(SOURCES)
+	$(CC) benchmarks/*.cxx $(COMPILED_SOURCES) $(R_FLAGS) $(CIMG_FLAGS) $(BENCH_FLAGS) -o $@
 
 report: $(REPORT_FILE)
 
