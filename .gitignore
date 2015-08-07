@@ -1,6 +1,4 @@
 *.swp
-main
-benchmark
-*-test
+build/
 report.csv
 

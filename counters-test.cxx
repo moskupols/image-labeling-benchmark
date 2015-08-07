@@ -9,7 +9,7 @@
 #include "dsu_counter.h"
 #include "twoline_dsu_counter.h"
 #include "int_array.h"
-#include "testgen.h"
+#include "utils/testgen.h"
 
 using namespace std;
 

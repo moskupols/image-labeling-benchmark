@@ -7,7 +7,7 @@
 #include "twoline_dsu_counter.h"
 #include "int_array.h"
 #include "matrix.h"
-#include "testgen.h"
+#include "utils/testgen.h"
 
 using namespace std;
 
