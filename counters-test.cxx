@@ -5,6 +5,7 @@
 #include "matrix.h"
 #include "profile_counter.h"
 #include "dfs_counter.h"
+#include "stack_dfs_counter.h"
 #include "dsu_counter.h"
 #include "twoline_dsu_counter.h"
 #include "int_array.h"
@@ -20,6 +21,7 @@ typedef testing::Types<
     // ProfileCounter<UniqueIntArrayProvider>,
     DfsCounter<>, DfsCounter<IntArrayProvider>,
     DfsCounter<UniqueIntArrayProvider>,
+    StackDfsCounter<>,
     DsuCounter,
     TwolineDsuCounter>
         TestedCounters;
@@ -110,7 +112,7 @@ public:
         TestedCounter tested;
         RandomMatrixGenerator<VectorMatrix> gen(seed);
         const VectorMatrix m = gen.nextNotLargerThan(maxSize);
-        EXPECT_EQ(exemplary.getComponentsCount(m), tested.getComponentsCount(m));
+        ASSERT_EQ(exemplary.getComponentsCount(m), tested.getComponentsCount(m));
     }
 
     void randomTestBatch(size_t count, size_t maxSize)

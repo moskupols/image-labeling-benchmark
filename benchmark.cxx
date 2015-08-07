@@ -2,6 +2,7 @@
 
 #include "profile_counter.h"
 #include "dfs_counter.h"
+#include "stack_dfs_counter.h"
 #include "dsu_counter.h"
 #include "twoline_dsu_counter.h"
 #include "int_array.h"
@@ -66,6 +67,7 @@ void BM(benchmark::State& state)
     BENCHMARK_TEMPLATE(BM, DfsCounter<IntArrayProvider>, test); \
     BENCHMARK_TEMPLATE(BM, DfsCounter<UniqueIntArrayProvider>, test); \
     BENCHMARK_TEMPLATE(BM, DfsCounter<IntVectorProvider>, test); \
+    BENCHMARK_TEMPLATE(BM, StackDfsCounter<StdIntStackFactory>, test); \
     BENCHMARK_TEMPLATE(BM, DsuCounter, test); \
     BENCHMARK_TEMPLATE(BM, TwolineDsuCounter, test);
    /*

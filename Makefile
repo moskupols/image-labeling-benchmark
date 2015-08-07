@@ -8,12 +8,12 @@ GTEST_FLAGS=-lgtest_main -lgtest -pthread
 BENCH_FLAGS=-lbenchmark -pthread
 
 SOURCES = matrix.* int_array.* profile_counter.h dfs_counter.h dsu.* dsu_counter.h
-SOURCES += testgen.h counters_common.* twoline_dsu_counter.h
-COMPILED_SOURCES=matrix.cxx int_array.cxx counters_common.cxx dsu.cxx
+SOURCES += testgen.h counters_common.* twoline_dsu_counter.h stack_dfs_counter.*
+COMPILED_SOURCES = matrix.cxx int_array.cxx counters_common.cxx dsu.cxx
 
 ULIMITED=ulimit -s 6100500 &&
 
-BENCH_FILTER=DsuCounter|<IntArray
+BENCH_FILTER=Dsu|Stack|<IntArray
 REPORT_FILE=report.csv
 
 run: main
