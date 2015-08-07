@@ -41,6 +41,25 @@ DisjointSetUnion::elem_t DisjointSetUnion::getRepresentative(elem_t v) const
         return v;
     else
         return parent[v] = getRepresentative(parent[v]);  // path compression
+
+    // Following non-recursive code is the fastest I can write, but still
+    // a little slower than that recursive beauty
+    //
+    // static elem_t st[10];
+    // if (parent[v] == FICTION)
+        // return v;
+    // int sz = 0;
+    // st[sz++] = v;
+    // v = parent[v];
+    // while (parent[v] != FICTION)
+    // {
+        // st[sz++] = v;
+        // v = parent[v];
+    // }
+    // elem_t ret = v;
+    // for (int i = 0; i < sz; ++i)
+        // parent[st[i]] = ret;
+    // return ret;
 }
 
 void DisjointSetUnion::reset()
