@@ -16,7 +16,10 @@ BUILD_DIR ?= build
 
 ULIMITED=ulimit -s 6100500 &&
 
-BENCH_FILTER=Dsu|Stack|<IntArray
+BENCH_FILTER=(Dsu|Stack|<IntArray)
+BENCH_RANDOM_FILTER=$(BENCH_FILTER).*RANDOM
+BENCH_IMAGE_FILTER=$(BENCH_FILTER).*IMAGE
+
 REPORT_FILE=report.csv
 
 run: main
@@ -39,6 +42,12 @@ $(BUILD_DIR)/counters-test: counters-test.cxx $(SOURCES)
 
 bench: benchmark
 	$(ULIMITED) $(BUILD_DIR)/benchmark --benchmark_filter='$(BENCH_FILTER)'
+
+bench-random: benchmark
+	$(ULIMITED) $(BUILD_DIR)/benchmark --benchmark_filter='$(BENCH_RANDOM_FILTER)'
+
+bench-image: benchmark
+	$(ULIMITED) $(BUILD_DIR)/benchmark --benchmark_filter='$(BENCH_IMAGE_FILTER)'
 
 benchmark: $(BUILD_DIR)/benchmark
 $(BUILD_DIR)/benchmark: benchmarks/* $(SOURCES)
