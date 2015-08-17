@@ -3,40 +3,9 @@
 
 using namespace std;
 
-template<class M, size_t ROWS, size_t COLS, int SEED=0, int DENSITY=50>
-class StaticRandomTest
-{
-public:
-    typedef M Matrix;
-
-    StaticRandomTest():
-        m(gen())
-    {
-        assert(!singleton);
-        singleton = this;
-    }
-
-    static const Matrix& get()
-    {
-        return singleton->m;
-    }
-
-protected:
-    static StaticRandomTest<Matrix, ROWS, COLS, SEED, DENSITY>* singleton;
-
-    static Matrix gen()
-    {
-        RandomMatrixGenerator<Matrix> g(SEED);
-        return g.nextWithDensity(ROWS, COLS, DENSITY / 100.);
-    }
-
-private:
-    const Matrix m;
-};
-
 template<class M, size_t ROWS, size_t COLS, int SEED, int DENSITY>
-StaticRandomTest<M, ROWS, COLS, SEED, DENSITY>*
-StaticRandomTest<M, ROWS, COLS, SEED, DENSITY>::singleton = nullptr;
+using StaticRandomTest =
+    Singleton<RandomMatrixGeneratorFunctor<M, ROWS, COLS, SEED, DENSITY>>;
 
 #define INSTANTIATE_RANDOM_TEST(m, r, c, s, d) \
     typedef StaticRandomTest<m, r, c, s, d> RANDOM_##m##_##r##x##c##_##s##_##d; \

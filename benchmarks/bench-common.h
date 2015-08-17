@@ -11,6 +11,8 @@
 #include "int_array.h"
 #include "matrix.h"
 
+#include "utils/singleton.h"
+
 template<class Counter, class Matrix>
 void runTest(benchmark::State& state, const Counter& counter, const Matrix& m)
 {
@@ -24,7 +26,7 @@ template<class Counter, class StaticTest>
 void BM(benchmark::State& state)
 {
     Counter counter;
-    const typename StaticTest::Matrix& m = StaticTest::get();
+    const auto& m = StaticTest::get();
     runTest(state, counter, m);
 }
 

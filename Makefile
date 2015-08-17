@@ -9,8 +9,8 @@ GTEST_FLAGS=-lgtest_main -lgtest -pthread
 BENCH_FLAGS=-lbenchmark -pthread
 CIMG_FLAGS=-lX11 -pthread
 
-SOURCES = counters/* utils/testgen.h
-COMPILED_SOURCES = counters/*.cxx
+SOURCES = counters/* utils/*.h
+COMPILED_SOURCES = counters/*.cxx img/*.cxx
 
 BUILD_DIR ?= build
 

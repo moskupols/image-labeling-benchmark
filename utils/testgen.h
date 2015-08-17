@@ -63,5 +63,16 @@ private:
     std::mt19937 rng;
 };
 
+template<class Matrix, size_t ROWS, size_t COLS, int SEED=1, int DENSITY=50>
+struct RandomMatrixGeneratorFunctor
+{
+public:
+    Matrix operator()() const
+    {
+        RandomMatrixGenerator<Matrix> g(SEED);
+        return g.nextWithDensity(ROWS, COLS, DENSITY / 100.);
+    }
+};
+
 #endif
 
