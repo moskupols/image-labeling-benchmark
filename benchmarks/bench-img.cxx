@@ -1,5 +1,5 @@
-#include "bench-common.h"
-#include "utils/img.h"
+#include "bench-common.hxx"
+#include "utils/img.hxx"
 
 using namespace std;
 

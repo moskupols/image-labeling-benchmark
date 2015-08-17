@@ -1,8 +1,8 @@
 #ifndef DSU_COUNTER_H
 #define DSU_COUNTER_H
 
-#include "counters_common.h"
-#include "dsu.h"
+#include "counters_common.hxx"
+#include "dsu.hxx"
 
 class DsuCounter
 {

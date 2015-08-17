@@ -1,8 +1,8 @@
 #ifndef DFS_COUNTER_H
 #define DFS_COUNTER_H
 
-#include "counters_common.h"
-#include "int_array.h"
+#include "counters_common.hxx"
+#include "int_array.hxx"
 
 template<class Matrix, class IntArrayProvider>
 class DfsCounterImpl

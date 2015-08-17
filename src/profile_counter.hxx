@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "int_array.h"
+#include "int_array.hxx"
 
 template<class IntArrayProvider=IntVectorProvider>
 class ProfileCounter

@@ -4,7 +4,7 @@
 #include <stack>
 #include <cstring>
 
-#include "counters_common.h"
+#include "counters_common.hxx"
 
 class StdIntStackFactory
 {

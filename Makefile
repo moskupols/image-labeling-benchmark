@@ -9,7 +9,7 @@ GTEST_FLAGS=-lgtest_main -lgtest -pthread
 BENCH_FLAGS=-lbenchmark -pthread
 CIMG_FLAGS=-lX11 -pthread
 
-SOURCES = src/* utils/*.h assets
+SOURCES = src/* utils/*.hxx assets
 COMPILED_SOURCES = src/*.cxx
 
 BUILD_DIR ?= build
@@ -47,7 +47,7 @@ benchmark: $(BUILD_DIR)/benchmark
 $(BUILD_DIR)/benchmark: benchmarks/* $(SOURCES) $(BUILD_DIR)/img.o
 	$(CC) benchmarks/*.cxx $(COMPILED_SOURCES) $(BUILD_DIR)/img.o $(R_FLAGS) $(CIMG_FLAGS) $(BENCH_FLAGS) -o $@
 
-$(BUILD_DIR)/img.o: utils/img.h utils/img.cxx
+$(BUILD_DIR)/img.o: utils/img.hxx utils/img.cxx
 	$(CC) -c utils/img.cxx $(R_FLAGS) $(CIMG_FLAGS) -o $@
 
 report: $(REPORT_FILE)

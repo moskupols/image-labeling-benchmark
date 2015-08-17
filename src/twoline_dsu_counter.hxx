@@ -3,8 +3,8 @@
 
 #include <cstring>
 
-#include "counters_common.h"
-#include "dsu.h"
+#include "counters_common.hxx"
+#include "dsu.hxx"
 
 class TwolineDsuCounter
 {

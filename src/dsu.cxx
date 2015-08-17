@@ -1,4 +1,4 @@
-#include "dsu.h"
+#include "dsu.hxx"
 
 #include <cstring>
 #include <algorithm>

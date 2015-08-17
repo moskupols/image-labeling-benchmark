@@ -5,7 +5,7 @@
 
 #include "CImg.h"
 
-#include "img.h"
+#include "img.hxx"
 
 
 const char* imgDirPath = "assets/";

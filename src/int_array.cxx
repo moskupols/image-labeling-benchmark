@@ -2,7 +2,7 @@
 #include <memory>
 #include <cstring>
 
-#include "int_array.h"
+#include "int_array.hxx"
 
 using namespace std;
 

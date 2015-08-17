@@ -1,5 +1,5 @@
-#include "bench-common.h"
-#include "utils/testgen.h"
+#include "bench-common.hxx"
+#include "utils/testgen.hxx"
 
 using namespace std;
 

@@ -1,4 +1,4 @@
-#include "counters_common.h"
+#include "counters_common.hxx"
 
 extern const int UPPER_DELTAS[4][2] =
     {

@@ -1,4 +1,4 @@
-#include "matrix.h"
+#include "matrix.hxx"
 
 #include <cassert>
 #include <algorithm>

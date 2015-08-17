@@ -3,15 +3,15 @@
 
 #include "benchmark/benchmark_api.h"
 
-#include "profile_counter.h"
-#include "dfs_counter.h"
-#include "stack_dfs_counter.h"
-#include "dsu_counter.h"
-#include "twoline_dsu_counter.h"
-#include "int_array.h"
-#include "matrix.h"
+#include "profile_counter.hxx"
+#include "dfs_counter.hxx"
+#include "stack_dfs_counter.hxx"
+#include "dsu_counter.hxx"
+#include "twoline_dsu_counter.hxx"
+#include "int_array.hxx"
+#include "matrix.hxx"
 
-#include "utils/singleton.h"
+#include "utils/singleton.hxx"
 
 template<class Counter, class Matrix>
 void runTest(benchmark::State& state, const Counter& counter, const Matrix& m)
