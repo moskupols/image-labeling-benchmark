@@ -25,16 +25,7 @@ BENCH_IMAGE_FILTER=$(BENCH_COUNTER_FILTER).*IMAGE.*$(BENCH_MATRIX_FILTER)
 
 REPORT_FILE=report.csv
 
-run: main
-	$(BUILD_DIR)/main
-
-main: debug
-
-debug: $(SOURCES)
-	$(CC) $(D_FLAGS) -o $(BUILD_DIR)/main main.cxx $(COMPILED_SOURCES)
-
-release: $(SOURCES) main.cxx
-	$(CC) $(R_FLAGS) -o $(BUILD_DIR)/main main.cxx $(COMPILED_SOURCES)
+default: report
 
 test: counters-test
 	$(ULIMITED) $(BUILD_DIR)/counters-test
