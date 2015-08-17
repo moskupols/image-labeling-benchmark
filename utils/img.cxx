@@ -1,6 +1,6 @@
 #include "img.h"
 
-const char* imgDirPath = "img/";
+const char* imgDirPath = "assets/";
 const char* imgOrder[] =
 {
     "halfcircle.bmp",

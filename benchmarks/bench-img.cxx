@@ -1,5 +1,5 @@
 #include "bench-common.h"
-#include "img/img.h"
+#include "utils/img.h"
 
 using namespace cimg_library;
 using namespace std;
