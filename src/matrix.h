@@ -31,7 +31,6 @@ public:
     IntArrayMatrix(): data(nullptr) {}
     IntArrayMatrix(std::size_t rows, std::size_t cols, int value = 0);
     explicit IntArrayMatrix(const Vectors &data);
-    explicit IntArrayMatrix(Vectors &&data);
 
     ~IntArrayMatrix() { delete[] data; }
 

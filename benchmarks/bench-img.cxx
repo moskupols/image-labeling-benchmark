@@ -1,7 +1,6 @@
 #include "bench-common.h"
 #include "utils/img.h"
 
-using namespace cimg_library;
 using namespace std;
 
 template<class M, size_t IMG_ID>
