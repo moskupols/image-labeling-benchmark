@@ -27,6 +27,8 @@ typedef testing::Types<
         TestedCounters;
 typedef DfsCounter<> ExemplaryCounter;
 
+typedef IntArrayMatrix Matrix;
+
 
 template<class C>
 class CounterSanityTest : public testing::Test
@@ -38,7 +40,7 @@ TYPED_TEST(CounterSanityTest, Trivial)
     for (int i = 0; i < 2; ++i)
     {
         vector<vector<int>> m = {{i}};
-        VectorMatrix matrix(m);
+        Matrix matrix(m);
         TypeParam counter;
         EXPECT_EQ(i, counter.getComponentsCount(matrix));
     }
@@ -78,7 +80,7 @@ TYPED_TEST(CounterSanityTest, Manual)
     };
     for (auto t : tests)
     {
-        VectorMatrix matrix(t.first);
+        Matrix matrix(t.first);
         TypeParam counter;
         EXPECT_EQ(t.second, counter.getComponentsCount(matrix));
     }
@@ -87,7 +89,7 @@ TYPED_TEST(CounterSanityTest, Manual)
 TYPED_TEST(CounterSanityTest, OneColumn)
 {
     vector<vector<int>> m = {{0}, {1}, {0}, {1}};
-    VectorMatrix matrix(m);
+    Matrix matrix(m);
     TypeParam counter;
     EXPECT_EQ(2, counter.getComponentsCount(matrix));
 }
@@ -95,7 +97,7 @@ TYPED_TEST(CounterSanityTest, OneColumn)
 TYPED_TEST(CounterSanityTest, OneRow)
 {
     vector<vector<int>> m = {{0, 1, 0, 1}};
-    VectorMatrix matrix(m);
+    Matrix matrix(m);
     TypeParam counter;
     EXPECT_EQ(2, counter.getComponentsCount(matrix));
 }
@@ -110,8 +112,8 @@ public:
         SCOPED_TRACE(seed);
         ExemplaryCounter exemplary;
         TestedCounter tested;
-        RandomMatrixGenerator<VectorMatrix> gen(seed);
-        const VectorMatrix m = gen.nextNotLargerThan(maxSize);
+        RandomMatrixGenerator<Matrix> gen(seed);
+        const Matrix m = gen.nextNotLargerThan(maxSize);
         ASSERT_EQ(exemplary.getComponentsCount(m), tested.getComponentsCount(m));
     }
 

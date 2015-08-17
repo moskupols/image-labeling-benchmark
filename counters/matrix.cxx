@@ -1,37 +1,26 @@
 #include "matrix.h"
 
 #include <cassert>
-
-VectorMatrix::VectorMatrix():
-    data()
-{}
+#include <algorithm>
 
 VectorMatrix::VectorMatrix(int rows, int cols, int value):
     data(rows, vector<int>(cols, value))
 {}
 
-VectorMatrix::VectorMatrix(Vectors data):
-    data(data)
-{}
-
-VectorMatrix::VectorMatrix(Vectors &&data):
-    data(data)
-{}
-
-int VectorMatrix::getMatrixWidth() const
+IntArrayMatrix::IntArrayMatrix(std::size_t rows, std::size_t cols, int value):
+    height(rows),
+    width(cols),
+    data(rows && cols ? new int[rows * cols] : nullptr)
 {
-    return data[0].size();
+    std::fill(data, data + rows * cols, value);
 }
 
-int VectorMatrix::getMatrixHeight() const
+IntArrayMatrix::IntArrayMatrix(const IntArrayMatrix::Vectors &v):
+    height(v.size()),
+    width(height ? v[0].size() : 0),
+    data(height && width ? new int[height * width] : nullptr)
 {
-    return data.size();
-}
-
-int VectorMatrix::getNumber(int row, int col) const
-{
-    assert(row >= 0 && row < getMatrixHeight());
-    assert(col >= 0 && col < getMatrixWidth());
-    return data[row][col];
+    for (std::size_t i = 0; i < height; ++i)
+        copy(v[i].begin(), v[i].end(), data + i * width);
 }
 
