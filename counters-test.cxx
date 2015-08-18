@@ -19,8 +19,7 @@ using namespace std;
 typedef testing::Types<
     // ProfileCounter<>, ProfileCounter<IntArrayProvider>,
     // ProfileCounter<UniqueIntArrayProvider>,
-    DfsCounter<>, DfsCounter<IntArrayProvider>,
-    DfsCounter<UniqueIntArrayProvider>,
+    DfsCounter<>,
     StackDfsCounter<>,
     DsuCounter,
     TwolineDsuCounter>

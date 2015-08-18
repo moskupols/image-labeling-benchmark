@@ -1,72 +1,56 @@
 #ifndef DFS_COUNTER_HXX
 #define DFS_COUNTER_HXX
 
-#include "counters_common.hxx"
 #include "int_array.hxx"
+#include "grid.hxx"
 
-template<class Matrix, class IntArrayProvider>
-class DfsCounterImpl
+template<class Matrix, class Grid>
+class DfsCellVisitor
 {
 public:
-    explicit DfsCounterImpl(const Matrix &matrix):
-        rows(matrix.getMatrixHeight()),
-        cols(matrix.getMatrixWidth()),
-        matrix(matrix)
+    DfsCellVisitor(Matrix &used, const Grid &grid):
+        used(used),
+        grid(grid)
     {}
 
-    int getComponentsCount() const
+    void operator()(std::size_t, std::size_t, std::size_t r, std::size_t c)
     {
-        IntArrayProvider provider;
-        used = provider.create(rows * cols);
-        int ans = 0;
-        for (int i = 0; i < rows * cols; ++i)
-        {
-            if (used[i])
-                continue;
-            int r = i / cols, c = i % cols;
-            if (matrix.getNumber(r, c))
-            {
-                ++ans;
-                paint(r, c);
-            }
-        }
-        provider.destroy(used);
-        return ans;
-    }
-
-protected:
-    inline bool isOk(int r, int c) const
-    {
-        return r >= 0 && c >= 0 && r < rows && c < cols;
-    }
-
-    inline void paint(int r, int c) const
-    {
-        int v = r * cols + c;
-        used[v] = 1;
-        for (auto d : DELTAS)
-        {
-            int newR = r + d[0], newC = c + d[1];
-            int u = v + d[0] * cols + d[1];
-            if (isOk(newR, newC) && !used[u] && matrix.getNumber(newR, newC))
-                paint(newR, newC);
-        }
+        if (used.getNumber(r, c))
+            return;
+        used.setNumber(r, c, 1);
+        grid.forEachNeighbor(r, c, *this);
     }
 
 private:
-    const int rows, cols;
-    const Matrix &matrix;
-    mutable typename IntArrayProvider::IntArray used;
+    Matrix &used;
+    const Grid &grid;
 };
 
-template<class IntArrayProvider=IntVectorProvider>
+template<template<class> class Grid=SimpleGrid>
 class DfsCounter
 {
 public:
     template<class Matrix>
     static int getComponentsCount(const Matrix &m)
     {
-        return DfsCounterImpl<Matrix, IntArrayProvider>(m).getComponentsCount();
+        const Grid<Matrix> grid(m);
+
+        std::size_t rows = grid.rows(), cols = grid.cols();
+
+        Matrix used(rows, cols, 0);
+        DfsCellVisitor<Matrix, Grid<Matrix>> visit(used, grid);
+
+        int ans = 0;
+        for (std::size_t r = 0; r < rows; ++r)
+            for (std::size_t c = 0; c < cols; ++c)
+            {
+                if (m.getNumber(r, c) && !used.getNumber(r, c))
+                {
+                    ++ans;
+                    visit(0, 0, r, c);
+                }
+            }
+        return ans;
     }
 };
 

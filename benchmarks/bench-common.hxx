@@ -8,7 +8,6 @@
 #include "stack_dfs_counter.hxx"
 #include "dsu_counter.hxx"
 #include "twoline_dsu_counter.hxx"
-#include "int_array.hxx"
 #include "matrix.hxx"
 
 #include "utils/singleton.hxx"
@@ -31,17 +30,10 @@ void BM(benchmark::State& state)
 }
 
 #define BENCH_ALL(test) \
-    BENCHMARK_TEMPLATE(BM, DfsCounter<IntArrayProvider>, test); \
-    BENCHMARK_TEMPLATE(BM, DfsCounter<UniqueIntArrayProvider>, test); \
-    BENCHMARK_TEMPLATE(BM, DfsCounter<IntVectorProvider>, test); \
+    BENCHMARK_TEMPLATE(BM, DfsCounter<>, test); \
     BENCHMARK_TEMPLATE(BM, StackDfsCounter<StdIntStackFactory>, test); \
     BENCHMARK_TEMPLATE(BM, DsuCounter, test); \
     BENCHMARK_TEMPLATE(BM, TwolineDsuCounter, test);
-   /*
-    * BENCHMARK_TEMPLATE(BM, ProfileCounter<IntArrayProvider>, test); \
-    * BENCHMARK_TEMPLATE(BM, ProfileCounter<UniqueIntArrayProvider>, test); \
-    * BENCHMARK_TEMPLATE(BM, ProfileCounter<IntVectorProvider>, test);
-    */
 
 #define INSTANTIATE_TEST(test) \
     volatile test test##_singleton; \

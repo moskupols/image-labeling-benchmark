@@ -18,6 +18,7 @@ public:
     int getMatrixWidth() const { return data[0].size(); }
     int getMatrixHeight() const { return data.size(); }
     int getNumber(int row, int col) const { return data[row][col]; }
+    void setNumber(int row, int col, int value) { data[row][col] = value; }
 
 private:
     Vectors data;
@@ -37,6 +38,7 @@ public:
     int getMatrixWidth() const { return width; }
     int getMatrixHeight() const { return height; }
     int getNumber(int row, int col) const { return data[row * width + col]; }
+    void setNumber(int row, int col, int value) { data[row * width + col] = value; }
 
 private:
     std::size_t height, width;
