@@ -1,5 +1,5 @@
-#ifndef INT_ARRAY_H
-#define INT_ARRAY_H
+#ifndef INT_ARRAY_HXX
+#define INT_ARRAY_HXX
 
 #include <vector>
 #include <cstring>

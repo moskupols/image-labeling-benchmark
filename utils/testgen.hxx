@@ -1,5 +1,5 @@
-#ifndef TESTGEN_H
-#define TESTGEN_H
+#ifndef TESTGEN_HXX
+#define TESTGEN_HXX
 
 #include <random>
 #include <vector>

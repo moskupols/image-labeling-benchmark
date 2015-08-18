@@ -1,5 +1,5 @@
-#ifndef DFS_COUNTER_H
-#define DFS_COUNTER_H
+#ifndef DFS_COUNTER_HXX
+#define DFS_COUNTER_HXX
 
 #include "counters_common.hxx"
 #include "int_array.hxx"

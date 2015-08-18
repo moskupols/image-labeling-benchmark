@@ -1,5 +1,5 @@
-#ifndef BENCH_COMMON_H
-#define BENCH_COMMON_H
+#ifndef BENCH_COMMON_HXX
+#define BENCH_COMMON_HXX
 
 #include "benchmark/benchmark_api.h"
 

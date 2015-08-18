@@ -1,5 +1,5 @@
-#ifndef COUNTER_H
-#define COUNTER_H
+#ifndef COUNTER_HXX
+#define COUNTER_HXX
 
 #include <vector>
 

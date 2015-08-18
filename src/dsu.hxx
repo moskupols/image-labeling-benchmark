@@ -1,5 +1,5 @@
-#ifndef DSU_H
-#define DSU_H
+#ifndef DSU_HXX
+#define DSU_HXX
 
 #include <cstddef>
 

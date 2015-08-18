@@ -1,5 +1,5 @@
-#ifndef SINGLETON_H
-#define SINGLETON_H
+#ifndef SINGLETON_HXX
+#define SINGLETON_HXX
 
 template<class Initializer>
 class Singleton

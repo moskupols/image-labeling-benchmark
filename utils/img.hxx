@@ -1,5 +1,5 @@
-#ifndef IMG_H
-#define IMG_H
+#ifndef IMG_HXX
+#define IMG_HXX
 
 #include <vector>
 

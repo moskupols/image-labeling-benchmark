@@ -1,5 +1,5 @@
-#ifndef DSU_COUNTER_H
-#define DSU_COUNTER_H
+#ifndef DSU_COUNTER_HXX
+#define DSU_COUNTER_HXX
 
 #include "counters_common.hxx"
 #include "dsu.hxx"
