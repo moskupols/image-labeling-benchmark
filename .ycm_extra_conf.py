@@ -25,7 +25,7 @@ flags = [
     '-x',
     'c++',
     '-I.',
-    '-Icounters'
+    '-Isrc'
 ]
 
 
