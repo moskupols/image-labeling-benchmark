@@ -46,9 +46,9 @@ def update_best(runs, filepath):
 
     for r in runs:
         t = r['test_signature']
-        if t not in best_runs or best_runs[t]['time'] > r['real time ms']:
+        if t not in best_runs or best_runs[t]['time'] > r['cpu time ms'] * 1.2:
             best_runs[t] = {
-                'time': r['real time ms'],
+                'time': r['cpu time ms'],
                 'counter_signature': r['counter_signature'],
             }
     with open(filepath, 'w') as fout:

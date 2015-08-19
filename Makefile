@@ -52,12 +52,14 @@ $(BUILD_DIR)/img.o: utils/img.hxx utils/img.cxx
 
 report: $(REPORT_FILE)
 
-$(REPORT_FILE): utils/report.py benchmark
-	$(ULIMITED) $(BUILD_DIR)/benchmark --benchmark_format=json --benchmark_filter='$(BENCH_FILTER)' | utils/report.py >$@
+$(REPORT_FILE): bench.json
+	utils/report.py <$< >$@
 
-update-best:
-	$(ULIMITED) $(BUILD_DIR)/benchmark --benchmark_format=json --benchmark_filter='$(BENCH_FILTER)' | utils/report.py --update-best >$(REPORT_FILE)
-	git add best.json
+bench.json: utils/report.py $(BUILD_DIR)/benchmark
+	$(ULIMITED) $(BUILD_DIR)/benchmark --benchmark_format=json --benchmark_filter='$(BENCH_FILTER)' >$@
+
+update-best: bench.json
+	utils/report.py --update-best <$< >/dev/null
 
 clean:
 	rm -f $(BUILD_DIR)/{img.o,benchmark,counters-test} $(REPORT_FILE)
