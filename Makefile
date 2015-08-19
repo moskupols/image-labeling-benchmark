@@ -55,6 +55,10 @@ report: $(REPORT_FILE)
 $(REPORT_FILE): utils/report.py benchmark
 	$(ULIMITED) $(BUILD_DIR)/benchmark --benchmark_format=json --benchmark_filter='$(BENCH_FILTER)' | utils/report.py >$@
 
+update-best:
+	$(ULIMITED) $(BUILD_DIR)/benchmark --benchmark_format=json --benchmark_filter='$(BENCH_FILTER)' | utils/report.py --update-best >$(REPORT_FILE)
+	git add best.json
+
 clean:
 	rm -f $(BUILD_DIR)/{img.o,benchmark,counters-test} $(REPORT_FILE)
 

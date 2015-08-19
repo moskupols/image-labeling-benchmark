@@ -56,8 +56,7 @@ def update_best(runs, filepath):
 
 if __name__ == '__main__':
     runs = read_benchmarks_json()
-    if '--pre-commit' in sys.argv:
+    if '--update-best' in sys.argv:
         update_best(runs, 'best.json')
-    else:
-        write_benchmarks_csv(runs)
+    write_benchmarks_csv(runs)
 
