@@ -36,10 +36,8 @@ class TwolineDsuCounter
 {
 public:
     template<class Matrix>
-    static int getComponentsCount(const Matrix &m)
+    static int getComponentsCount(const Grid<Matrix> &grid)
     {
-        const Grid<Matrix> grid(m);
-
         int rows = grid.rows();
         int cols = grid.cols();
         int maxId = (cols+1) / 2;
@@ -62,7 +60,7 @@ public:
         {
             int numerator = 1;
             for (int c = 0; c < cols; ++c)
-                if (m.getNumber(r, c))
+                if (grid.getColor(r, c))
                 {
                     newMark = 0;
                     grid.forEachUpperNeighbor(r, c, visit);
@@ -89,6 +87,12 @@ public:
         delete[] mark[1];
 
         return answer;
+    }
+
+    template<class Matrix>
+    static int getComponentsCount(const Matrix &m)
+    {
+        return getComponentsCount(Grid<Matrix>(m));
     }
 };
 

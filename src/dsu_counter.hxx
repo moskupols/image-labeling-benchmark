@@ -32,10 +32,8 @@ class DsuCounter
 {
 public:
     template<class Matrix>
-    static int getComponentsCount(const Matrix &m)
+    static int getComponentsCount(const Grid<Matrix> &grid)
     {
-        const Grid<Matrix> grid(m);
-
         int rows = grid.rows();
         int cols = grid.cols();
 
@@ -47,13 +45,19 @@ public:
         for (int r = 0; r < rows; ++r)
             for (int c = 0; c < cols; ++c)
             {
-                if (m.getNumber(r, c))
+                if (grid.getColor(r, c))
                 {
                     ++answer;
                     grid.forEachUpperNeighbor(r, c, visit);
                 }
             }
         return answer;
+    }
+
+    template<class Matrix>
+    static int getComponentsCount(const Matrix &m)
+    {
+        return getComponentsCount(Grid<Matrix>(m));
     }
 };
 

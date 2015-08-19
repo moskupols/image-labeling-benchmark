@@ -47,10 +47,8 @@ class StackDfsCounter
 {
 public:
     template<class Matrix>
-    static int getComponentsCount(const Matrix& m)
+    static int getComponentsCount(const Grid<Matrix>& grid)
     {
-        const Grid<Matrix> grid(m);
-
         int rows = grid.rows();
         int cols = grid.cols();
 
@@ -65,7 +63,7 @@ public:
         int answer = 0;
         for (int r = 0; r < rows; ++r)
             for (int c = 0; c < cols; ++c)
-                if (m.getNumber(r, c) && !used.getNumber(r, c))
+                if (grid.getColor(r, c) && !used.getNumber(r, c))
                 {
                     ++answer;
 
@@ -81,6 +79,12 @@ public:
                     }
                 }
         return answer;
+    }
+
+    template<class Matrix>
+    static int getComponentsCount(const Matrix &m)
+    {
+        return getComponentsCount(Grid<Matrix>(m));
     }
 };
 

@@ -30,10 +30,8 @@ class DfsCounter
 {
 public:
     template<class Matrix>
-    static int getComponentsCount(const Matrix &m)
+    static int getComponentsCount(const Grid<Matrix> &grid)
     {
-        const Grid<Matrix> grid(m);
-
         std::size_t rows = grid.rows(), cols = grid.cols();
 
         Matrix used(rows, cols, 0);
@@ -43,13 +41,19 @@ public:
         for (std::size_t r = 0; r < rows; ++r)
             for (std::size_t c = 0; c < cols; ++c)
             {
-                if (m.getNumber(r, c) && !used.getNumber(r, c))
+                if (grid.getColor(r, c) && !used.getNumber(r, c))
                 {
                     ++ans;
                     visit(0, 0, r, c);
                 }
             }
         return ans;
+    }
+
+    template<class Matrix>
+    static int getComponentsCount(const Matrix &m)
+    {
+        return getComponentsCount(Grid<Matrix>(m));
     }
 };
 
