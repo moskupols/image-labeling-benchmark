@@ -3,17 +3,45 @@
 
 #include <cstring>
 
-#include "counters_common.hxx"
+#include "grid.hxx"
 #include "dsu.hxx"
 
+class TwolineDsuCellVisitor
+{
+public:
+    TwolineDsuCellVisitor(int &newMark, int* mark[2], int& answer, DisjointSetUnion& dsu):
+        newMark(newMark),
+        mark(mark),
+        answer(answer),
+        dsu(dsu)
+    {}
+
+    void operator()(std::size_t x, std::size_t, std::size_t r, std::size_t c)
+    {
+        if (!newMark)
+            newMark = mark[1+r-x][c];
+        else if (dsu.join(mark[1+r-x][c], newMark))
+            --answer;
+    }
+
+private:
+    int& newMark;
+    int** mark;
+    int& answer;
+    DisjointSetUnion& dsu;
+};
+
+template<template<class> class Grid=SimpleGrid>
 class TwolineDsuCounter
 {
 public:
     template<class Matrix>
     static int getComponentsCount(const Matrix &m)
     {
-        int rows = m.getMatrixHeight();
-        int cols = m.getMatrixWidth();
+        const Grid<Matrix> grid(m);
+
+        int rows = grid.rows();
+        int cols = grid.cols();
         int maxId = (cols+1) / 2;
 
         DisjointSetUnion dsu = DisjointSetUnion(maxId+1);
@@ -26,6 +54,9 @@ public:
         memset(mark[1], 0, cols * sizeof(int));
 
         int answer = 0;
+        int newMark;
+
+        TwolineDsuCellVisitor visit(newMark, mark, answer, dsu);
 
         for (int r = 0; r < rows; ++r)
         {
@@ -33,21 +64,8 @@ public:
             for (int c = 0; c < cols; ++c)
                 if (m.getNumber(r, c))
                 {
-                    int& newMark = mark[1][c];
-                    for (auto d : UPPER_DELTAS)
-                    {
-                        int newRId = 1 + d[0];
-                        int newR = r + d[0], newC = c + d[1];
-                        if (newR >= 0  // we don't look lower, so newR < rows
-                                && newC >=0 && newC < cols
-                                && mark[newRId][newC])  // mark != 0 <=> getNumber(r, c)
-                        {
-                            if (!newMark)
-                                newMark = mark[newRId][newC];
-                            else if (dsu.join(mark[newRId][newC], newMark))
-                                --answer;
-                        }
-                    }
+                    newMark = 0;
+                    grid.forEachUpperNeighbor(r, c, visit);
                     if (!newMark)
                     {
                         ++answer;
@@ -56,6 +74,7 @@ public:
                         newMark = numerator;
                         idUsed[numerator++] = true;
                     }
+                    mark[1][c] = newMark;
                 }
 
             memset(idUsed, 0, sizeof(idUsed));

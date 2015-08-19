@@ -4,7 +4,7 @@
 #include <stack>
 #include <cstring>
 
-#include "counters_common.hxx"
+#include "grid.hxx"
 
 class StdIntStackFactory
 {
@@ -15,32 +15,61 @@ public:
     }
 };
 
-template<class IntStackFactory=StdIntStackFactory>
+template<class Matrix, class Stack>
+class StackDfsCellVisitor
+{
+public:
+    StackDfsCellVisitor(Matrix &used, Stack &rowStack, Stack &colStack):
+        used(used),
+        rowStack(rowStack),
+        colStack(colStack)
+    {}
+
+    void operator()(std::size_t, std::size_t, std::size_t r, std::size_t c)
+    {
+        if (used.getNumber(r, c))
+            return;
+        used.setNumber(r, c, 1);
+        rowStack.push(r);
+        colStack.push(c);
+    }
+private:
+    Matrix &used;
+    Stack &rowStack, &colStack;
+};
+
+
+template<
+    class IntStackFactory=StdIntStackFactory,
+    template<class> class Grid=SimpleGrid
+>
 class StackDfsCounter
 {
 public:
     template<class Matrix>
     static int getComponentsCount(const Matrix& m)
     {
-        int rows = m.getMatrixHeight();
-        int cols = m.getMatrixWidth();
+        const Grid<Matrix> grid(m);
+
+        int rows = grid.rows();
+        int cols = grid.cols();
 
         auto rowStack = IntStackFactory::create(rows * cols);
         auto colStack = IntStackFactory::create(rows * cols);
 
-        bool used[rows][cols];
-        memset(used, 0, sizeof used);
+        Matrix used(rows, cols, 0);
+
+        StackDfsCellVisitor<Matrix, decltype(rowStack)>
+            visit(used, rowStack, colStack);
 
         int answer = 0;
         for (int r = 0; r < rows; ++r)
             for (int c = 0; c < cols; ++c)
-                if (m.getNumber(r, c) && !used[r][c])
+                if (m.getNumber(r, c) && !used.getNumber(r, c))
                 {
                     ++answer;
 
-                    rowStack.push(r);
-                    colStack.push(c);
-                    used[r][c] = true;
+                    visit(0, 0, r, c);
 
                     while (!rowStack.empty())
                     {
@@ -48,19 +77,7 @@ public:
                         rowStack.pop();
                         colStack.pop();
 
-                        for (auto d : DELTAS)
-                        {
-                            int newA = a + d[0], newB = b + d[1];
-                            if (newA >= 0 && newA < rows
-                                    && newB >= 0 && newB < cols
-                                    && !used[newA][newB]
-                                    && m.getNumber(newA, newB))
-                            {
-                                used[newA][newB] = true;
-                                rowStack.push(newA);
-                                colStack.push(newB);
-                            }
-                        }
+                        grid.forEachNeighbor(a, b, visit);
                     }
                 }
         return answer;

@@ -1,38 +1,57 @@
 #ifndef DSU_COUNTER_HXX
 #define DSU_COUNTER_HXX
 
-#include "counters_common.hxx"
+#include "grid.hxx"
 #include "dsu.hxx"
 
+class DsuCellVisitor
+{
+public:
+    DsuCellVisitor(std::size_t cols, int& answer, DisjointSetUnion &dsu):
+        cols(cols),
+        answer(answer),
+        dsu(dsu)
+    {}
+
+    void operator()(std::size_t x, std::size_t y, std::size_t r, std::size_t c)
+    {
+        std::size_t v = x * cols + y;
+        std::size_t u = r * cols + c;
+        if (dsu.join(v, u))
+            --answer;
+    }
+
+private:
+    const std::size_t cols;
+    int &answer;
+    DisjointSetUnion &dsu;
+};
+
+template<template<class> class Grid=SimpleGrid>
 class DsuCounter
 {
 public:
     template<class Matrix>
     static int getComponentsCount(const Matrix &m)
     {
-        int rows = m.getMatrixHeight();
-        int cols = m.getMatrixWidth();
+        const Grid<Matrix> grid(m);
+
+        int rows = grid.rows();
+        int cols = grid.cols();
+
         DisjointSetUnion dsu(rows * cols);
         int answer = 0;
-        int v = 0;
+
+        DsuCellVisitor visit(cols, answer, dsu);
+
         for (int r = 0; r < rows; ++r)
             for (int c = 0; c < cols; ++c)
             {
                 if (m.getNumber(r, c))
                 {
                     ++answer;
-                    for (auto d : UPPER_DELTAS)
-                    {
-                        int newR = r + d[0], newC = c + d[1];
-                        int u = v + d[0] * cols + d[1];
-                        if (newR >= 0  // we don't look lower
-                                && newC >=0 && newC < cols
-                                && m.getNumber(newR, newC)
-                                && dsu.join(v, u))
-                            --answer;
-                    }
+                    grid.forEachUpperNeighbor(r, c, visit);
                 }
-                ++v;
             }
         return answer;
     }

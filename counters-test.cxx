@@ -3,12 +3,11 @@
 #include "gtest/gtest.h"
 
 #include "matrix.hxx"
-#include "profile_counter.hxx"
+// #include "profile_counter.hxx"
 #include "dfs_counter.hxx"
 #include "stack_dfs_counter.hxx"
 #include "dsu_counter.hxx"
 #include "twoline_dsu_counter.hxx"
-#include "int_array.hxx"
 #include "utils/testgen.hxx"
 
 using namespace std;
@@ -21,8 +20,8 @@ typedef testing::Types<
     // ProfileCounter<UniqueIntArrayProvider>,
     DfsCounter<>,
     StackDfsCounter<>,
-    DsuCounter,
-    TwolineDsuCounter>
+    DsuCounter<>,
+    TwolineDsuCounter<>>
         TestedCounters;
 typedef DfsCounter<> ExemplaryCounter;
 

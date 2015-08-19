@@ -3,7 +3,6 @@
 
 #include "benchmark/benchmark_api.h"
 
-#include "profile_counter.hxx"
 #include "dfs_counter.hxx"
 #include "stack_dfs_counter.hxx"
 #include "dsu_counter.hxx"
@@ -32,8 +31,8 @@ void BM(benchmark::State& state)
 #define BENCH_ALL(test) \
     BENCHMARK_TEMPLATE(BM, DfsCounter<>, test); \
     BENCHMARK_TEMPLATE(BM, StackDfsCounter<StdIntStackFactory>, test); \
-    BENCHMARK_TEMPLATE(BM, DsuCounter, test); \
-    BENCHMARK_TEMPLATE(BM, TwolineDsuCounter, test);
+    BENCHMARK_TEMPLATE(BM, DsuCounter<>, test); \
+    BENCHMARK_TEMPLATE(BM, TwolineDsuCounter<>, test);
 
 #define INSTANTIATE_TEST(test) \
     volatile test test##_singleton; \

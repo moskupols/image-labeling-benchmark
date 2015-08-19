@@ -1,7 +1,6 @@
 #ifndef DFS_COUNTER_HXX
 #define DFS_COUNTER_HXX
 
-#include "int_array.hxx"
 #include "grid.hxx"
 
 template<class Matrix, class Grid>
