@@ -32,7 +32,7 @@ test: counters-test
 
 counters-test: $(BUILD_DIR)/counters-test
 $(BUILD_DIR)/counters-test: counters-test.cxx $(SOURCES)
-	$(CC) $(R_FLAGS) counters-test.cxx $(COMPILED_SOURCES) $(GTEST_FLAGS) -o $@
+	$(CC) $(D_FLAGS) counters-test.cxx $(COMPILED_SOURCES) $(GTEST_FLAGS) -o $@
 
 bench: benchmark
 	$(ULIMITED) $(BUILD_DIR)/benchmark --benchmark_filter='$(BENCH_FILTER)'
@@ -52,13 +52,13 @@ $(BUILD_DIR)/img.o: utils/img.hxx utils/img.cxx
 
 report: $(REPORT_FILE)
 
-$(REPORT_FILE): bench.json
+$(REPORT_FILE): bench.json utils/report.py
 	utils/report.py <$< >$@
 
-bench.json: utils/report.py $(BUILD_DIR)/benchmark
+bench.json: $(BUILD_DIR)/benchmark
 	$(ULIMITED) $(BUILD_DIR)/benchmark --benchmark_format=json --benchmark_filter='$(BENCH_FILTER)' >$@
 
-update-best: bench.json
+update-best: bench.json utils/report.py
 	utils/report.py --update-best <$< >/dev/null
 
 clean:
