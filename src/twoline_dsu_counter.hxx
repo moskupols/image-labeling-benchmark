@@ -40,7 +40,11 @@ public:
     {
         int rows = grid.rows();
         int cols = grid.cols();
-        int maxId = (cols+1) / 2;
+        int maxId = cols;
+        if (grid.isDense())
+            maxId = (maxId + 1) / 2;
+        else
+            maxId *= 2;
 
         DisjointSetUnion dsu = DisjointSetUnion(maxId+1);
 

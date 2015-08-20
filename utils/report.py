@@ -7,7 +7,7 @@ import re
 
 NAME_RE = re.compile(
         '^BM<' +
-        '(?P<counter_signature>(?P<counter>\w+)(<(?P<array>\w*)>)?)' +
+        '(?P<counter_signature>(?P<counter>\w+)(<(?P<params>(\w+,\s*))?(?P<grid>\w*)?>)?)' +
         ',\s*' +
         '(?P<test_signature>'
         '(?P<type>\w+?)_(?P<matrix>\w+?)(_(?P<height>\d+)x(?P<width>\d+))?' +
@@ -30,7 +30,7 @@ def read_benchmarks_json(json_file=None):
 def write_benchmarks_csv(runs, csv_file=None):
     csv_file = csv_file or sys.stdout
     writer = csv.DictWriter(csv_file,
-            ['type', 'counter', 'array', 'matrix',
+            ['type', 'counter', 'params', 'grid', 'matrix',
              'height', 'width', 'id', 'cpu time ms'],
             extrasaction='ignore')
     writer.writeheader()

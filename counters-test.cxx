@@ -18,12 +18,13 @@ using namespace std;
 typedef testing::Types<
     // ProfileCounter<>, ProfileCounter<IntArrayProvider>,
     // ProfileCounter<UniqueIntArrayProvider>,
-    DfsCounter<>,
+    DfsCounter<Compressing2x2Grid>,
     StackDfsCounter<>,
-    DsuCounter<>,
-    TwolineDsuCounter<>>
+    StackDfsCounter<StdIntStackFactory, Compressing2x2Grid>,
+    DsuCounter<Compressing2x2Grid>,
+    TwolineDsuCounter<Compressing2x2Grid>>
         TestedCounters;
-typedef DfsCounter<> ExemplaryCounter;
+typedef StackDfsCounter<StdIntStackFactory, Compressing2x2Grid> ExemplaryCounter;
 
 typedef IntArrayMatrix Matrix;
 
