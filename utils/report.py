@@ -37,26 +37,36 @@ def write_benchmarks_csv(runs, csv_file=None):
     for r in runs:
         writer.writerow(r)
 
-def update_best(runs, filepath):
+def choose_best(runs):
+    stripped_runs = [
+        (r['test_signature'],
+           { 'time': r['cpu time ms'],
+             'counter_signature': r['counter_signature']})
+        for r in runs]
+    ret = {}
+    for r in stripped_runs:
+        old = ret.get(r[0])
+        if not old or old['time'] > r[1]['time']:
+            ret[r[0]] = r[1]
+    return ret
+
+def update_best(new_bests, filepath):
     try:
         with open(filepath, 'r') as fin:
-            best_runs = json.load(fin)
+            old_bests = json.load(fin)
     except FileNotFoundError:
-        best_runs = {}
+        old_bests = {}
 
-    for r in runs:
-        t = r['test_signature']
-        if t not in best_runs or best_runs[t]['time'] > r['cpu time ms'] * 1.2:
-            best_runs[t] = {
-                'time': r['cpu time ms'],
-                'counter_signature': r['counter_signature'],
-            }
+    for t, run in new_bests.items():
+        if t not in old_bests or old_bests[t]['time'] > run['time'] * 1.1:
+            old_bests[t] = run
+
     with open(filepath, 'w') as fout:
-        json.dump(best_runs, fout, sort_keys=True, indent=2)
+        json.dump(old_bests, fout, sort_keys=True, indent=2)
 
 if __name__ == '__main__':
     runs = read_benchmarks_json()
     if '--update-best' in sys.argv:
-        update_best(runs, 'best.json')
+        update_best(choose_best(runs), 'best.json')
     write_benchmarks_csv(runs)
 
