@@ -7,6 +7,7 @@
 #include "stack_dfs_counter.hxx"
 #include "dsu_counter.hxx"
 #include "twoline_dsu_counter.hxx"
+#include "profile_counter.hxx"
 #include "grid.hxx"
 #include "matrix.hxx"
 
@@ -30,6 +31,7 @@ void BM(benchmark::State& state)
 }
 
 #define BENCH_ALL(test) \
+    BENCHMARK_TEMPLATE(BM, ProfileCounter, test); \
     BENCHMARK_TEMPLATE(BM, DfsCounter<>, test); \
     BENCHMARK_TEMPLATE(BM, DfsCounter<Compressing2x2Grid>, test); \
     BENCHMARK_TEMPLATE(BM, StackDfsCounter<>, test); \
