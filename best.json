@@ -20,16 +20,16 @@
     "time": 88.33
   },
   "RANDOM_IntArrayMatrix_10000x10_4_10": {
-    "counter_signature": "DsuCounter<>",
-    "time": 2.46
+    "counter_signature": "DsuCounter<Compressing2x2Grid>",
+    "time": 1.67
   },
   "RANDOM_IntArrayMatrix_10000x10_4_20": {
-    "counter_signature": "StackDfsCounter<StdIntStackFactory>",
-    "time": 3.37
+    "counter_signature": "DsuCounter<Compressing2x2Grid>",
+    "time": 2.31
   },
   "RANDOM_IntArrayMatrix_10000x10_4_5": {
-    "counter_signature": "DfsCounter<>",
-    "time": 1.89
+    "counter_signature": "DsuCounter<Compressing2x2Grid>",
+    "time": 1.35
   },
   "RANDOM_IntArrayMatrix_10x10000_3_10": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
@@ -41,7 +41,7 @@
   },
   "RANDOM_IntArrayMatrix_10x10000_3_5": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 1.43
+    "time": 1.29
   },
   "RANDOM_IntArrayMatrix_200x600_0_10": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
@@ -53,7 +53,7 @@
   },
   "RANDOM_IntArrayMatrix_200x600_0_5": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 1.77
+    "time": 1.57
   },
   "RANDOM_IntArrayMatrix_500x500_2_10": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
@@ -65,7 +65,7 @@
   },
   "RANDOM_IntArrayMatrix_500x500_2_5": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 3.8
+    "time": 3.3
   },
   "RANDOM_IntArrayMatrix_600x200_1_10": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
@@ -77,6 +77,6 @@
   },
   "RANDOM_IntArrayMatrix_600x200_1_5": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 1.86
+    "time": 1.59
   }
 }

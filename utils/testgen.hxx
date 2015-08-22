@@ -40,11 +40,7 @@ public:
         memset(perm, 1, ones);
         shuffle(perm, perm + size, rng);
 
-        vector<vector<int>> res(rows, vector<int>(cols));
-        for (size_t i = 0; i < size; ++i)
-            res[i/cols][i % cols] = perm[i];
-
-        return Matrix(res);
+        return Matrix(rows, cols, perm, perm + size);
     }
 
     Matrix nextWithDensity(size_t rows, size_t cols, double density)
