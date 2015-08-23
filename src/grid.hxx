@@ -14,45 +14,53 @@ public:
         m(m)
     {}
 
-    std::size_t rows() const { return m.getMatrixHeight(); }
+    inline std::size_t rows() const { return m.getMatrixHeight(); }
     std::size_t cols() const { return m.getMatrixWidth(); }
 
-    bool isDense() const { return true; }
+    inline bool isDense() const { return true; }
 
-    int getColor(std::size_t row, std::size_t col) const
+    inline int getColor(std::size_t row, std::size_t col) const
     {
         return m.getNumber(row, col);
     }
 
-    bool validCoords(std::size_t row, std::size_t col) const
+    inline bool validCoords(std::size_t row, std::size_t col) const
     {
         return row >= 0 && col >= 0 && row < rows() && col < cols(/*row*/);
     }
 
     template<class Action>
-    void forEachNeighbor(std::size_t row, std::size_t col, Action action) const
+    inline void forEachNeighbor(std::size_t row, std::size_t col, Action action) const
     {
         for (int i = 0; i < 8; ++i)
             tryTouchNeighbor(row, col, action, i);
     }
 
     template<class Action>
-    void forEachUpperNeighbor(std::size_t row, std::size_t col, Action action) const
+    inline void forEachUpperNeighbor(std::size_t row, std::size_t col, Action action) const
     {
         for (int i = 0; i < 4; ++i)
             tryTouchNeighbor(row, col, action, i);
     }
 
-protected:
-    template<class Action>
-    void tryTouchNeighbor(std::size_t row, std::size_t col, Action action, int dir) const
+    inline bool canGo(std::size_t row, std::size_t col, int dir) const
     {
         std::size_t nr = row + DELTAS[dir][0], nc = col + DELTAS[dir][1];
-        if (validCoords(nr, nc) && getColor(nr, nc))
-            action(row, col, nr, nc);
+        return validCoords(nr, nc) && getColor(nr, nc);
     }
 
     static const int DELTAS[8][2];
+
+protected:
+    template<class Action>
+    inline void tryTouchNeighbor(std::size_t row, std::size_t col, Action action, int dir) const
+    {
+        if (canGo(row, col, dir))
+        {
+            std::size_t nr = row + DELTAS[dir][0], nc = col + DELTAS[dir][1];
+            action(row, col, nr, nc);
+        }
+    }
 
 private:
     const Matrix &m;
@@ -75,36 +83,46 @@ public:
         m(compressBitmap(bitmap))
     {}
 
-    std::size_t rows() const { return m.getMatrixHeight(); }
-    std::size_t cols() const { return m.getMatrixWidth(); }
+    inline std::size_t rows() const { return m.getMatrixHeight(); }
+    inline std::size_t cols() const { return m.getMatrixWidth(); }
 
-    bool isDense() const { return false; }
+    inline bool isDense() const { return false; }
 
-    int getColor(std::size_t row, std::size_t col) const
+    inline int getColor(std::size_t row, std::size_t col) const
     {
         return m.getNumber(row, col);
     }
 
-    bool validCoords(std::size_t row, std::size_t col) const
+    inline bool validCoords(std::size_t row, std::size_t col) const
     {
         return row >= 0 && col >= 0 && row < rows() && col < cols(/*row*/);
     }
 
     template<class Action>
-    void forEachNeighbor(std::size_t row, std::size_t col, Action action) const
+    inline void forEachNeighbor(std::size_t row, std::size_t col, Action action) const
     {
         for (int i = 0; i < 8; ++i)
             tryTouchNeighbor(row, col, action, i);
     }
 
     template<class Action>
-    void forEachUpperNeighbor(std::size_t row, std::size_t col, Action action) const
+    inline void forEachUpperNeighbor(std::size_t row, std::size_t col, Action action) const
     {
         for (int i = 0; i < 4; ++i)
             tryTouchNeighbor(row, col, action, i);
     }
 
-protected:
+    inline bool canGo(std::size_t row, std::size_t col, int dir) const
+    {
+        std::size_t nr = row + DELTAS[dir][0], nc = col + DELTAS[dir][1];
+        return (getColor(row, col) & DELTA_MASKS[dir][0])
+                && validCoords(nr, nc)
+                && (getColor(nr, nc) & DELTA_MASKS[dir][1]);
+    }
+
+    static const int DELTAS[8][2];
+    static const int DELTA_MASKS[8][2];
+
     static IntArrayMatrix compressBitmap(const GivenMatrix &bitmap)
     {
         std::size_t oldRows = bitmap.getMatrixHeight();
@@ -132,18 +150,16 @@ protected:
         return IntArrayMatrix(newRows, newCols, compressed);
     }
 
+protected:
     template<class Action>
-    void tryTouchNeighbor(std::size_t row, std::size_t col, Action action, int dir) const
+    inline void tryTouchNeighbor(std::size_t row, std::size_t col, Action action, int dir) const
     {
-        std::size_t nr = row + DELTAS[dir][0], nc = col + DELTAS[dir][1];
-        if ((getColor(row, col) & DELTA_MASKS[dir][0])
-                && validCoords(nr, nc)
-                && (getColor(nr, nc) & DELTA_MASKS[dir][1]))
+        if (canGo(row, col, dir))
+        {
+            std::size_t nr = row + DELTAS[dir][0], nc = col + DELTAS[dir][1];
             action(row, col, nr, nc);
+        }
     }
-
-    static const int DELTAS[8][2];
-    static const int DELTA_MASKS[8][2];
 
 private:
     const IntArrayMatrix m;

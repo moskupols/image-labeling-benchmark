@@ -21,7 +21,10 @@ typedef testing::Types<
     DfsCounter<Compressing2x2Grid>,
     StackDfsCounter<>,
     StackDfsCounter<StdIntStackFactory, Compressing2x2Grid>,
+    DsuCounter<SimpleGrid>,
+    InlinedDsuCounter<SimpleGrid>,
     DsuCounter<Compressing2x2Grid>,
+    // InlinedDsuCounter<Compressing2x2Grid>,
     TwolineDsuCounter<Compressing2x2Grid>>
         TestedCounters;
 typedef StackDfsCounter<StdIntStackFactory, Compressing2x2Grid> ExemplaryCounter;
