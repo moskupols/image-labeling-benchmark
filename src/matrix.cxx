@@ -1,7 +1,9 @@
 #include "matrix.hxx"
 
-#include <cassert>
 #include <algorithm>
+
+#include <cassert>
+#include <memory.h>
 
 VectorMatrix::VectorMatrix(int rows, int cols, int value):
     data(rows, vector<int>(cols, value))
@@ -22,5 +24,13 @@ IntArrayMatrix::IntArrayMatrix(const IntArrayMatrix::Vectors &v):
 {
     for (std::size_t i = 0; i < height; ++i)
         copy(v[i].begin(), v[i].end(), data + i * width);
+}
+
+IntArrayMatrix::IntArrayMatrix(std::size_t rows, std::size_t cols, int *data):
+    height(rows),
+    width(cols),
+    data(new int[rows * cols])
+{
+    memcpy(this->data, data, (rows * cols) * sizeof(int));
 }
 

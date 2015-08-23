@@ -54,6 +54,8 @@ public:
         assert(dataEnd  == data + rows * cols);
     }
 
+    IntArrayMatrix(std::size_t rows, std::size_t cols, int* data);
+
     ~IntArrayMatrix() { delete[] data; }
 
     int getMatrixWidth() const { return width; }
@@ -65,6 +67,8 @@ private:
     std::size_t height, width;
     int *data;
 };
+
+typedef IntArrayMatrix BestMatrix;
 
 #endif
 

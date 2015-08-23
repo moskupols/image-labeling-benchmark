@@ -57,7 +57,7 @@
   },
   "RANDOM_IntArrayMatrix_500x500_2_10": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 4.55
+    "time": 4.07
   },
   "RANDOM_IntArrayMatrix_500x500_2_20": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
