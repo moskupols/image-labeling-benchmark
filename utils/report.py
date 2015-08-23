@@ -18,8 +18,8 @@ TIME_MULTIPLIER = 1e-6
 
 def load_run_info(d):
     info = NAME_RE.match(d['name']).groupdict()
-    info['cpu time ms'] = round(d['cpu_time'] * TIME_MULTIPLIER, 2)
-    info['real time ms'] = round(d['real_time'] * TIME_MULTIPLIER, 2)
+    info['cpu time ms'] = round(d['cpu_time'] * TIME_MULTIPLIER, 4)
+    info['real time ms'] = round(d['real_time'] * TIME_MULTIPLIER, 4)
     return info
 
 def read_benchmarks_json(json_file=None):

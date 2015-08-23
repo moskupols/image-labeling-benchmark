@@ -1,82 +1,82 @@
 {
   "IMAGE_IntArrayMatrix_0": {
-    "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 0.01
+    "counter_signature": "ProfileCounter",
+    "time": 0.0019
   },
   "IMAGE_IntArrayMatrix_1": {
-    "counter_signature": "TwolineDsuCounter<Compressing2x2Grid>",
-    "time": 7.58
+    "counter_signature": "ProfileCounter",
+    "time": 0.6606
   },
   "IMAGE_IntArrayMatrix_2": {
     "counter_signature": "ProfileCounter",
-    "time": 180.0
+    "time": 14.4445
   },
   "IMAGE_IntArrayMatrix_3": {
     "counter_signature": "ProfileCounter",
-    "time": 35.79
+    "time": 3.2781
   },
   "IMAGE_IntArrayMatrix_4": {
     "counter_signature": "ProfileCounter",
-    "time": 65.33
+    "time": 6.7619
   },
   "RANDOM_IntArrayMatrix_10000x10_4_10": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 1.67
+    "time": 0.396
   },
   "RANDOM_IntArrayMatrix_10000x10_4_20": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 2.31
+    "time": 0.6952
   },
   "RANDOM_IntArrayMatrix_10000x10_4_5": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 1.35
+    "time": 0.2705
   },
   "RANDOM_IntArrayMatrix_10x10000_3_10": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 1.57
+    "time": 0.3481
   },
   "RANDOM_IntArrayMatrix_10x10000_3_20": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 2.31
+    "time": 0.6
   },
   "RANDOM_IntArrayMatrix_10x10000_3_5": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 1.29
+    "time": 0.2631
   },
   "RANDOM_IntArrayMatrix_200x600_0_10": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 1.92
+    "time": 0.475
   },
   "RANDOM_IntArrayMatrix_200x600_0_20": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 2.91
+    "time": 0.733
   },
   "RANDOM_IntArrayMatrix_200x600_0_5": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 1.57
+    "time": 0.2952
   },
   "RANDOM_IntArrayMatrix_500x500_2_10": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 4.07
+    "time": 0.9761
   },
   "RANDOM_IntArrayMatrix_500x500_2_20": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 6.04
+    "time": 1.5735
   },
   "RANDOM_IntArrayMatrix_500x500_2_5": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 3.3
+    "time": 0.6933
   },
   "RANDOM_IntArrayMatrix_600x200_1_10": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 2.08
+    "time": 0.4404
   },
   "RANDOM_IntArrayMatrix_600x200_1_20": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 2.91
+    "time": 0.7867
   },
   "RANDOM_IntArrayMatrix_600x200_1_5": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 1.59
+    "time": 0.3018
   }
 }

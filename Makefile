@@ -1,8 +1,8 @@
 CC=g++
-COMMON_FLAGS = -Wall -Wextra --std=c++11 -fstack-protector -fsanitize=address -fsanitize=undefined
+COMMON_FLAGS = -Wall -Wextra --std=c++11
 COMMON_FLAGS += -Isrc -I.
 
-D_FLAGS=$(COMMON_FLAGS) -O0 -ggdb
+D_FLAGS=$(COMMON_FLAGS) -O0 -ggdb -fstack-protector -fsanitize=address -fsanitize=undefined
 R_FLAGS=$(COMMON_FLAGS) -O3
 
 GTEST_FLAGS=-lgtest_main -lgtest -pthread
