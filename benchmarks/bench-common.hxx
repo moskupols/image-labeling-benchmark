@@ -37,9 +37,7 @@ void BM(benchmark::State& state)
     BENCHMARK_TEMPLATE(BM, StackDfsCounter<>, test); \
     BENCHMARK_TEMPLATE(BM, StackDfsCounter<StdIntStackFactory, Compressing2x2Grid>, test); \
     BENCHMARK_TEMPLATE(BM, DsuCounter<>, test); \
-    BENCHMARK_TEMPLATE(BM, InlinedDsuCounter<SimpleGrid>, test); \
     BENCHMARK_TEMPLATE(BM, DsuCounter<Compressing2x2Grid>, test); \
-    /* BENCHMARK_TEMPLATE(BM, InlinedDsuCounter<Compressing2x2Grid>, test); */ \
     BENCHMARK_TEMPLATE(BM, TwolineDsuCounter<>, test); \
     BENCHMARK_TEMPLATE(BM, TwolineDsuCounter<Compressing2x2Grid>, test);
 
