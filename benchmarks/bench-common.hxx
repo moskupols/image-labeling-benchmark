@@ -3,11 +3,15 @@
 
 #include "benchmark/benchmark_api.h"
 
-#include "dfs_counter.hxx"
+#include "dfs_painter.hxx"
+
+#include "painting_counter.hxx"
+
 #include "stack_dfs_counter.hxx"
 #include "dsu_counter.hxx"
 #include "twoline_dsu_counter.hxx"
 #include "profile_counter.hxx"
+
 #include "grid.hxx"
 #include "matrix.hxx"
 
@@ -32,8 +36,8 @@ void BM(benchmark::State& state)
 
 #define BENCH_ALL(test) \
     BENCHMARK_TEMPLATE(BM, ProfileCounter, test); \
-    BENCHMARK_TEMPLATE(BM, DfsCounter<>, test); \
-    BENCHMARK_TEMPLATE(BM, DfsCounter<Compressing2x2Grid>, test); \
+    BENCHMARK_TEMPLATE(BM, PaintingCounter<DfsPainter<>, SimpleGrid>, test); \
+    BENCHMARK_TEMPLATE(BM, PaintingCounter<DfsPainter<>, Compressing2x2Grid>, test); \
     BENCHMARK_TEMPLATE(BM, StackDfsCounter<>, test); \
     BENCHMARK_TEMPLATE(BM, StackDfsCounter<StdIntStackFactory, Compressing2x2Grid>, test); \
     BENCHMARK_TEMPLATE(BM, DsuCounter<>, test); \

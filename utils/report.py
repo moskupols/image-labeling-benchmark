@@ -7,7 +7,7 @@ import re
 
 NAME_RE = re.compile(
         '^BM<' +
-        '(?P<counter_signature>(?P<counter>\w+)(<(?P<params>(\w+,\s*))?(?P<grid>\w*)?>)?)' +
+        '(?P<counter_signature>(?P<counter>\w+)(<(?P<params>(\S+,\s*))?(?P<grid>\w*)?>)?)' +
         ',\s*' +
         '(?P<test_signature>'
         '(?P<type>\w+?)_(?P<matrix>\w+?)(_(?P<height>\d+)x(?P<width>\d+))?' +

@@ -15,7 +15,7 @@ public:
     {}
 
     inline std::size_t rows() const { return m.getMatrixHeight(); }
-    std::size_t cols() const { return m.getMatrixWidth(); }
+    inline std::size_t cols() const { return m.getMatrixWidth(); }
 
     inline bool isDense() const { return true; }
 
