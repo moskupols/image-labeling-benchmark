@@ -27,12 +27,12 @@ private:
     DisjointSetUnion &dsu;
 };
 
-template<template<class> class Grid=SimpleGrid>
-class DsuCounter
+class DsuPainter
 {
 public:
-    template<class Matrix>
-    static int getComponentsCount(const Grid<Matrix> &grid)
+    template<class Grid>
+    static int paint(const Grid &grid,
+            ColoredRow &top, ColoredRow &bottom)
     {
         int rows = grid.rows();
         int cols = grid.cols();
@@ -51,13 +51,21 @@ public:
                     grid.forEachUpperNeighbor(r, c, visit);
                 }
             }
+        paintRow(grid, 0, dsu, top);
+        paintRow(grid, rows - 1, dsu, bottom);
         return answer;
     }
 
-    template<class Matrix>
-    static int getComponentsCount(const Matrix &m)
+protected:
+    template<class Grid>
+    static void paintRow(const Grid &grid, int r,
+            const DisjointSetUnion &dsu, ColoredRow &row)
     {
-        return getComponentsCount(Grid<Matrix>(m));
+        int cols = grid.cols();
+        int begin = r * cols;
+        for (int c = 0; c < cols; ++c)
+            if (grid.getColor(r, c))
+                row[c] = dsu.getRepresentative(begin + c);
     }
 };
 
