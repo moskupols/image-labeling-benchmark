@@ -20,16 +20,16 @@
     "time": 6.7619
   },
   "RANDOM_IntArrayMatrix_10000x10_4_10": {
-    "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 0.396
+    "counter_signature": "PaintingCounter<DsuPainter, Compressing2x2Grid>",
+    "time": 0.35
   },
   "RANDOM_IntArrayMatrix_10000x10_4_20": {
     "counter_signature": "PaintingCounter<DsuPainter, Compressing2x2Grid>",
     "time": 0.6198
   },
   "RANDOM_IntArrayMatrix_10000x10_4_5": {
-    "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 0.2705
+    "counter_signature": "PaintingCounter<DsuPainter, Compressing2x2Grid>",
+    "time": 0.2289
   },
   "RANDOM_IntArrayMatrix_10x10000_3_10": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
@@ -45,7 +45,7 @@
   },
   "RANDOM_IntArrayMatrix_200x600_0_10": {
     "counter_signature": "PaintingCounter<DsuPainter, Compressing2x2Grid>",
-    "time": 0.4259
+    "time": 0.3667
   },
   "RANDOM_IntArrayMatrix_200x600_0_20": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
@@ -53,30 +53,30 @@
   },
   "RANDOM_IntArrayMatrix_200x600_0_5": {
     "counter_signature": "PaintingCounter<DsuPainter, Compressing2x2Grid>",
-    "time": 0.2671
+    "time": 0.2401
   },
   "RANDOM_IntArrayMatrix_500x500_2_10": {
-    "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 0.9761
+    "counter_signature": "PaintingCounter<DsuPainter, Compressing2x2Grid>",
+    "time": 0.821
   },
   "RANDOM_IntArrayMatrix_500x500_2_20": {
-    "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 1.5735
+    "counter_signature": "PaintingCounter<DsuPainter, Compressing2x2Grid>",
+    "time": 1.38
   },
   "RANDOM_IntArrayMatrix_500x500_2_5": {
     "counter_signature": "PaintingCounter<DsuPainter, Compressing2x2Grid>",
-    "time": 0.6254
+    "time": 0.5513
   },
   "RANDOM_IntArrayMatrix_600x200_1_10": {
-    "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 0.4404
+    "counter_signature": "PaintingCounter<DsuPainter, Compressing2x2Grid>",
+    "time": 0.3667
   },
   "RANDOM_IntArrayMatrix_600x200_1_20": {
     "counter_signature": "PaintingCounter<DsuPainter, Compressing2x2Grid>",
     "time": 0.71
   },
   "RANDOM_IntArrayMatrix_600x200_1_5": {
-    "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 0.3018
+    "counter_signature": "PaintingCounter<DsuPainter, Compressing2x2Grid>",
+    "time": 0.2434
   }
 }

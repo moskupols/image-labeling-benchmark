@@ -11,17 +11,26 @@ class SimpleGrid
 {
 public:
     explicit SimpleGrid(const Matrix &m):
-        m(m)
+        m(m),
+        beginRow(0),
+        endRow(m.getMatrixHeight())
     {}
 
-    inline std::size_t rows() const { return m.getMatrixHeight(); }
+    // construct grid over a "window" of the matrix: [beginRow; endRow)
+    SimpleGrid(const Matrix &m, std::size_t beginRow, std::size_t endRow):
+        m(m),
+        beginRow(beginRow),
+        endRow(endRow)
+    {}
+
+    inline std::size_t rows() const { return endRow - beginRow; }
     inline std::size_t cols() const { return m.getMatrixWidth(); }
 
     inline bool isDense() const { return true; }
 
     inline int getColor(std::size_t row, std::size_t col) const
     {
-        return m.getNumber(row, col);
+        return m.getNumber(row + beginRow, col);
     }
 
     inline bool validCoords(std::size_t row, std::size_t col) const
@@ -64,6 +73,7 @@ protected:
 
 private:
     const Matrix &m;
+    const std::size_t beginRow, endRow;
 };
 
 template<class Matrix>
@@ -80,7 +90,12 @@ class Compressing2x2Grid
 {
 public:
     explicit Compressing2x2Grid(const GivenMatrix &bitmap):
-        m(compressBitmap(bitmap))
+        m(compressBitmap(bitmap, 0, bitmap.getMatrixHeight()))
+    {}
+
+    Compressing2x2Grid(const GivenMatrix &bitmap,
+            std::size_t beginRow, std::size_t endRow):
+        m(compressBitmap(bitmap, beginRow, endRow))
     {}
 
     inline std::size_t rows() const { return m.getMatrixHeight(); }
@@ -123,16 +138,17 @@ public:
     static const int DELTAS[8][2];
     static const int DELTA_MASKS[8][2];
 
-    static IntArrayMatrix compressBitmap(const GivenMatrix &bitmap)
+    static IntArrayMatrix compressBitmap(
+            const GivenMatrix &bitmap, std::size_t beginRow, std::size_t endRow)
     {
-        std::size_t oldRows = bitmap.getMatrixHeight();
+        std::size_t oldRows = endRow - beginRow;
         std::size_t oldCols = bitmap.getMatrixWidth();
         std::size_t newRows = (oldRows + 1) / 2;
         std::size_t newCols = (oldCols + 1) / 2;
 
         std::unique_ptr<int> compressedOwned{new int[newRows * newCols]};
         int* compressIter = compressedOwned.get();
-        for (std::size_t i = 0; i < oldRows; i += 2)
+        for (std::size_t i = beginRow; i < endRow; i += 2)
         {
             for (std::size_t j = 0; j < oldCols; j += 2)
                 *(compressIter++) =
