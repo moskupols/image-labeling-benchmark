@@ -5,10 +5,10 @@
 
 #include "dfs_painter.hxx"
 #include "dsu_painter.hxx"
+#include "stack_dfs_painter.hxx"
 
 #include "painting_counter.hxx"
 
-#include "stack_dfs_counter.hxx"
 #include "twoline_dsu_counter.hxx"
 #include "profile_counter.hxx"
 

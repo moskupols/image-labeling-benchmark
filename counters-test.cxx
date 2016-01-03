@@ -4,9 +4,12 @@
 
 #include "matrix.hxx"
 // #include "profile_counter.hxx"
-#include "dfs_counter.hxx"
-#include "stack_dfs_counter.hxx"
-#include "dsu_counter.hxx"
+
+#include "dfs_painter.hxx"
+#include "stack_dfs_painter.hxx"
+#include "dsu_painter.hxx"
+#include "painting_counter.hxx"
+
 #include "twoline_dsu_counter.hxx"
 #include "utils/testgen.hxx"
 
@@ -18,16 +21,16 @@ using namespace std;
 typedef testing::Types<
     // ProfileCounter<>, ProfileCounter<IntArrayProvider>,
     // ProfileCounter<UniqueIntArrayProvider>,
-    DfsCounter<Compressing2x2Grid>,
-    StackDfsCounter<>,
-    StackDfsCounter<StdIntStackFactory, Compressing2x2Grid>,
-    DsuCounter<SimpleGrid>,
-    InlinedDsuCounter<SimpleGrid>,
-    DsuCounter<Compressing2x2Grid>,
+    PaintingCounter<DfsPainter<>, Compressing2x2Grid>,
+    PaintingCounter<StackDfsCounter<>, SimpleGrid>,
+    PaintingCounter<StackDfsCounter<>, Compressing2x2Grid>,
+    PaintingCounter<DsuPainter, SimpleGrid>,
+    // InlinedDsuCounter<SimpleGrid>,
+    PaintingCounter<DsuPainter, Compressing2x2Grid>,
     // InlinedDsuCounter<Compressing2x2Grid>,
     TwolineDsuCounter<Compressing2x2Grid>>
         TestedCounters;
-typedef StackDfsCounter<StdIntStackFactory, Compressing2x2Grid> ExemplaryCounter;
+typedef PaintingCounter<StackDfsCounter<>, Compressing2x2Grid> ExemplaryCounter;
 
 typedef IntArrayMatrix Matrix;
 
