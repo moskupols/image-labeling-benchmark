@@ -41,11 +41,11 @@
   },
   "RANDOM_IntArrayMatrix_10x10000_3_5": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 0.2631
+    "time": 0.2297
   },
   "RANDOM_IntArrayMatrix_200x600_0_10": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",
-    "time": 0.475
+    "time": 0.4212
   },
   "RANDOM_IntArrayMatrix_200x600_0_20": {
     "counter_signature": "DsuCounter<Compressing2x2Grid>",

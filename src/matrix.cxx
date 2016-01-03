@@ -26,11 +26,12 @@ IntArrayMatrix::IntArrayMatrix(const IntArrayMatrix::Vectors &v):
         copy(v[i].begin(), v[i].end(), data + i * width);
 }
 
-IntArrayMatrix::IntArrayMatrix(std::size_t rows, std::size_t cols, int *data):
+IntArrayMatrix::IntArrayMatrix(std::size_t rows, std::size_t cols, std::unique_ptr<int> &&data):
     height(rows),
     width(cols),
-    data(new int[rows * cols])
+    data(data.release())
+    // data(new int[rows * cols])
 {
-    memcpy(this->data, data, (rows * cols) * sizeof(int));
+    // memcpy(this->data, data, (rows * cols) * sizeof(int));
 }
 
