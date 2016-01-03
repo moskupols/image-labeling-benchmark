@@ -5,6 +5,7 @@
 #include <cstring>
 
 #include "grid.hxx"
+#include "colored_row.hxx"
 
 class StdIntStackFactory
 {
@@ -19,10 +20,13 @@ template<class Matrix, class Stack>
 class StackDfsCellVisitor
 {
 public:
-    StackDfsCellVisitor(Matrix &used, Stack &rowStack, Stack &colStack):
+    StackDfsCellVisitor(Matrix &used, Stack &rowStack, Stack &colStack,
+            ColoredRow &top, ColoredRow &bottom):
         used(used),
         rowStack(rowStack),
-        colStack(colStack)
+        colStack(colStack),
+        top(top),
+        bottom(bottom)
     {}
 
     void operator()(std::size_t, std::size_t, std::size_t r, std::size_t c)
@@ -32,22 +36,29 @@ public:
         used.setNumber(r, c, 1);
         rowStack.push(r);
         colStack.push(c);
+        if (r == 0)
+            top[c] = color;
+        if (r + 1 == (std::size_t)used.getMatrixHeight())
+            bottom[c] = color;
     }
+
+    int color = 0;
+
 private:
     Matrix &used;
     Stack &rowStack, &colStack;
+    ColoredRow &top, &bottom;
 };
 
 
 template<
-    class IntStackFactory=StdIntStackFactory,
-    template<class> class Grid=SimpleGrid
->
+    class IntStackFactory = StdIntStackFactory,
+    class TempMatrix = BestMatrix>
 class StackDfsCounter
 {
 public:
-    template<class Matrix>
-    static int getComponentsCount(const Grid<Matrix>& grid)
+    template<class Grid>
+    static int paint(const Grid& grid, ColoredRow &top, ColoredRow &bottom)
     {
         int rows = grid.rows();
         int cols = grid.cols();
@@ -55,17 +66,16 @@ public:
         auto rowStack = IntStackFactory::create(rows * cols);
         auto colStack = IntStackFactory::create(rows * cols);
 
-        Matrix used(rows, cols, 0);
+        TempMatrix used(rows, cols, 0);
 
-        StackDfsCellVisitor<Matrix, decltype(rowStack)>
-            visit(used, rowStack, colStack);
+        StackDfsCellVisitor<TempMatrix, decltype(rowStack)>
+            visit(used, rowStack, colStack, top, bottom);
 
-        int answer = 0;
         for (int r = 0; r < rows; ++r)
             for (int c = 0; c < cols; ++c)
                 if (grid.getColor(r, c) && !used.getNumber(r, c))
                 {
-                    ++answer;
+                    ++visit.color;
 
                     visit(0, 0, r, c);
 
@@ -78,13 +88,7 @@ public:
                         grid.forEachNeighbor(a, b, visit);
                     }
                 }
-        return answer;
-    }
-
-    template<class Matrix>
-    static int getComponentsCount(const Matrix &m)
-    {
-        return getComponentsCount(Grid<Matrix>(m));
+        return visit.color;
     }
 };
 

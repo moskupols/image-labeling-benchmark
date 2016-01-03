@@ -38,8 +38,8 @@ void BM(benchmark::State& state)
     BENCHMARK_TEMPLATE(BM, ProfileCounter, test); \
     BENCHMARK_TEMPLATE(BM, PaintingCounter<DfsPainter<>, SimpleGrid>, test); \
     BENCHMARK_TEMPLATE(BM, PaintingCounter<DfsPainter<>, Compressing2x2Grid>, test); \
-    BENCHMARK_TEMPLATE(BM, StackDfsCounter<>, test); \
-    BENCHMARK_TEMPLATE(BM, StackDfsCounter<StdIntStackFactory, Compressing2x2Grid>, test); \
+    BENCHMARK_TEMPLATE(BM, PaintingCounter<StackDfsCounter<>, SimpleGrid>, test); \
+    BENCHMARK_TEMPLATE(BM, PaintingCounter<StackDfsCounter<>, Compressing2x2Grid>, test); \
     BENCHMARK_TEMPLATE(BM, PaintingCounter<DsuPainter, SimpleGrid>, test); \
     BENCHMARK_TEMPLATE(BM, PaintingCounter<DsuPainter, Compressing2x2Grid>, test); \
     BENCHMARK_TEMPLATE(BM, TwolineDsuCounter<>, test); \
