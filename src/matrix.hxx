@@ -2,6 +2,7 @@
 #define MATRIX_HXX
 
 #include <vector>
+#include <memory>
 #include <cassert>
 
 using std::vector;
@@ -54,7 +55,7 @@ public:
         assert(dataEnd  == data + rows * cols);
     }
 
-    IntArrayMatrix(std::size_t rows, std::size_t cols, int* data);
+    IntArrayMatrix(std::size_t rows, std::size_t cols, std::unique_ptr<int> &&data);
 
     ~IntArrayMatrix() { delete[] data; }
 

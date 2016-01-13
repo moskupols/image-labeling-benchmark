@@ -130,12 +130,12 @@ public:
         std::size_t newRows = (oldRows + 1) / 2;
         std::size_t newCols = (oldCols + 1) / 2;
 
-        int compressed[newRows * newCols];
-        int v = 0;
+        std::unique_ptr<int> compressedOwned{new int[newRows * newCols]};
+        int* compressIter = compressedOwned.get();
         for (std::size_t i = 0; i < oldRows; i += 2)
         {
             for (std::size_t j = 0; j < oldCols; j += 2)
-                compressed[v++] =
+                *(compressIter++) =
                     bitmap.getNumber(i, j)
                     | (j+1 < oldCols
                             ? bitmap.getNumber(i, j+1) << 1
@@ -147,7 +147,7 @@ public:
                             ? bitmap.getNumber(i + 1, j + 1) << 3
                             : 0);
         }
-        return IntArrayMatrix(newRows, newCols, compressed);
+        return IntArrayMatrix(newRows, newCols, std::move(compressedOwned));
     }
 
 protected:
