@@ -47,8 +47,8 @@
 
 \begin{document}
 
-\title{Optimization for connected-component counting in binary image for the case of
-8-connectivity}
+\title{Linear variation and an optimization of algorithms for connected
+components labeling in a binary image}
 
 \author{Fedor Alekseev\inst{1} \and Mikhail Alekseev\inst{2}\inst{3}
 \and Artyom Makovetskii\inst{2}\inst{4}}
@@ -65,7 +65,7 @@ Chelyabinsk State University, Chelyabinsk, Russia
 \maketitle              % typeset the title of the contribution
 
 \begin{abstract}
-The linear variation is a topological characteristic of the function of two variables.
+Linear variation is a topological characteristic of a function of two variables.
 The problem of linear variation computing can be reduced to the problem
 of counting connected components in a binary image with eight-connected connectivity.
 The new hybrid method for the problem is presented.
@@ -90,7 +90,7 @@ image $u_0$ and the relation between $u_0$ and $v$:
 where $n$ is a noise?
 A common way for solving the problems \eqref{eq:imageRelation} is to use the
 variational functionals.
-One of the most widely used approaches is total variation 
+One of the most widely used approaches is total variation
 regularization [1]. % TODO fix bibliography
 Let $J(u)$ be the following functional:
 \begin{equation}
@@ -105,7 +105,7 @@ $\lambda TV(u)$ is called a regularization term and $\lambda$ is regularization
 parameter.
 
 \begin{equation}
-  TV(u) = \int_{\Omega} |\nabla u|\,dx\,dy.
+  TV(u) = \int\limits_{\Omega} |\nabla u|\,dx\,dy.
   \label{eq:TV}
 \end{equation}
 
@@ -135,7 +135,7 @@ Let $\Phi_u(t)$ be the number of regular components of a level set $t$
 for a continuous function.
 The first Kronrod's linear variation is defined as
 \begin{equation}
-  V(u) = \int_{-\infty}^{+\infty} \Phi_u(t)\,dt.
+  V(u) = \int\limits_{-\infty}^{+\infty} \Phi_u(t)\,dt.
   \label{eq:KronrodVariation}
 \end{equation}
 
@@ -191,7 +191,7 @@ This paper presents an efficient way to convert the initial binary image
 with 8-connectivity into
 a condensed (non-binary) image with new connectivity that is $2$ times smaller in
 each dimension than the initial image.
-Most approaches for CC labeling are still valid for the new matrix.
+Most approaches for CC labeling are still valid for the new image.
 As time and memory consumptions of conventional approaches usually depend linearly on
 the number of pixels, running them on the condensed image can be up to 4 times
 more efficient than running on the initial image.
