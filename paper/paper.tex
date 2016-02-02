@@ -37,6 +37,7 @@
   % numbers=left
 }
 
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 \renewcommand{\C}{\texttt{C}\xspace}
 
 \begin{document}
@@ -67,10 +68,38 @@ The method is essentially a modification of a two-scan algorithm for labeling
 that groups the pixels into $2 \times 2$ cells.
 
 \keywords{Binary raster image, connected component labeling,
-pattern recognition, parallel processing}
+pattern recognition}
 \end{abstract}
 
 \section{Introduction}
+
+% Makovetskii part
+
+In image restoration it is often necessary to consider the following problem.
+How to restore an original undistorted image $v$, if it is known an observed
+image $u_0$ and the relation between $u_0$ and $v$:
+\begin{equation}
+  u_0=v+n,
+  \label{eq:imageRelation}
+\end{equation}
+where $n$ is a noise?
+A common way for solving the problems \ref{eq:imageRelation} is to use the
+variational functionals.
+One of the most widely used approaches is total variation 
+regularization [1]. % TODO fix bibliography
+Let $J(u)$ be the following functional:
+\begin{equation}
+  J(u) = \frac12 \norm{u - u_0}^2 + \lambda TV(u),
+  \label{eq:jFunctional}
+\end{equation}
+where $\norm{\cdot}$ is the $L_2$ norm and all function we consider belong to the class
+$BV(\Omega)$, i.\,e. the class of bounded variation on the set $\Omega$ functions.
+%
+The expression $\frac12 \norm{n-n_0}^2$ is called a fidelity term and
+$\lambda TV(u)$ is called a regularization term and $\lambda$ is regularization
+parameter.
+
+% Alekseev part
 
 This problem is equivalent to the problem of counting the number of connected
 components (CC) in a binary image with 8-connectivity.
