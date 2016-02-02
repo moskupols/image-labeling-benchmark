@@ -1,6 +1,8 @@
 \RequirePackage{amsmath}
 \documentclass{llncs}
 
+\usepackage{amssymb}
+
 \usepackage{cmap}
 \usepackage[utf8]{inputenc}
 \usepackage[T2A]{fontenc}
@@ -38,7 +40,10 @@
 }
 
 \newcommand{\norm}[1]{\left\lVert#1\right\rVert}
-\renewcommand{\C}{\texttt{C}\xspace}
+\newcommand*{\N}{\mathbb{N} \xspace}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\renewcommand{\C}{\texttt{C} \xspace}
 
 \begin{document}
 
@@ -83,7 +88,7 @@ image $u_0$ and the relation between $u_0$ and $v$:
   \label{eq:imageRelation}
 \end{equation}
 where $n$ is a noise?
-A common way for solving the problems \ref{eq:imageRelation} is to use the
+A common way for solving the problems \eqref{eq:imageRelation} is to use the
 variational functionals.
 One of the most widely used approaches is total variation 
 regularization [1]. % TODO fix bibliography
@@ -98,6 +103,82 @@ $BV(\Omega)$, i.\,e. the class of bounded variation on the set $\Omega$ function
 The expression $\frac12 \norm{n-n_0}^2$ is called a fidelity term and
 $\lambda TV(u)$ is called a regularization term and $\lambda$ is regularization
 parameter.
+
+\begin{equation}
+  TV(u) = \int_{\Omega} |\nabla u|\,dx\,dy.
+  \label{eq:TV}
+\end{equation}
+
+Let $u_*$ be extremal function for the following variational problem:
+\begin{equation}
+  u_* = \argmin_{u \in BV(\Omega)} J(u).
+  \label{eq:ustar}
+\end{equation}
+The \autoref{eq:ustar} is called total variation regularization problem.
+
+The norm and modulus of the gradient are metrical characteristic of a function of
+two variables.
+Continuous functions of two variables also have a set of topological
+characteristics referred to as linear variations.
+Kronrod [2] % TODO fix bibliography
+introduced the notion of a regular component of the level set of a
+continuous function of two variables.
+The simplest topological characteristic in the linear variation theory is a number
+of regular components for all level sets of a function.
+Full information about linear variations of a function is contained in the
+one-dimensional tree of a function of two variables.
+In [3, 4, 5] % TODO fix bibliography
+was discussed the necessity of the using a linear variation in the
+image restoration theory.
+
+Let $\Phi_u(t)$ be the number of regular components of a level set $t$
+for a continuous function.
+The first Kronrod's linear variation is defined as
+\begin{equation}
+  V(u) = \int_{-\infty}^{+\infty} \Phi_u(t)\,dt.
+  \label{eq:KronrodVariation}
+\end{equation}
+
+Let $w$ be a binary discrete function $w=(w_{i,j})$, where $w_{i,j} \in \{0,1\}$,
+for all pairs $(i,j)$.
+A subset of such pairs $(i, j)$ when $w_{i,j}=1$ and all elements of the subset are
+connected by the 8-connectivity, is called the connected component of the binary
+function $w$.
+For a number $k \in \N$ and a discrete function $u$ we define the following
+indicator function $\chi$:
+\begin{equation}
+  \chi_k (u_{i,j}) =
+    \begin{cases}
+      1, & u_{i,j} \ge k \\
+      0, & u_{i,j} < k
+    \end{cases}.
+  \label{eq:chiIndicator}
+\end{equation}
+
+\begin{definition}
+  The number $V_k(u_{i,j})$ of connected components for a level $k$, $k \in \N$ of
+  the discrete function $u$ is called the number of connected components of the 
+  binary discrete function $\chi_k(u_{i,j})$.
+\end{definition}
+
+\begin{definition}
+  The linear variation $V(u_{i,j})$ of a discrete function  is defined as follows:
+  \begin{equation}
+    V(u_{i,j}) = \sum_{k=0}^{+\infty} V_k(u_{i,j})
+    \label{eq:V}
+  \end{equation}
+\end{definition}
+
+Let us compute the discrete gradient $\nabla u_{i,j}$ of $u$ at $(i,j)$ as
+\begin{equation}
+  \nabla u_{i,j} = (u_{i+1,j} - u_{i,j}, u_{i,j+1} - u_{i,j}).
+  \label{eq:gradient}
+\end{equation}
+
+Suppose that if the pair $(i,j)$ is outside of the domain of the function $u$, then 
+$u_{i,j} = 0$.
+The main problem of the computer implementation of the linear variation is 
+computation of $V_k(u_{i,j})$ for given k.
 
 % Alekseev part
 
