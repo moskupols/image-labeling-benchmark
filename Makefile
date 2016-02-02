@@ -16,11 +16,12 @@ BUILD_DIR ?= build
 
 ULIMITED=ulimit -s 6100500 &&
 
-BENCH_COUNTER_FILTER ?= ()
+BENCH_COUNTER_FILTER ?= (.*(Dfs|Dsu).*)
 BENCH_MATRIX_FILTER ?= IntArrayMatrix
 
-BENCH_FILTER ?= $(BENCH_COUNTER_FILTER).*$(BENCH_MATRIX_FILTER)
+# BENCH_FILTER ?= $(BENCH_COUNTER_FILTER).*$(BENCH_MATRIX_FILTER)
 BENCH_RANDOM_FILTER ?= $(BENCH_COUNTER_FILTER).*RANDOM.*$(BENCH_MATRIX_FILTER)
+BENCH_FILTER ?= $(BENCH_RANDOM_FILTER)
 BENCH_IMAGE_FILTER ?= $(BENCH_COUNTER_FILTER).*IMAGE.*$(BENCH_MATRIX_FILTER)
 
 REPORT_FILE=report.csv
@@ -56,7 +57,7 @@ $(REPORT_FILE): bench.json utils/report.py
 	utils/report.py <$< >$@
 
 bench.json: $(BUILD_DIR)/benchmark
-	$(ULIMITED) $(BUILD_DIR)/benchmark --benchmark_format=json --benchmark_filter='$(BENCH_FILTER)' >$@
+	$(ULIMITED) $(BUILD_DIR)/benchmark --benchmark_format=json --benchmark_filter='$(BENCH_FILTER)' | tee $@
 
 update-best: bench.json utils/report.py
 	utils/report.py --update-best <$< >/dev/null
