@@ -170,7 +170,7 @@ configuration. See \autoref{fig:connectivity:examples} for examples.
     \begin{tikzpicture}
       \foreach \x in {0.5,4.5}
         \node[cell] at (\x,0.5){};
-      \foreach \x/\y in {0/0, 1/1, 4/0, 5/1}
+      \foreach \x/\y in {0/0, 0/1, 1/1, 4/0, 4/1, 5/0}
         \node[whitebox] at (\x, \y){};
     \end{tikzpicture}
     \caption{Cells that are not nearby in terms of 8-connectivity, cannot be
