@@ -1,9 +1,11 @@
 #ifndef GRID_HXX
 #define GRID_HXX
 
-#include <cstddef>
 #include <vector>
 #include <iostream>
+
+#include <cstddef>
+#include <cstring>
 
 #include "matrix.hxx"
 

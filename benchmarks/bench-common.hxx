@@ -41,7 +41,7 @@ void BM(benchmark::State& state)
     BENCHMARK_TEMPLATE(BM, DsuCounter<>, test); \
     BENCHMARK_TEMPLATE(BM, DsuCounter<Compressing2x2Grid>, test); \
     BENCHMARK_TEMPLATE(BM, DsuCounter<Viewing2x2Grid>, test); \
-    BENCHMARK_TEMPLATE(BM, DesisionTreeDsuCounter, test);
+    BENCHMARK_TEMPLATE(BM, DesisionTreeDsuCounter<>, test);
     /* BENCHMARK_TEMPLATE(BM, TwolineDsuCounter<>, test); */
     /* BENCHMARK_TEMPLATE(BM, TwolineDsuCounter<Compressing2x2Grid>, test); */
 

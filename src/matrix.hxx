@@ -32,7 +32,8 @@ public:
 
     int getMatrixWidth() const { return data[0].size(); }
     int getMatrixHeight() const { return data.size(); }
-    int getNumber(int row, int col) const { return data[row][col]; }
+    T getNumber(int row, int col) const { return data[row][col]; }
+    T& getNumber(int row, int col) { return data[row][col]; }
     void setNumber(int row, int col, T value) { data[row][col] = value; }
 
 private:
@@ -52,7 +53,10 @@ public:
         width(cols),
         data(rows && cols ? new T[rows * cols] : nullptr)
     {
-        std::fill(data, data + rows * cols, value);
+        if (value)
+            std::fill(data, data + rows * cols, value);
+        else
+            memset(data, 0, rows * cols * sizeof(T));
     }
 
     explicit ArrayMatrix(const Vectors &v):
@@ -85,7 +89,8 @@ public:
 
     int getMatrixWidth() const { return width; }
     int getMatrixHeight() const { return height; }
-    int getNumber(int row, int col) const { return data[row * width + col]; }
+    T getNumber(int row, int col) const { return data[row * width + col]; }
+    T& getNumber(int row, int col) { return data[row * width + col]; }
     void setNumber(int row, int col, T value) { data[row * width + col] = value; }
 
 private:

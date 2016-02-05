@@ -26,7 +26,7 @@ typedef testing::Types<
     DsuCounter<SimpleGrid>,
     InlinedDsuCounter<SimpleGrid>,
     DsuCounter<Compressing2x2Grid>,
-    DesisionTreeDsuCounter,
+    DesisionTreeDsuCounter<>,
     // InlinedDsuCounter<Compressing2x2Grid>,
     TwolineDsuCounter<Compressing2x2Grid>>
         TestedCounters;

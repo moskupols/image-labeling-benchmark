@@ -3,6 +3,7 @@
 
 #include "matrix.hxx"
 
+template<template<class> class TempMatrix=ArrayMatrix>
 class DesisionTreeDsuCounter
 {
 public:
@@ -12,38 +13,95 @@ public:
         int rows = m.getMatrixHeight();
         int cols = m.getMatrixWidth();
 
-        DisjointSetUnion dsu(rows * cols);
-        IdCalculator id(cols);
-        int answer = 0;
+        TempMatrix<int> label(rows, cols, 0);
+        int nextLabel = 1;
 
-        for (int r = 0; r < rows; ++r)
+        for (int c = 0; c < cols; ++c)
+        {
+            if (m.getNumber(0, c))
+            {
+                int prev = (c ? label.getNumber(0, c-1) : 0);
+                label.setNumber(0, c, prev ? prev : nextLabel++);
+            }
+        }
+
+        int empty = 0;
+        for (int r = 1; r < rows; ++r)
             for (int c = 0; c < cols; ++c)
             {
                 if (!m.getNumber(r, c))
                     continue;
-                auto me = id(r, c);
-                if (r && m.getNumber(r-1, c))
-                    dsu.join(me, id(r-1, c));
-                else if (r && c + 1 != cols && m.getNumber(r-1, c+1))
-                {
-                    if (c && m.getNumber(r-1, c-1))
-                        answer -= dsu.join(me, id(r-1, c-1)) && dsu.join(id(r-1, c-1), id(r-1, c+1));
-                    else if (c && m.getNumber(r, c-1))
-                        answer -= dsu.join(me, id(r, c-1)) && dsu.join(id(r-1, c+1), id(r, c-1));
-                    else
-                        dsu.join(me, id(r-1, c+1));
-                }
+                int& me = label.getNumber(r, c);
+                int labelN = label.getNumber(r-1, c);
+                if (labelN)
+                    me = labelN;
                 else
                 {
-                    if (r && c && m.getNumber(r-1, c-1))
-                        dsu.join(me, id(r-1, c-1));
-                    else if (c && m.getNumber(r, c-1))
-                        dsu.join(me, id(r, c-1));
+                    int& labelNE = (c + 1 == cols ? empty : label.getNumber(r-1, c+1));
+                    if (labelNE)
+                    {
+                        int& labelNW = (!c ? empty : label.getNumber(r-1, c-1));
+                        if (labelNW)
+                            copy3(me, labelNE, labelNW);
+                        else
+                        {
+                            int& labelW = (!c ? empty : label.getNumber(r, c-1));
+                            if (labelW)
+                                copy3(me, labelNE, labelW);
+                            else
+                                me = labelNE;
+                        }
+                    }
                     else
-                        ++answer;
+                    {
+                        int labelNW, labelW;
+                        if (c && (labelNW = label.getNumber(r-1, c-1)))
+                            me = labelNW;
+                        else if (c && (labelW = label.getNumber(r, c-1)))
+                            me = labelW;
+                        else
+                            me = nextLabel++;
+                    }
                 }
             }
+
+        DisjointSetUnion dsu(nextLabel);
+        bool met[nextLabel];
+        memset(met, 0, sizeof met);
+        int answer = 0;
+        SimpleGrid<decltype(label)> grid(label);
+        for (int r = 0; r < rows; ++r)
+            for (int c = 0; c < cols; ++c)
+            {
+                int me = label.getNumber(r, c);
+                if (me)
+                {
+                    if (!met[me])
+                    {
+                        ++answer;
+                        met[me] = 1;
+                    }
+                    for (int i = 0; i < 4; ++i)
+                    {
+                        int nr = r + grid.DELTAS[i][0];
+                        int nc = c + grid.DELTAS[i][1];
+                        if (grid.validCoords(nr, nc))
+                        {
+                            int that = label.getNumber(nr, nc);
+                            if (that && that != me)
+                                answer -= dsu.join(me, that);
+                        }
+                    }
+                }
+            }
+
         return answer;
+    }
+
+protected:
+    static void copy3(int& me, int& a, int& b)
+    {
+        a = b = me = std::min(a, b);
     }
 };
 
