@@ -12,12 +12,17 @@ CIMG_FLAGS=-lX11 -pthread
 SOURCES = src/* utils/*.hxx assets
 COMPILED_SOURCES = src/*.cxx
 
+SIZES = $(shell grep -oP '\d+, \d+' benchmarks/bench-random.cxx | uniq | sed 's/, /x/')
+BENCH_OUT_DIR ?= bench-out
+SIZE_CSVS = $(patsubst %,$(BENCH_OUT_DIR)/%.csv,$(SIZES))
+SIZE_TEX  = $(SIZE_CSVS:.csv=.tex)
+
 BUILD_DIR ?= build
 
 ULIMITED=ulimit -s 6100500 &&
 
 BENCH_COUNTER_FILTER ?= (.*(Dfs|Dsu).*)
-BENCH_MATRIX_FILTER ?= IntArrayMatrix
+BENCH_MATRIX_FILTER ?= ArrayMatrix
 
 # BENCH_FILTER ?= $(BENCH_COUNTER_FILTER).*$(BENCH_MATRIX_FILTER)
 BENCH_RANDOM_FILTER ?= $(BENCH_COUNTER_FILTER).*RANDOM.*$(BENCH_MATRIX_FILTER)
@@ -56,8 +61,20 @@ report: $(REPORT_FILE)
 $(REPORT_FILE): bench.json utils/report.py
 	utils/report.py <$< >$@
 
+split-sizes: $(SIZE_CSVS)
+$(SIZE_CSVS): bench.json
+	mkdir -p $(BENCH_OUT_DIR)
+	utils/report.py --split-by-sizes <$<
+
+latex-tables: $(SIZE_TEX)
+$(SIZE_TEX): split-sizes
+	utils/csv-to-latex.py <$(@:.tex=.csv) >$@
+
+paper: latex-tables paper/paper.tex
+	cd paper && latexmk -pdf paper
+
 bench.json: $(BUILD_DIR)/benchmark
-	$(ULIMITED) $(BUILD_DIR)/benchmark --benchmark_format=json --benchmark_filter='$(BENCH_FILTER)' | tee $@
+	$(ULIMITED) time $(BUILD_DIR)/benchmark --benchmark_format=json --benchmark_filter='$(BENCH_FILTER)' > $@
 
 update-best: bench.json utils/report.py
 	utils/report.py --update-best <$< >/dev/null

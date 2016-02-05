@@ -1,7 +1,7 @@
 #ifndef BENCH_COMMON_HXX
 #define BENCH_COMMON_HXX
 
-#include "benchmark/benchmark_api.h"
+#include <benchmark/benchmark_api.h>
 
 #include "dfs_counter.hxx"
 #include "stack_dfs_counter.hxx"
@@ -31,17 +31,15 @@ void BM(benchmark::State& state)
 }
 
 #define BENCH_ALL(test) \
-    BENCHMARK_TEMPLATE(BM, ProfileCounter, test); \
+    /* BENCHMARK_TEMPLATE(BM, ProfileCounter, test); */ \
     BENCHMARK_TEMPLATE(BM, DfsCounter<>, test); \
     BENCHMARK_TEMPLATE(BM, DfsCounter<Compressing2x2Grid>, test); \
-    BENCHMARK_TEMPLATE(BM, StackDfsCounter<>, test); \
-    BENCHMARK_TEMPLATE(BM, StackDfsCounter<StdIntStackFactory, Compressing2x2Grid>, test); \
+    /* BENCHMARK_TEMPLATE(BM, StackDfsCounter<>, test); */ \
+    /* BENCHMARK_TEMPLATE(BM, StackDfsCounter<StdIntStackFactory, Compressing2x2Grid>, test); */ \
     BENCHMARK_TEMPLATE(BM, DsuCounter<>, test); \
-    BENCHMARK_TEMPLATE(BM, InlinedDsuCounter<SimpleGrid>, test); \
-    BENCHMARK_TEMPLATE(BM, DsuCounter<Compressing2x2Grid>, test); \
-    /* BENCHMARK_TEMPLATE(BM, InlinedDsuCounter<Compressing2x2Grid>, test); */ \
-    BENCHMARK_TEMPLATE(BM, TwolineDsuCounter<>, test); \
-    BENCHMARK_TEMPLATE(BM, TwolineDsuCounter<Compressing2x2Grid>, test);
+    BENCHMARK_TEMPLATE(BM, DsuCounter<Compressing2x2Grid>, test);
+    /* BENCHMARK_TEMPLATE(BM, TwolineDsuCounter<>, test); */
+    /* BENCHMARK_TEMPLATE(BM, TwolineDsuCounter<Compressing2x2Grid>, test); */
 
 #define INSTANTIATE_TEST(test) \
     volatile test test##_singleton; \

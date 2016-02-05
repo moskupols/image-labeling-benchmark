@@ -1,5 +1,6 @@
 *.swp
 build/
+bench-out/
 report.csv
 bench.json
 *.pyc

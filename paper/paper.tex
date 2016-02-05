@@ -392,6 +392,19 @@ factor of 4.
 
 \section{Benchmarks}
 
+\newcommand{\inputtable}[2]{
+  \begin{table}
+    \centering
+    \input{../bench-out/#1x#2}
+    \caption{$#1 \times #2$}
+  \end{table} }
+
+\inputtable{400}{600}
+\inputtable{800}{1200}
+\inputtable{1200}{1800}
+\inputtable{2000}{3000}
+\inputtable{4000}{6000}
+
 \begin{thebibliography}{5}
 
 \bibitem {hechao}
@@ -406,3 +419,4 @@ Fast connected-component labeling. Pattern Recognition. v42, Pages 1977-1987. (2
 \end{thebibliography}
 
 \end{document}
+
