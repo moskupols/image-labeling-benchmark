@@ -29,7 +29,7 @@ typedef testing::Types<
         TestedCounters;
 typedef StackDfsCounter<StdIntStackFactory, Compressing2x2Grid> ExemplaryCounter;
 
-typedef IntArrayMatrix Matrix;
+typedef ArrayMatrix<char> Matrix;
 
 
 template<class C>
@@ -39,9 +39,9 @@ TYPED_TEST_CASE(CounterSanityTest, TestedCounters);
 
 TYPED_TEST(CounterSanityTest, Trivial)
 {
-    for (int i = 0; i < 2; ++i)
+    for (char i = 0; i < 2; ++i)
     {
-        vector<vector<int>> m = {{i}};
+        vector<vector<char>> m = {{i}};
         Matrix matrix(m);
         TypeParam counter;
         EXPECT_EQ(i, counter.getComponentsCount(matrix));
@@ -50,7 +50,7 @@ TYPED_TEST(CounterSanityTest, Trivial)
 
 TYPED_TEST(CounterSanityTest, Manual)
 {
-    pair<vector<vector<int>>, int> tests[] =
+    pair<vector<vector<char>>, int> tests[] =
     {
         {{
             {1, 0},
@@ -90,7 +90,7 @@ TYPED_TEST(CounterSanityTest, Manual)
 
 TYPED_TEST(CounterSanityTest, OneColumn)
 {
-    vector<vector<int>> m = {{0}, {1}, {0}, {1}};
+    vector<vector<char>> m = {{0}, {1}, {0}, {1}};
     Matrix matrix(m);
     TypeParam counter;
     EXPECT_EQ(2, counter.getComponentsCount(matrix));
@@ -98,7 +98,7 @@ TYPED_TEST(CounterSanityTest, OneColumn)
 
 TYPED_TEST(CounterSanityTest, OneRow)
 {
-    vector<vector<int>> m = {{0, 1, 0, 1}};
+    vector<vector<char>> m = {{0, 1, 0, 1}};
     Matrix matrix(m);
     TypeParam counter;
     EXPECT_EQ(2, counter.getComponentsCount(matrix));

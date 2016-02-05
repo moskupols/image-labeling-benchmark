@@ -9,7 +9,7 @@ extern const char* imgDirPath;
 extern const char* imgOrder[];
 extern const std::size_t imgCount;
 
-std::vector<std::vector<int>> loadImageVectors(size_t imgId);
+std::vector<std::vector<char>> loadImageVectors(size_t imgId);
 
 template<class Matrix>
 Matrix loadImage(std::size_t imgId)
