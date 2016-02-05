@@ -6,7 +6,7 @@
 
 #include "matrix.hxx"
 
-template<class Matrix=BestMatrix>
+template<class Matrix=BestBinaryMatrix>
 class SimpleGrid
 {
 public:
@@ -75,7 +75,7 @@ const int SimpleGrid<Matrix>::DELTAS[8][2] =
 };
 
 
-template<class GivenMatrix=BestMatrix>
+template<class GivenMatrix=BestBinaryMatrix>
 class Compressing2x2Grid
 {
 public:
@@ -123,15 +123,15 @@ public:
     static const int DELTAS[8][2];
     static const int DELTA_MASKS[8][2];
 
-    static IntArrayMatrix compressBitmap(const GivenMatrix &bitmap)
+    static ArrayMatrix<char> compressBitmap(const GivenMatrix &bitmap)
     {
         std::size_t oldRows = bitmap.getMatrixHeight();
         std::size_t oldCols = bitmap.getMatrixWidth();
         std::size_t newRows = (oldRows + 1) / 2;
         std::size_t newCols = (oldCols + 1) / 2;
 
-        std::unique_ptr<int> compressedOwned{new int[newRows * newCols]};
-        int* compressIter = compressedOwned.get();
+        std::unique_ptr<char[]> compressedOwned{new char[newRows * newCols]};
+        char* compressIter = compressedOwned.get();
         for (std::size_t i = 0; i < oldRows; i += 2)
         {
             for (std::size_t j = 0; j < oldCols; j += 2)
@@ -147,7 +147,7 @@ public:
                             ? bitmap.getNumber(i + 1, j + 1) << 3
                             : 0);
         }
-        return IntArrayMatrix(newRows, newCols, std::move(compressedOwned));
+        return ArrayMatrix<char>(newRows, newCols, std::move(compressedOwned));
     }
 
 protected:
@@ -162,7 +162,7 @@ protected:
     }
 
 private:
-    const IntArrayMatrix m;
+    const ArrayMatrix<char> m;
 };
 
 template<class GivenMatrix>

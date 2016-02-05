@@ -12,10 +12,10 @@ using StaticRandomTest =
     INSTANTIATE_TEST(RANDOM_##m##_##r##x##c##_##s##_##d);
 
 #define INSTANTIATE_RANDOM_TEST_2_MATRICES(r, c, s, d) \
-    INSTANTIATE_RANDOM_TEST(VectorMatrix, r, c, s, d); \
-    INSTANTIATE_RANDOM_TEST(IntArrayMatrix, r, c, s, d);
+    INSTANTIATE_RANDOM_TEST(BinaryVectorMatrix, r, c, s, d); \
+    INSTANTIATE_RANDOM_TEST(BinaryArrayMatrix, r, c, s, d);
 
-#define INSTANTIATE_RANDOM_TEST_3_DENSITIES_2_MATRICES( r, c, s) \
+#define INSTANTIATE_RANDOM_TEST_3_DENSITIES_2_MATRICES(r, c, s) \
     INSTANTIATE_RANDOM_TEST_2_MATRICES(r, c, s, 5); \
     INSTANTIATE_RANDOM_TEST_2_MATRICES(r, c, s, 10); \
     INSTANTIATE_RANDOM_TEST_2_MATRICES(r, c, s, 20);

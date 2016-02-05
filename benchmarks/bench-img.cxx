@@ -11,8 +11,8 @@ using ImageSingleton =  Singleton<ImageLoader<M, IMG_ID>>;
     INSTANTIATE_TEST(IMAGE_##m##_##id);
 
 #define INSTANTIATE_IMG_TEST_2_MATRICES(id) \
-    INSTANTIATE_IMG_TEST(VectorMatrix, id); \
-    INSTANTIATE_IMG_TEST(IntArrayMatrix, id);
+    INSTANTIATE_IMG_TEST(BinaryVectorMatrix, id); \
+    INSTANTIATE_IMG_TEST(BinaryArrayMatrix, id);
 
 INSTANTIATE_IMG_TEST_2_MATRICES(0);
 INSTANTIATE_IMG_TEST_2_MATRICES(1);

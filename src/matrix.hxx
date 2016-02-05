@@ -7,22 +7,25 @@
 
 using std::vector;
 
+template<typename T>
 class VectorMatrix  // adapter over vector of vectors
 {
 public:
-    typedef vector<vector<int>> Vectors;
+    typedef vector<vector<T>> Vectors;
 
     VectorMatrix() {}
-    VectorMatrix(int rows, int cols, int value = 0);
+    VectorMatrix(int rows, int cols, T value):
+        data(rows, vector<T>(cols, value))
+    {}
     explicit VectorMatrix(const Vectors &data): data(data) {}
     explicit VectorMatrix(Vectors &&data): data(data) {}
 
     template<class InputIt>
     VectorMatrix(int rows, int cols, InputIt begin, InputIt end):
-        data(rows, vector<int>(cols))
+        data(rows, vector<T>(cols))
     {
         for (auto& row : data)
-            for (int& cell : row)
+            for (T& cell : row)
                 cell = *begin++;
         assert(begin == end);
     }
@@ -30,46 +33,70 @@ public:
     int getMatrixWidth() const { return data[0].size(); }
     int getMatrixHeight() const { return data.size(); }
     int getNumber(int row, int col) const { return data[row][col]; }
-    void setNumber(int row, int col, int value) { data[row][col] = value; }
+    void setNumber(int row, int col, T value) { data[row][col] = value; }
 
 private:
     Vectors data;
 };
 
-class IntArrayMatrix
+template<typename T>
+class ArrayMatrix
 {
 public:
-    typedef vector<vector<int>> Vectors;
+    typedef vector<vector<T>> Vectors;
 
-    IntArrayMatrix(): data(nullptr) {}
-    IntArrayMatrix(std::size_t rows, std::size_t cols, int value = 0);
-    explicit IntArrayMatrix(const Vectors &data);
+    ArrayMatrix(): data(nullptr) {}
 
-    template<class InputIt>
-    IntArrayMatrix(std::size_t rows, std::size_t cols, InputIt begin, InputIt end):
+    ArrayMatrix(std::size_t rows, std::size_t cols, T value):
         height(rows),
         width(cols),
-        data(new int[rows * cols])
+        data(rows && cols ? new T[rows * cols] : nullptr)
     {
-        int* dataEnd = std::copy(begin, end, data);
+        std::fill(data, data + rows * cols, value);
+    }
+
+    explicit ArrayMatrix(const Vectors &v):
+        height(v.size()),
+        width(height ? v[0].size() : 0),
+        data(height && width ? new T[height * width] : nullptr)
+    {
+        for (std::size_t i = 0; i < height; ++i)
+            copy(v[i].begin(), v[i].end(), data + i * width);
+    }
+
+
+    template<class InputIt>
+    ArrayMatrix(std::size_t rows, std::size_t cols, InputIt begin, InputIt end):
+        height(rows),
+        width(cols),
+        data(new T[rows * cols])
+    {
+        T* dataEnd = std::copy(begin, end, data);
         assert(dataEnd  == data + rows * cols);
     }
 
-    IntArrayMatrix(std::size_t rows, std::size_t cols, std::unique_ptr<int> &&data);
+    ArrayMatrix(std::size_t rows, std::size_t cols, std::unique_ptr<T[]> &&data):
+        height(rows),
+        width(cols),
+        data(data.release())
+    {}
 
-    ~IntArrayMatrix() { delete[] data; }
+    ~ArrayMatrix() { delete[] data; }
 
     int getMatrixWidth() const { return width; }
     int getMatrixHeight() const { return height; }
     int getNumber(int row, int col) const { return data[row * width + col]; }
-    void setNumber(int row, int col, int value) { data[row * width + col] = value; }
+    void setNumber(int row, int col, T value) { data[row * width + col] = value; }
 
 private:
     std::size_t height, width;
-    int *data;
+    T *data;
 };
 
-typedef IntArrayMatrix BestMatrix;
+using BinaryVectorMatrix = VectorMatrix<char>;
+
+using BinaryArrayMatrix = ArrayMatrix<char>;
+using BestBinaryMatrix = BinaryArrayMatrix;
 
 #endif
 

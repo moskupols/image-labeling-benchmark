@@ -19,14 +19,14 @@ const char* imgOrder[] =
 };
 const std::size_t imgCount = sizeof(imgOrder) / sizeof(*imgOrder);
 
-std::vector<std::vector<int>> loadImageVectors(std::size_t imgId)
+std::vector<std::vector<char>> loadImageVectors(std::size_t imgId)
 {
     assert(imgId < imgCount);
     std::string path = imgDirPath;
     path += imgOrder[imgId];
 
     cimg_library::CImg<unsigned char> image(path.c_str());
-    std::vector<std::vector<int>> v(image.height(), std::vector<int>(image.width()));
+    std::vector<std::vector<char>> v(image.height(), std::vector<char>(image.width()));
     for (int i = 0; i < image.height(); ++i)
         for (int j = 0; j < image.width(); ++j)
             v[i][j] = image.atXY(j, i);
