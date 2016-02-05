@@ -22,18 +22,20 @@ COUNTER_MAP = {
 
 
 def write_benchmarks_latex(runs):
-    runs.sort(key=lambda r: (r['counter'], '2x2' in r['grid'], int(r['density'])))
+    grids = ['no', 'view', 'in-memory']
+    gridfunc = lambda g: 1 if 'View' in g else 2 if '2x2' in g else 0
+    runs.sort(key=lambda r: (r['counter'], gridfunc(r['grid']), int(r['density'])))
 
-    headers = ['counter', '2x2']
+    headers = ['method', 'compression']
     densities = set()
     lines = []
 
-    for (counter, cond), runs in itertools.groupby(runs, lambda r: (r['counter'], '2x2' in r['grid'])):
+    for (counter, compression), runs in itertools.groupby(runs, lambda r: (r['counter'], gridfunc(r['grid']))):
         runs = tuple(runs)
         counter = counter[:counter.index('Counter')]
         line = {
             headers[0]: COUNTER_MAP.get(counter, counter),
-            headers[1]: 'yes' if cond else 'no',
+            headers[1]: grids[compression],
         }
         for r in runs:
             dens = r['density']

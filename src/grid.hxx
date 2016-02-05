@@ -3,19 +3,51 @@
 
 #include <cstddef>
 #include <vector>
+#include <iostream>
 
 #include "matrix.hxx"
 
+class BaseGrid
+{
+protected:
+    BaseGrid(std::size_t rows, std::size_t cols):
+        h(rows),
+        w(cols)
+    {}
+
+public:
+
+    inline std::size_t rows() const
+    {
+        return h;
+    }
+
+    inline std::size_t cols() const
+    {
+        return w;
+    }
+
+    inline bool validCoords(std::size_t row, std::size_t col) const
+    {
+        return row < h && col < w;
+    }
+
+    static const int DELTAS[8][2];
+
+private:
+    std::size_t h;
+    std::size_t w;
+};
+
+
 template<class Matrix=BestBinaryMatrix>
-class SimpleGrid
+class SimpleGrid : public BaseGrid
 {
 public:
     explicit SimpleGrid(const Matrix &m):
+        BaseGrid(m.getMatrixHeight(), m.getMatrixWidth()),
         m(m)
     {}
-
-    inline std::size_t rows() const { return m.getMatrixHeight(); }
-    std::size_t cols() const { return m.getMatrixWidth(); }
 
     inline bool isDense() const { return true; }
 
@@ -24,20 +56,15 @@ public:
         return m.getNumber(row, col);
     }
 
-    inline bool validCoords(std::size_t row, std::size_t col) const
-    {
-        return row >= 0 && col >= 0 && row < rows() && col < cols(/*row*/);
-    }
-
     template<class Action>
-    inline void forEachNeighbor(std::size_t row, std::size_t col, Action action) const
+    inline void forEachNeighbor(std::size_t row, std::size_t col, Action &action) const
     {
         for (int i = 0; i < 8; ++i)
             tryTouchNeighbor(row, col, action, i);
     }
 
     template<class Action>
-    inline void forEachUpperNeighbor(std::size_t row, std::size_t col, Action action) const
+    inline void forEachUpperNeighbor(std::size_t row, std::size_t col, Action &action) const
     {
         for (int i = 0; i < 4; ++i)
             tryTouchNeighbor(row, col, action, i);
@@ -49,11 +76,9 @@ public:
         return validCoords(nr, nc) && getColor(nr, nc);
     }
 
-    static const int DELTAS[8][2];
-
 protected:
     template<class Action>
-    inline void tryTouchNeighbor(std::size_t row, std::size_t col, Action action, int dir) const
+    inline void tryTouchNeighbor(std::size_t row, std::size_t col, Action &action, int dir) const
     {
         if (canGo(row, col, dir))
         {
@@ -66,20 +91,90 @@ private:
     const Matrix &m;
 };
 
-template<class Matrix>
-const int SimpleGrid<Matrix>::DELTAS[8][2] =
+
+class Base2x2Grid
 {
-    {-1, -1}, {-1, 0}, {-1, 1},
-    {0, -1},           {0, 1},
-    {1, -1},  {1, 0},  {1, 1}
+public:
+    static const int DELTA_MASKS[8][2];
 };
 
 
+template<class Matrix=BestBinaryMatrix>
+class Viewing2x2Grid : public BaseGrid, public Base2x2Grid
+{
+public:
+    explicit Viewing2x2Grid(const Matrix &bitmap):
+        BaseGrid(
+                (bitmap.getMatrixHeight() + 1) / 2,
+                (bitmap.getMatrixWidth() + 1) / 2),
+        bitmap(bitmap),
+        oldRows(bitmap.getMatrixHeight()),
+        oldCols(bitmap.getMatrixWidth())
+    { }
+
+    inline bool isDense() const { return false; }
+
+    inline int getColor(std::size_t row, std::size_t col) const
+    {
+        std::size_t i = row * 2, j = col * 2;
+        return bitmap.getNumber(i, j)
+            | (j+1 < oldCols
+                    ? bitmap.getNumber(i, j+1) << 1
+                    : 0)
+            | (i+1 < oldRows
+                    ? bitmap.getNumber(i+1, j) << 2
+                    : 0)
+            | (i+1 < oldRows && j+1 < oldCols
+                    ? bitmap.getNumber(i + 1, j + 1) << 3
+                    : 0);
+    }
+
+    template<class Action>
+    inline void forEachNeighbor(std::size_t row, std::size_t col, Action &action) const
+    {
+        for (int i = 0; i < 8; ++i)
+            tryTouchNeighbor(row, col, action, i);
+    }
+
+    template<class Action>
+    inline void forEachUpperNeighbor(std::size_t row, std::size_t col, Action &action) const
+    {
+        for (int i = 0; i < 4; ++i)
+            tryTouchNeighbor(row, col, action, i);
+    }
+
+    inline bool canGo(std::size_t row, std::size_t col, int dir) const
+    {
+        std::size_t nr = row + DELTAS[dir][0], nc = col + DELTAS[dir][1];
+        return (getColor(row, col) & DELTA_MASKS[dir][0])
+                && validCoords(nr, nc)
+                && (getColor(nr, nc) & DELTA_MASKS[dir][1]);
+    }
+
+protected:
+    template<class Action>
+    inline void tryTouchNeighbor(std::size_t row, std::size_t col, Action &action, int dir) const
+    {
+        if (canGo(row, col, dir))
+        {
+            std::size_t nr = row + DELTAS[dir][0], nc = col + DELTAS[dir][1];
+            action(row, col, nr, nc);
+        }
+    }
+
+private:
+    const Matrix &bitmap;
+    std::size_t oldRows, oldCols;
+};
+
 template<class GivenMatrix=BestBinaryMatrix>
-class Compressing2x2Grid
+class Compressing2x2Grid : public BaseGrid, public Base2x2Grid
 {
 public:
     explicit Compressing2x2Grid(const GivenMatrix &bitmap):
+        BaseGrid(
+                (bitmap.getMatrixHeight() + 1) / 2,
+                (bitmap.getMatrixWidth() + 1) / 2),
         m(compressBitmap(bitmap))
     {}
 
@@ -99,14 +194,14 @@ public:
     }
 
     template<class Action>
-    inline void forEachNeighbor(std::size_t row, std::size_t col, Action action) const
+    inline void forEachNeighbor(std::size_t row, std::size_t col, Action &action) const
     {
         for (int i = 0; i < 8; ++i)
             tryTouchNeighbor(row, col, action, i);
     }
 
     template<class Action>
-    inline void forEachUpperNeighbor(std::size_t row, std::size_t col, Action action) const
+    inline void forEachUpperNeighbor(std::size_t row, std::size_t col, Action &action) const
     {
         for (int i = 0; i < 4; ++i)
             tryTouchNeighbor(row, col, action, i);
@@ -119,9 +214,6 @@ public:
                 && validCoords(nr, nc)
                 && (getColor(nr, nc) & DELTA_MASKS[dir][1]);
     }
-
-    static const int DELTAS[8][2];
-    static const int DELTA_MASKS[8][2];
 
     static ArrayMatrix<char> compressBitmap(const GivenMatrix &bitmap)
     {
@@ -152,7 +244,7 @@ public:
 
 protected:
     template<class Action>
-    inline void tryTouchNeighbor(std::size_t row, std::size_t col, Action action, int dir) const
+    inline void tryTouchNeighbor(std::size_t row, std::size_t col, Action &action, int dir) const
     {
         if (canGo(row, col, dir))
         {
@@ -163,22 +255,6 @@ protected:
 
 private:
     const ArrayMatrix<char> m;
-};
-
-template<class GivenMatrix>
-const int Compressing2x2Grid<GivenMatrix>::DELTAS[8][2] =
-{
-    {-1, -1}, {-1, 0}, {-1, 1},
-    {0, -1},           {0, 1},
-    {1, -1},  {1, 0},  {1, 1}
-};
-
-template<class GivenMatrix>
-const int Compressing2x2Grid<GivenMatrix>::DELTA_MASKS[8][2] =
-{
-    {1,   8},  {1|2, 4|8}, {2,   4},
-    {1|4, 2|8},            {2|8, 1|4},
-    {4,   2},  {4|8, 1|2}, {8,   1}
 };
 
 #endif

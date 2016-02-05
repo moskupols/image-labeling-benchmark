@@ -19,6 +19,7 @@ typedef testing::Types<
     // ProfileCounter<>, ProfileCounter<IntArrayProvider>,
     // ProfileCounter<UniqueIntArrayProvider>,
     DfsCounter<Compressing2x2Grid>,
+    DfsCounter<Viewing2x2Grid>,
     StackDfsCounter<>,
     StackDfsCounter<StdIntStackFactory, Compressing2x2Grid>,
     DsuCounter<SimpleGrid>,
