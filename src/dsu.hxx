@@ -31,5 +31,21 @@ private:
     std::size_t* rank;
 };
 
+class IdCalculator
+{
+public:
+    explicit IdCalculator(std::size_t cols):
+        cols(cols)
+    {}
+
+    inline DisjointSetUnion::elem_t operator() (std::size_t row, std::size_t col) const
+    {
+        return row * cols + col;
+    }
+
+private:
+    std::size_t cols;
+};
+
 #endif
 

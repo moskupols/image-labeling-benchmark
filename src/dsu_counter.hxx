@@ -8,21 +8,19 @@ class DsuCellVisitor
 {
 public:
     DsuCellVisitor(std::size_t cols, int& answer, DisjointSetUnion &dsu):
-        cols(cols),
+        id(cols),
         answer(answer),
         dsu(dsu)
     {}
 
     void operator()(std::size_t x, std::size_t y, std::size_t r, std::size_t c)
     {
-        std::size_t v = x * cols + y;
-        std::size_t u = r * cols + c;
-        if (dsu.join(v, u))
+        if (dsu.join(id(x, y), id(r, c)))
             --answer;
     }
 
 private:
-    const std::size_t cols;
+    IdCalculator id;
     int &answer;
     DisjointSetUnion &dsu;
 };

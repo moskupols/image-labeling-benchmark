@@ -8,6 +8,7 @@
 #include "dsu_counter.hxx"
 #include "twoline_dsu_counter.hxx"
 #include "profile_counter.hxx"
+#include "desision_tree_dsu_counter.hxx"
 #include "grid.hxx"
 #include "matrix.hxx"
 
@@ -39,7 +40,8 @@ void BM(benchmark::State& state)
     /* BENCHMARK_TEMPLATE(BM, StackDfsCounter<StdIntStackFactory, Compressing2x2Grid>, test); */ \
     BENCHMARK_TEMPLATE(BM, DsuCounter<>, test); \
     BENCHMARK_TEMPLATE(BM, DsuCounter<Compressing2x2Grid>, test); \
-    BENCHMARK_TEMPLATE(BM, DsuCounter<Viewing2x2Grid>, test);
+    BENCHMARK_TEMPLATE(BM, DsuCounter<Viewing2x2Grid>, test); \
+    BENCHMARK_TEMPLATE(BM, DesisionTreeDsuCounter, test);
     /* BENCHMARK_TEMPLATE(BM, TwolineDsuCounter<>, test); */
     /* BENCHMARK_TEMPLATE(BM, TwolineDsuCounter<Compressing2x2Grid>, test); */
 

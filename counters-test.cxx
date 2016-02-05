@@ -8,6 +8,7 @@
 #include "stack_dfs_counter.hxx"
 #include "dsu_counter.hxx"
 #include "twoline_dsu_counter.hxx"
+#include "desision_tree_dsu_counter.hxx"
 #include "utils/testgen.hxx"
 
 using namespace std;
@@ -25,6 +26,7 @@ typedef testing::Types<
     DsuCounter<SimpleGrid>,
     InlinedDsuCounter<SimpleGrid>,
     DsuCounter<Compressing2x2Grid>,
+    DesisionTreeDsuCounter,
     // InlinedDsuCounter<Compressing2x2Grid>,
     TwolineDsuCounter<Compressing2x2Grid>>
         TestedCounters;
