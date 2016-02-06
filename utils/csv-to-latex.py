@@ -27,7 +27,7 @@ def write_benchmarks_latex(runs):
     grids = ['no', 'view', 'yes']
     gridfunc = lambda g: 1 if 'View' in g else 2 if '2x2' in g else 0
     runs.sort(key=lambda r: (
-        'Desis' in r['counter'],
+        'Decis' in r['counter'],
         r['counter'],
         gridfunc(r['grid']),
         int(r['density'])))

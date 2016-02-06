@@ -551,7 +551,7 @@ other resource-tight applications.
 
 \subsubsection{DTSUF}
 
-This modification of SUF was taken to compare the optimization we present with
+This modification of SUF was implemented to compare the optimization we present with
 another optimization suggested by Wu, Otoo and Suzuki, % TODO reference
 namely decision tree.
 Unfortunately DTSUF (Decision Tree Scan plus Union-Find) is not
@@ -642,13 +642,34 @@ shown on \autoref{fig:dtsuf}.
 
 \subsection{Condensation types}
 
-bla-bla about 2x2 in memory and as a view
+For memory-tight applications such as embedded systems it can be useful to
+utilise the suggested condensation in a lazy way, so that without actually
+constructing the condensed image we use a function (``view'') calculating color of
+each cell with 4 lookups to the original binary image.
+This is probably most interesting combined with SUF2 algorithm, as it is a way
+to win some time without increasing memory footprint.
+However this lazy approach increases the number of image lookups.
+So, according to our benchmark, this combination is efficient only for dense
+($>30\%$) noise.
+
+So the benchmark tables show three levels of optimization applied to
+DFS, SUF and SUF2:
+``no'' meaning no condensation, ``view'' meaning lazy memory-less condensation
+and ``yes'' meaning that a temporary condensed image was constructed in memory.
+For the latter case, the construction time was included into the overall measured
+time of run.
+
+\subsection{Results}
+
+some results
+
+\section{Summary and future work}
 
 \newcommand{\inputtable}[2]{
   \begin{table}[p]
     \centering
     \input{../bench-out/#1x#2}
-    \caption{Noise images $#1 \times #2$ px}
+    \caption{Average milliseconds of cpu time per run on noise images $#1 \times #2$ px}
     \label{tab:noise#1x#2}
   \end{table} }
 
