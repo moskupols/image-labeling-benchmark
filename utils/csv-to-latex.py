@@ -9,6 +9,14 @@ import os
 import collections
 
 
+def my_round(x):
+    from math import log10, floor
+
+    x = float(x)
+    x = round(x, -int(floor(log10(abs(x)))) + 1)
+    return round(x) if x - round(x) < 1e-4 and x >= 10 else x
+
+
 def read_benchmarks_csv(csv_file=None):
     csv_file = csv_file or sys.stdin
     reader = csv.DictReader(csv_file)
@@ -21,7 +29,6 @@ COUNTER_MAP = {
     "DsuCounter": "SUF",
     "TwolineDsuCounter": "SUF2"
 }
-
 
 def write_benchmarks_latex(runs):
     grids = ['no', 'view', 'yes']
@@ -45,11 +52,12 @@ def write_benchmarks_latex(runs):
         for r in runs:
             dens = r['density']
             densities.add(dens)
-            line[dens] = str(round(float(r['cpu time ms']), 1))
+            line[dens] = str(my_round(r['cpu time ms']))
         lines.append(line)
 
     columns = len(headers) + len(densities)
-    print(r'\begin{tabular}{| l | r | ' + 'r ' * (columns - 2) + '| }')
+    print(r'\begin{tabularx}{\textwidth}{| l  r  @{\extracolsep{\fill}}'
+            + 'r ' * (columns - 2) + '| }')
 
     print(r'\cline{' + '{}-{}'.format(3, columns) + '}')
     print(r'\multicolumn{' + str(len(headers)) + '}{c}{} & '
@@ -58,13 +66,13 @@ def write_benchmarks_latex(runs):
     print('\\hline')
     headers.extend(map(str, sorted(map(int, densities))))
     print(' & '.join(headers), end='\\\\\n')
-    print('\\hline \\hline')
+    print('\\hline')
     for _, counter_lines in itertools.groupby(lines, lambda li: li[headers[0]]):
         for line in counter_lines:
             print(' & '.join([line.get(k, '') for k in headers]), end='\\\\\n')
         print('\\hline')
 
-    print(r'\end{tabular}')
+    print(r'\end{tabularx}')
 
 
 if __name__ == '__main__':
