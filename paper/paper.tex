@@ -21,6 +21,7 @@
 \usepackage{xspace}
 
 \usepackage{tabularx}
+\usepackage{graphicx}
 
 \tikzset{every picture/.append style={scale=0.5}}
 
@@ -666,12 +667,19 @@ time of run.
 some results
 
 \newcommand{\inputtable}[2]{
-  \begin{table}[p]
+  \begin{figure}
     \centering
-    \input{../bench-out/#1x#2}
-    \caption{Average milliseconds of cpu time per run on noise images $#1 \times #2$ px}
-    \label{tab:noise#1x#2}
-  \end{table} }
+    \includegraphics[height=0.45\textheight, keepaspectratio]{pics/#1x#2.eps}
+    \caption{Average CPU time per run on noise images $#1 \times #2$ px}
+    \label{fig:noise#1x#2}
+  \end{figure}
+  % \begin{table}[p]
+    % \centering
+    % \input{../bench-out/#1x#2}
+    % \caption{Average milliseconds of cpu time per run on noise images $#1 \times #2$ px}
+    % \label{tab:noise#1x#2}
+  % \end{table}
+}
 
 % \inputtable{200}{300}
 % \inputtable{400}{600}

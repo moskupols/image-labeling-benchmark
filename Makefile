@@ -16,7 +16,9 @@ SIZES = $(shell grep -P '^\w' benchmarks/bench-random.cxx | grep -oP '\d+, \d+' 
 BENCH_OUT_DIR ?= bench-out
 SIZE_CSVS = $(patsubst %,$(BENCH_OUT_DIR)/%.csv,$(SIZES))
 SIZE_TEX  = $(SIZE_CSVS:.csv=.tex)
-SIZE_PIC  = $(SIZE_CSVS:.csv=.eps)
+
+PIC_DIR ?= paper/pics
+SIZE_PIC = $(patsubst %.csv,$(PIC_DIR)/%.eps,$(notdir $(SIZE_CSVS)))
 
 BUILD_DIR ?= build
 
@@ -69,7 +71,8 @@ $(SIZE_CSVS): bench.json utils/report.py
 
 latex-figures: $(SIZE_PIC) $(SIZE_TEX)
 $(SIZE_PIC): split-sizes utils/csv-to-latex.py
-	utils/csv-to-latex.py --plot $@ <$(@:.eps=.csv) >/dev/null
+	mkdir -p $(PIC_DIR)
+	utils/csv-to-latex.py --plot $@ <$(patsubst %.eps,$(BENCH_OUT_DIR)/%.csv,$(notdir $@)) >/dev/null
 $(SIZE_TEX): split-sizes utils/csv-to-latex.py
 	utils/csv-to-latex.py <$(@:.tex=.csv) >$@
 

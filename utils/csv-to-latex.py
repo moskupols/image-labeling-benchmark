@@ -55,33 +55,54 @@ def regroup_runs(runs):
         lines.append(line)
     return lines, sorted(densities)
 
-
 METHOD_COLOR = {
-    'DFS': 's',
-    'SUF': 'o',
-    "SUF2": '^',
-    'DTSUF': '*'
+    'DFS': 'red',
+    'SUF': 'green',
+    "SUF2": 'blue',
+    'DTSUF': 'purple'
 }
 
 COND_SHAPE = {
-    'no': 'r',
-    'view': 'y',
-    'yes': 'g'
+    'no': '-',
+    'view': '--',
+    'yes': ':'
+}
+
+COND_LEGEND = {
+    'no': '',
+    'view': '+view',
+    'yes': '+2x2'
 }
 
 def plot_benchmarks(runs, out_file='output.eps'):
     from matplotlib import pyplot as plt
+    from matplotlib.font_manager import FontProperties
+
+    fontP = FontProperties()
+    fontP.set_size('small')
 
     lines, densities = regroup_runs(runs)
 
     for line in lines:
         method = line['method']
-        compression = line['2x2']
+        condensation = line['2x2']
         ys = [line[x] for x in densities]
-        plt.plot(densities, ys, COND_SHAPE[compression] + METHOD_COLOR[method] + '-.')
-    plt.xlabel('Noise density')
-    plt.ylabel('ms')
-    plt.savefig(out_file, format='eps', dpi=1200)
+
+        plt.plot(densities, ys,
+                '.' + COND_SHAPE[condensation],
+                color=METHOD_COLOR[method],
+                label=method + COND_LEGEND[condensation])
+
+    plt.xlabel('Noise density, %')
+    plt.ylabel('CPU time, ms')
+
+    if '2000' not in out_file:
+        lgd = plt.legend(loc=2, prop=fontP)
+    else:
+        lgd = plt.legend(loc=2, bbox_to_anchor=(1, 1), prop=fontP)
+    plt.savefig(out_file,
+            bbox_extra_artists=(lgd,), bbox_inches='tight',
+            format='eps', dpi=1200)
 
 def write_benchmarks_latex(runs):
     headers = ['method', '2x2']
