@@ -16,7 +16,7 @@ def read_benchmarks_csv(csv_file=None):
 
 
 COUNTER_MAP = {
-    "DesisionTreeDsuCounter": "DTSUF",
+    "DecisionTreeDsuCounter": "DTSUF",
     "DfsCounter": "DFS",
     "DsuCounter": "SUF",
     "TwolineDsuCounter": "SUF2"
