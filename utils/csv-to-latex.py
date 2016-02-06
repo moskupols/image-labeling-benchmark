@@ -30,7 +30,7 @@ COUNTER_MAP = {
     "TwolineDsuCounter": "SUF2"
 }
 
-def write_benchmarks_latex(runs):
+def regroup_runs(runs):
     grids = ['no', 'view', 'yes']
     gridfunc = lambda g: 1 if 'View' in g else 2 if '2x2' in g else 0
     runs.sort(key=lambda r: (
@@ -39,21 +39,54 @@ def write_benchmarks_latex(runs):
         gridfunc(r['grid']),
         int(r['density'])))
 
-    headers = ['method', '2x2']
     densities = set()
     lines = []
 
     for (counter, compression), runs in itertools.groupby(runs, lambda r: (r['counter'], gridfunc(r['grid']))):
         runs = tuple(runs)
         line = {
-            headers[0]: COUNTER_MAP.get(counter, counter),
-            headers[1]: grids[compression],
+            'method': COUNTER_MAP.get(counter, counter),
+            '2x2': grids[compression],
         }
         for r in runs:
-            dens = r['density']
+            dens = int(r['density'])
             densities.add(dens)
-            line[dens] = str(my_round(r['cpu time ms']))
+            line[dens] = float(r['cpu time ms'])
         lines.append(line)
+    return lines, sorted(densities)
+
+
+METHOD_COLOR = {
+    'DFS': 's',
+    'SUF': 'o',
+    "SUF2": '^',
+    'DTSUF': '*'
+}
+
+COND_SHAPE = {
+    'no': 'r',
+    'view': 'y',
+    'yes': 'g'
+}
+
+def plot_benchmarks(runs, out_file='output.eps'):
+    from matplotlib import pyplot as plt
+
+    lines, densities = regroup_runs(runs)
+
+    for line in lines:
+        method = line['method']
+        compression = line['2x2']
+        ys = [line[x] for x in densities]
+        plt.plot(densities, ys, COND_SHAPE[compression] + METHOD_COLOR[method] + '-.')
+    plt.xlabel('Noise density')
+    plt.ylabel('ms')
+    plt.savefig(out_file, format='eps', dpi=1200)
+
+def write_benchmarks_latex(runs):
+    headers = ['method', '2x2']
+    grids = ['no', 'view', 'yes']
+    lines, densities = regroup_runs(runs)
 
     columns = len(headers) + len(densities)
     print(r'\begin{tabularx}{\textwidth}{| l  r  @{\extracolsep{\fill}}'
@@ -64,12 +97,13 @@ def write_benchmarks_latex(runs):
         + r'\multicolumn{' + str(len(densities)) + '}{|c|}{density}', end='\\\\\n')
 
     print('\\hline')
-    headers.extend(map(str, sorted(map(int, densities))))
-    print(' & '.join(headers), end='\\\\\n')
+    print(' & '.join(headers + list(map(str, densities))), end='\\\\\n')
     print('\\hline')
     for _, counter_lines in itertools.groupby(lines, lambda li: li[headers[0]]):
         for line in counter_lines:
-            print(' & '.join([line.get(k, '') for k in headers]), end='\\\\\n')
+            line = list(map(line.get, headers)) \
+                    + list(map(str, map(my_round, map(line.get, densities))))
+            print(' & '.join(line), end='\\\\\n')
         print('\\hline')
 
     print(r'\end{tabularx}')
@@ -77,5 +111,7 @@ def write_benchmarks_latex(runs):
 
 if __name__ == '__main__':
     runs = read_benchmarks_csv()
+    if '--plot' in sys.argv:
+        plot_benchmarks(runs, sys.argv[sys.argv.index('--plot')+1])
     write_benchmarks_latex(runs)
 

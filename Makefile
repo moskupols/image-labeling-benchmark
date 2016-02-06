@@ -12,10 +12,11 @@ CIMG_FLAGS=-lX11 -pthread
 SOURCES = src/* utils/*.hxx assets
 COMPILED_SOURCES = src/*.cxx
 
-SIZES = $(shell grep -oP '\d+, \d+' benchmarks/bench-random.cxx | uniq | sed 's/, /x/')
+SIZES = $(shell grep -P '^\w' benchmarks/bench-random.cxx | grep -oP '\d+, \d+' | uniq | sed 's/, /x/')
 BENCH_OUT_DIR ?= bench-out
 SIZE_CSVS = $(patsubst %,$(BENCH_OUT_DIR)/%.csv,$(SIZES))
 SIZE_TEX  = $(SIZE_CSVS:.csv=.tex)
+SIZE_PIC  = $(SIZE_CSVS:.csv=.eps)
 
 BUILD_DIR ?= build
 
@@ -62,15 +63,17 @@ $(REPORT_FILE): bench.json utils/report.py
 	utils/report.py <$< >$@
 
 split-sizes: $(SIZE_CSVS)
-$(SIZE_CSVS): bench.json
+$(SIZE_CSVS): bench.json utils/report.py
 	mkdir -p $(BENCH_OUT_DIR)
 	utils/report.py --split-by-sizes <$<
 
-latex-tables: $(SIZE_TEX) utils/csv-to-latex.py
-$(SIZE_TEX): split-sizes
+latex-figures: $(SIZE_PIC) $(SIZE_TEX)
+$(SIZE_PIC): split-sizes utils/csv-to-latex.py
+	utils/csv-to-latex.py --plot $@ <$(@:.eps=.csv) >/dev/null
+$(SIZE_TEX): split-sizes utils/csv-to-latex.py
 	utils/csv-to-latex.py <$(@:.tex=.csv) >$@
 
-paper: latex-tables paper/paper.tex
+paper: latex-figures paper/paper.tex
 	cd paper && latexmk -pdf paper
 
 bench.json: $(BUILD_DIR)/benchmark
