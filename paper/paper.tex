@@ -397,6 +397,15 @@ counting CC both with and without the $2 \times 2$ cells optimization.
 
 \subsection{Algorithms overview}
 
+As each of these methods, omitting DTSUF could be used with both condensed and
+non-condensed images, for convenience we denote height and width of the image
+on input of each algorithm as $H$ and $W$.
+
+Also to avoid repeating ``pixel or cell'' we will just use the word ``pixel''
+meaning the appropriate raster for non-condensed and condensed images.
+When we mention neighbors of some pixel, we mean pixels that are directly connected
+to it in terms of appropriate connectivity.
+
 \subsubsection{DFS}
 
 The first algorithm we chose for the benchmark is Depth First Search graph traversal.
@@ -406,10 +415,9 @@ Although not intended for image labeling and
 suboptimal in most cases, it still has linear in the number of pixels worst-case
 complexity in both time and memory.
 
-Like most approaches, the algorithm contains has and outer loop over all pixels
-of the image.
-Each time an object pixel that is not labeled yet is encountered, DFS traversal
-is launched from that pixel.
+Like most approaches, the algorithm has an outer loop over all pixels of the image.
+Each time an object pixel (non-empty cell, in case it is actually a cell)
+which is not labeled yet is encountered, DFS traversal is launched from that pixel.
 The traversal labels all the object pixels of the same CC, launching recursively
 from all unlabeled neighbors of current pixel.
 
@@ -418,15 +426,69 @@ from all unlabeled neighbors of current pixel.
 Another general approach for graph CC labeling which is more popular in image
 labeling is using some kind of a data structure to maintain disjoint sets of pixels
 that are considered to be in the same CC.
-The structure is commonly called \texttt{Union-Find}, as the two essential operations
-it must support are \texttt{Union}, which is used to union some of the disjoint sets,
-and \texttt{Find}, which is used to find the representative element of the set
-some element belongs to, so that we can always tell if two elements are in the same
-set.
+
+The structure is commonly called Union-Find, as the two essential operations
+it is supposed to support are Union, which is used to merge some two of the
+disjoint sets in one, and Find, which is used to find the representative element
+of the set some element belongs to, so that we can always tell if two elements are
+in the same set.
+The structure can be implemented so that the amortized time complexity for each
+operation is $O(\alpha(HW))$, where $\alpha$ is the inverse Ackermann function,
+and $\alpha(HW) < 5$ for all remotely practical image sizes. % TODO links
+
+The approach that is named SUF (Scan plus Union-Find) in this paper follows.
+
+Pixels are processed in the natural order: from top to bottom and from
+left to right, so each row is fully processed before all rows after it.
+So for each object pixel we encounter there are at most 4 nearby pixels
+that were already processed, see \autoref{fig:suf:neighbors}.
+
+At first each object pixel is considered to belong to its own CC, so right before
+considering the neighbors we increment the CC counter.
+Moreover, it is associated with its own disjoint set in the Union-Find structure.
+More specifically, object pixel at position $x, y$ is associated with
+the set number $xW + y$ to guarantee absence of collisions.
+
+The possible neighbors are processed in the order shown on \autoref{fig:suf:neighbors},
+and for each neighbor that is object pixel, the Union operation is performed
+on the two sets containing the current and the neighbor pixel.
+In case the Union operation was successful, which means that the pixels
+had belonged previously to different sets and we have just found a way to merge two
+CC, the CC counter is decremented.
+
+\begin{figure}
+  \centering
+  \begin{tikzpicture}
+    \foreach \x/\y [count=\i from 1] in {0/1,1/1,2/1,0/0} {
+      \node[whitebox] at (\x,\y) {\i};
+    }
+    \node[graybox] at (1, 0) {};
+    \node[whitebox] at (1, 0) {};
+  \end{tikzpicture}
+  \caption{Neighbor mask for SUF algorithm family.}
+  \label{fig:suf:neighbors}
+\end{figure}
+
+Note that this algorithm outputs not the matrix of final labels, but only the number
+of CC.
+This is the place in which it differs from some common two-pass approaches for CC % TODO references
+labeling, as it is an algorithm not for labeling, but just for counting CC.
+The latter is exactly what is needed for the aforementioned linear variation problem.
+
+Also we have to mention that for performance reasons the Union-Find internal structures
+have to be allocated ahead to have the size of at least $HW$ to guarantee that
+each object can be easily associated with unique starting set given only its
+coordinates. So memory consumption of SUF is linear in the number of pixels.
 
 \subsubsection{SUF2}
 
 \subsubsection{DTSUF}
+
+using desision trees suggested by Wu, Otoo and Suzuki
+
+\subsection{Condensation types}
+
+bla-bla about 2x2 in memory and as a view
 
 \newcommand{\inputtable}[2]{
   \begin{table}[p]
