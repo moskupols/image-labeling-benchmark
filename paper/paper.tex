@@ -393,15 +393,17 @@ factor of 4.
 \section{Benchmarks}
 
 \newcommand{\inputtable}[2]{
-  \begin{table}
+  \begin{table}[p]
     \centering
     \input{../bench-out/#1x#2}
     \caption{Noise images $#1 \times #2$ px}
+    \label{tab:noise#1x#2}
   \end{table} }
 
-\inputtable{400}{600}
+% \inputtable{200}{300}
+% \inputtable{400}{600}
 \inputtable{800}{1200}
-\inputtable{1200}{1800}
+% \inputtable{1200}{1800}
 \inputtable{2000}{3000}
 \inputtable{4000}{6000}
 

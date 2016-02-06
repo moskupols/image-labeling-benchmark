@@ -66,7 +66,7 @@ $(SIZE_CSVS): bench.json
 	mkdir -p $(BENCH_OUT_DIR)
 	utils/report.py --split-by-sizes <$<
 
-latex-tables: $(SIZE_TEX)
+latex-tables: $(SIZE_TEX) utils/csv-to-latex.py
 $(SIZE_TEX): split-sizes
 	utils/csv-to-latex.py <$(@:.tex=.csv) >$@
 

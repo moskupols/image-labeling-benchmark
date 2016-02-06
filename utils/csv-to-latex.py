@@ -16,7 +16,7 @@ def read_benchmarks_csv(csv_file=None):
 
 
 COUNTER_MAP = {
-    "DesisionTreeDsuCounter": "WuOtoo",
+    "DesisionTreeDsuCounter": "DTSUF",
     "DfsCounter": "DFS",
     "DsuCounter": "SUF",
     "TwolineDsuCounter": "SUF2"
@@ -26,7 +26,11 @@ COUNTER_MAP = {
 def write_benchmarks_latex(runs):
     grids = ['no', 'view', 'yes']
     gridfunc = lambda g: 1 if 'View' in g else 2 if '2x2' in g else 0
-    runs.sort(key=lambda r: (r['counter'], gridfunc(r['grid']), int(r['density'])))
+    runs.sort(key=lambda r: (
+        'Desis' in r['counter'],
+        r['counter'],
+        gridfunc(r['grid']),
+        int(r['density'])))
 
     headers = ['method', '2x2']
     densities = set()
@@ -54,11 +58,12 @@ def write_benchmarks_latex(runs):
     print('\\hline')
     headers.extend(map(str, sorted(map(int, densities))))
     print(' & '.join(headers), end='\\\\\n')
-    print('\\hline')
-    for line in lines:
-        print(' & '.join([line.get(k, '') for k in headers]), end='\\\\\n')
+    print('\\hline \\hline')
+    for _, counter_lines in itertools.groupby(lines, lambda li: li[headers[0]]):
+        for line in counter_lines:
+            print(' & '.join([line.get(k, '') for k in headers]), end='\\\\\n')
+        print('\\hline')
 
-    print('\\hline')
     print(r'\end{tabular}')
 
 
