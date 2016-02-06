@@ -16,23 +16,24 @@ def read_benchmarks_csv(csv_file=None):
 
 
 COUNTER_MAP = {
-    "Dfs": "DFS",
-    "Dsu": "SUF",
+    "DesisionTreeDsuCounter": "WuOtoo",
+    "DfsCounter": "DFS",
+    "DsuCounter": "SUF",
+    "TwolineDsuCounter": "SUF2"
 }
 
 
 def write_benchmarks_latex(runs):
-    grids = ['no', 'view', 'in-memory']
+    grids = ['no', 'view', 'yes']
     gridfunc = lambda g: 1 if 'View' in g else 2 if '2x2' in g else 0
     runs.sort(key=lambda r: (r['counter'], gridfunc(r['grid']), int(r['density'])))
 
-    headers = ['method', 'compression']
+    headers = ['method', '2x2']
     densities = set()
     lines = []
 
     for (counter, compression), runs in itertools.groupby(runs, lambda r: (r['counter'], gridfunc(r['grid']))):
         runs = tuple(runs)
-        counter = counter[:counter.index('Counter')]
         line = {
             headers[0]: COUNTER_MAP.get(counter, counter),
             headers[1]: grids[compression],
