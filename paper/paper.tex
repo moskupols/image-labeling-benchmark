@@ -392,6 +392,42 @@ factor of 4.
 
 \section{Benchmarks}
 
+In this section we present performance benchmarks of some popular methods for
+counting CC both with and without the $2 \times 2$ cells optimization.
+
+\subsection{Algorithms overview}
+
+\subsubsection{DFS}
+
+The first algorithm we chose for the benchmark is Depth First Search graph traversal.
+Graph traversal algorithms are the general approach for CC labeling in graphs, and
+DFS is arguably the most simple.
+Although not intended for image labeling and
+suboptimal in most cases, it still has linear in the number of pixels worst-case
+complexity in both time and memory.
+
+Like most approaches, the algorithm contains has and outer loop over all pixels
+of the image.
+Each time an object pixel that is not labeled yet is encountered, DFS traversal
+is launched from that pixel.
+The traversal labels all the object pixels of the same CC, launching recursively
+from all unlabeled neighbors of current pixel.
+
+\subsubsection{SUF}
+
+Another general approach for graph CC labeling which is more popular in image
+labeling is using some kind of a data structure to maintain disjoint sets of pixels
+that are considered to be in the same CC.
+The structure is commonly called \texttt{Union-Find}, as the two essential operations
+it must support are \texttt{Union}, which is used to union some of the disjoint sets,
+and \texttt{Find}, which is used to find the representative element of the set
+some element belongs to, so that we can always tell if two elements are in the same
+set.
+
+\subsubsection{SUF2}
+
+\subsubsection{DTSUF}
+
 \newcommand{\inputtable}[2]{
   \begin{table}[p]
     \centering
