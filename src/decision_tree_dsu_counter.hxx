@@ -3,7 +3,7 @@
 
 #include "matrix.hxx"
 
-class DesisionTreeDsuCounter
+class DecisionTreeDsuCounter
 {
 public:
     template<class Matrix>

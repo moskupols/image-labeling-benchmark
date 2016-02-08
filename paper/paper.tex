@@ -13,17 +13,24 @@
 \usepackage{subcaption}
 
 \usepackage{hyperref}
+\usepackage{cleveref}
 
 \usepackage{listings}
 \usepackage{xcolor}
 
 \usepackage{xspace}
 
+\usepackage{tabularx}
+\usepackage{graphicx}
+
 \tikzset{every picture/.append style={scale=0.5}}
 
-\tikzstyle{cell}=[rectangle,draw=gray,dashed,thick, minimum size=1.05cm]
+\tikzstyle{cell}=[rectangle,draw=gray,dashed,semithick, minimum size=1.05cm]
 \tikzstyle{graybox}=[rectangle,thick, minimum size=0.4cm, fill=lightgray]
 \tikzstyle{whitebox}=[rectangle,draw=black,thick, minimum size=0.5cm]
+
+% \captionsetup[subfigure]{subrefformat=simple,labelformat=simple}
+% \renewcommand\thesubfigure{(\alph{subfigure})}
 
 \lstset{
   language=c++,
@@ -47,8 +54,8 @@
 
 \begin{document}
 
-\title{Linear variation and an optimization of algorithms for connected
-components labeling in a binary image}
+\title{Linear Variation and an Optimization of Algorithms for Connected
+Components Labeling in a Binary Image}
 
 \author{Fedor Alekseev\inst{1} \and Mikhail Alekseev\inst{2}\inst{3}
 \and Artyom Makovetskii\inst{2}\inst{4}}
@@ -193,7 +200,7 @@ a condensed (non-binary) image with new connectivity that is $2$ times smaller i
 each dimension than the initial image.
 Most approaches for CC labeling are still valid for the new image.
 As time and memory consumptions of conventional approaches usually depend linearly on
-the number of pixels, running them on the condensed image can be up to 4 times
+the number of pixels, running them on the condensed image can be
 more efficient than running on the initial image.
 
 It is worth noting that our method exploits an important property of 8-connectivity
@@ -392,18 +399,298 @@ factor of 4.
 
 \section{Benchmarks}
 
-\newcommand{\inputtable}[2]{
-  \begin{table}
-    \centering
-    \input{../bench-out/#1x#2}
-    \caption{Noise images $#1 \times #2$ px}
-  \end{table} }
+In this section we present performance benchmarks of some popular methods for
+counting CC both with and without the $2 \times 2$ cells optimization.
 
+\subsection{Algorithms overview}
+
+As each of these methods, omitting DTSUF could be used with both condensed and
+non-condensed images, for convenience we denote height and width of the image
+on input of each algorithm as $H$ and $W$.
+
+Also to avoid repeating ``pixel or cell'' we will just use the word ``pixel''
+meaning the appropriate raster for non-condensed and condensed images.
+When we mention neighbors of some pixel, we mean pixels that are directly connected
+to it in terms of appropriate connectivity.
+
+\subsubsection{DFS}
+
+The first algorithm we chose for the benchmark is Depth First Search graph traversal.
+Graph traversal algorithms are the general approach for CC labeling in graphs, and
+DFS is arguably the most simple.
+Although not intended for image labeling and
+suboptimal in most cases, it still has linear in the number of pixels worst-case
+complexity in both time and memory.
+
+Like most approaches, the algorithm has an outer loop over all pixels of the image.
+Each time an object pixel (non-empty cell, in case it is actually a cell)
+which is not labeled yet is encountered, DFS traversal is launched from that pixel.
+The traversal labels all the object pixels of the same CC, launching recursively
+from all unlabeled neighbors of current pixel.
+
+\subsubsection{SUF}
+
+Another general approach for graph CC labeling which is more popular in image
+labeling is using some kind of a data structure to maintain disjoint sets of pixels
+that are considered to be in the same CC.
+
+The structure is commonly called Union-Find, as the two essential operations
+it is supposed to support are Union, which is used to merge some two of the
+disjoint sets in one, and Find, which is used to find the representative element
+of the set some element belongs to, so that we can always tell if two elements are
+in the same set.
+The structure can be implemented so that the amortized time complexity for each
+operation is $O(\alpha(HW))$, where $\alpha$ is the inverse Ackermann function,
+and $\alpha(HW) < 5$ for all remotely practical image sizes\cite{CLRS}. % TODO links
+
+The approach that is named SUF (Scan plus Union-Find) in this paper follows.
+
+Pixels are processed in the natural order: from top to bottom and from
+left to right, so each row is fully processed before all rows after it.
+So for each object pixel we encounter there are at most 4 nearby pixels
+that were already processed, see \autoref{fig:suf:neighbors}.
+
+At first each object pixel is considered to belong to its own CC, so right before
+considering the neighbors we increment the CC counter.
+Moreover, it is associated with its own disjoint set in the Union-Find structure.
+More specifically, object pixel at position $x, y$ is associated with
+the set number $xW + y$ to guarantee absence of collisions.
+
+The possible neighbors are processed in the order shown on \autoref{fig:suf:neighbors},
+and for each neighbor that is object pixel, the Union operation is performed
+on the two sets containing the current and the neighbor pixel.
+In case the Union operation was successful, which means that the pixels
+had belonged previously to different sets and we have just found a way to merge two
+CC, the CC counter is decremented.
+
+\begin{figure}
+  \centering
+  \begin{tikzpicture}
+    \foreach \x/\y [count=\i from 1] in {0/1,1/1,2/1,0/0} {
+      \node[whitebox] at (\x,\y) {\i};
+    }
+    \node[graybox] at (1, 0) {};
+    \node[whitebox] at (1, 0) {};
+  \end{tikzpicture}
+  \caption{Neighbor mask for SUF algorithm family.}
+  \label{fig:suf:neighbors}
+\end{figure}
+
+Note that this algorithm outputs not the matrix of final labels, but only the number
+of CC.
+This is the place in which it differs from some common two-pass approaches for CC % TODO references
+labeling, as it is an algorithm not for labeling, but just for counting CC.
+The latter is exactly what is needed for the aforementioned linear variation problem.
+
+Also we have to mention that for performance reasons the Union-Find internal structures
+are allocated ahead to have the size of at least $HW$ to guarantee that
+each object can be easily associated with unique starting set given only its
+coordinates. So memory consumption of SUF is linear in the number of pixels.
+
+\subsubsection{SUF2}
+
+This approach is a modification of SUF designed to reduce memory consumption
+and potential number of cache-misses generated by Union-Find operations.
+
+The idea is to run through each row twice: first time to establish label equivalence
+classes within row, and the second time to set unique equal label for all pixels of
+same CC.
+This gives us the opportunity to maintain just $O(W)$
+different labels at each moment, and so the Union-Find structure can be allocated
+for only $O(W)$ elements, as opposed to $WH$ elements needed for SUF.
+
+The exact maximum number of label equivalence classes between two adjacent rows
+depends on whether the given image is condensed.
+For non-condensed images $W=2M$, and maximum number of label equivalence classes
+in two adjacent rows is $M=\frac{W}2$, as if two object pixels are both in adjacent
+rows and in adjacent columns, then they are neighbors in terms of 8-connectivity.
+
+On the other hand, for condensed images $W=M$, and maximum number of label equivalence
+class in two adjacent rows of cells is $2W=2M$.
+See \autoref{fig:suf2:extremal} for illustration on the extremal cases.
+
+\begin{figure}
+  \centering
+  \begin{subfigure}{0.475\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \foreach \x in {0,1,...,9} \foreach \y in {0,1} {
+        \node[whitebox,dashed,semithick,draw=gray] at (\x,\y) {};
+      }
+      \foreach \x/\y in {0/0,2/1,4/1,6/0,8/1} {
+        \node[whitebox] at (\x,\y) {};
+      }
+    \end{tikzpicture}
+    \caption{Non-condensed image, up to 5 different labels on 10 columns.}
+  \end{subfigure}
+  \quad
+  \begin{subfigure}{0.475\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \foreach \x in {0.5,2.5,...,8.5} \foreach \y in {0.5,2.5} {
+        \node[cell] at (\x,\y) {};
+      }
+      \foreach \x in {0,2,...,8} \foreach \y in {0,3} {
+        \node[whitebox] at (\x,\y) {};
+      }
+    \end{tikzpicture}
+    \caption{Condensed image, up to 10 different labels on 5 columns.}
+  \end{subfigure}
+  \caption{Extremal cases for SUF2.}
+  \label{fig:suf2:extremal}
+\end{figure}
+
+Our benchmarks show that, although SUF2 without condensation is generally more
+efficient on noise images than SUF without condensation, the mentioned
+consideration make the $2 \times 2$ optimization
+of SUF2 less dramatic in means of performance increase factor.
+Optimized SUF2 significantly outperforms optimized SUF only on
+huge noise images with less than 60\% density, while falling behind on
+small and medium-sized noise images.
+
+Note that, while SUF2 is intended for CC counting, its memory
+consumption is only $O(W)$, which is significant for embedded systems and
+other resource-tight applications.
+
+\subsubsection{DTSUF}
+
+This modification of SUF was implemented to compare the optimization we present with
+another optimization suggested by Wu, Otoo and Suzuki\cite{wuotoo},
+namely decision tree.
+Unfortunately DTSUF (Decision Tree Scan plus Union-Find) is not
+applicable for condensed image, as it exploits similar observations on 8-connectivity.
+
+As before, the goal is to reduce the number of pixel lookup and label copy operations.
+This is achieved with careful consideration of only the necessary neighbors,
+stopping once the set of one or two label operations that are needed is
+determined. The decision tree for processing an object pixel is
+shown on \autoref{fig:dtsuf}.
+
+\begin{figure}
+  \centering
+  \begin{subfigure}{0.3\linewidth}
+    \centering
+    \begin{tikzpicture}
+      \node[graybox] at (1,0) {};
+      \foreach \x/\y/\a in {0/1/a,1/1/b,2/1/c,0/0/d,1/0/e} {
+        \node[whitebox,font=\bf] at (\x,\y) {\a};
+      }
+    \end{tikzpicture}
+    \caption{Neighbor enumeration.}
+  \end{subfigure}
+  \quad
+  \begin{subfigure}{0.65\linewidth}
+    \centering
+    \begin{tikzpicture}[
+      sibling distance=18em,
+      lookup/.style = {shape=circle, draw, thick, align=center, font=\bf},
+      action/.style = {shape=rectangle, rounded corners, draw, align=center, font=\scriptsize},
+      result/.style = {font=\bf}
+    ]
+      \node[lookup] {b}
+        child[level distance=3em,sibling distance=30em] {
+          node[lookup] {c}
+          child[level distance=5em, sibling distance=14em] {
+            node[lookup] {a}
+            child[level distance=6em, sibling distance=10em] {
+              node[lookup] {d}
+              child {
+                node[action] {new label}
+                edge from parent node[result,above] {$0$}
+              }
+              child {
+                node[action] {union(e,d)}
+                edge from parent node[result,above] {$1$}
+              }
+              edge from parent node[result,above] {$0$}
+            }
+            child {
+              node[action] {union(e,a)}
+              edge from parent node[result,above] {$1$}
+            }
+            edge from parent node[result,above] {$0$}
+          }
+          child[level distance=9em,sibling distance=24em] {
+            node[lookup] {a}
+            child[level distance= 6em, sibling distance=10em] {
+              node[lookup] {d}
+              child {
+                node[action] {union(e,c)}
+                edge from parent node[result,above] {$0$}
+              }
+              child {
+                node[action] {union(e,c,d)}
+                edge from parent node[result,above] {$1$}
+              }
+              edge from parent node[result,above] {$0$}
+            }
+            child[sibling distance=20em] {
+              node[action] {union(e,c,a)}
+              edge from parent node[result,above] {$1$}
+            }
+            edge from parent node[result,above] {$1$}
+          }
+          edge from parent node[result,above] {$0$}
+        }
+        child[level distance=2em] {
+          node[action] {union(e,b)}
+          edge from parent node[result,above] {$1$}
+        };
+    \end{tikzpicture}
+    \caption{The decision tree.}
+  \end{subfigure}
+  \caption{DTSUF decision tree optimization.}
+  \label{fig:dtsuf}
+\end{figure}
+
+\subsection{Condensation types}
+
+For memory-tight applications such as embedded systems it can be useful to
+utilise the suggested condensation in a lazy way, so that without actually
+constructing the condensed image we use a function (``view'') calculating color of
+each cell with 4 lookups to the original binary image.
+This is probably most interesting when combined with SUF2 algorithm, as it is a way
+to win some time while avoiding memory footprint increase.
+However this lazy approach increases the number of image lookups.
+% So, according to our benchmark, this combination is efficient only for dense
+% ($>30\%$) noise.
+
+So the benchmark tables show three levels of optimization applied to
+DFS, SUF and SUF2:
+``no'' meaning no condensation, ``view'' meaning lazy memory-less condensation
+and ``yes'' meaning that a temporary condensed image was constructed in memory.
+For the latter case, the construction time was included into the overall measured
+time of run.
+
+\subsection{Results}
+
+some results
+
+\newcommand{\inputtable}[2]{
+  \begin{figure}
+    \centering
+    \includegraphics[height=0.45\textheight, keepaspectratio]{pics/#1x#2.eps}
+    \caption{Average CPU time per run on noise images $#1 \times #2$ px}
+    \label{fig:noise#1x#2}
+  \end{figure}
+  \begin{table}[p]
+    \centering
+    \input{tables/#1x#2}
+    \caption{Average CPU time per run on noise images $#1 \times #2$ px}
+    \label{tab:noise#1x#2}
+  \end{table}
+}
+
+% \inputtable{200}{300}
 \inputtable{400}{600}
 \inputtable{800}{1200}
 \inputtable{1200}{1800}
 \inputtable{2000}{3000}
 \inputtable{4000}{6000}
+% \inputtable{5000}{7500}
+
+\section{Summary and future work}
+
 
 \begin{thebibliography}{5}
 
@@ -414,7 +701,16 @@ Fast connected-component labeling. Pattern Recognition. v42, Pages 1977-1987. (2
 \bibitem {sterzh}
 Стержанов, М.:
 Методики выделения связных компонент в штриховых бинарных изображениях.
-Труды конференции ГрафиКон’2010. НИУ ИТМО. Санкт-Петербург. 2010, с. 169-174.
+Труды конференции ГрафиКон’2010. НИУ ИТМО. Санкт-Петербург. с. 169-174. (2010)
+
+\bibitem {CLRS}
+Cormen, H., Leiserson, E., Rivest, L., Stein, C.:
+Introduction to Algorithms (Second ed.), MIT Press (2001)
+
+\bibitem {wuotoo}
+Wu, K, Otoo, E., Suzuki, K.:
+Optimizing two-pass connected-component labeling algorithms.
+Pattern Anal. Appl. (2008)
 
 \end{thebibliography}
 
