@@ -4,4 +4,5 @@ bench-out/
 report.csv
 bench.json
 *.pyc
+texput.log
 
