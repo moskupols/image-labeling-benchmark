@@ -62,6 +62,13 @@ METHOD_COLOR = {
     'DTSUF': 'purple'
 }
 
+METHOD_SHAPE = {
+    'DFS': '.',
+    'SUF': '.',
+    "SUF2": '.',
+    'DTSUF': '.'
+}
+
 COND_SHAPE = {
     'no': '-',
     'view': '--',
@@ -89,7 +96,7 @@ def plot_benchmarks(runs, out_file='output.eps'):
         ys = [line[x] for x in densities]
 
         plt.plot(densities, ys,
-                '.' + COND_SHAPE[condensation],
+                METHOD_SHAPE[method] + COND_SHAPE[condensation],
                 color=METHOD_COLOR[method],
                 label=method + COND_LEGEND[condensation])
 
@@ -104,30 +111,47 @@ def plot_benchmarks(runs, out_file='output.eps'):
             bbox_extra_artists=(lgd,), bbox_inches='tight',
             format='eps', dpi=1200)
 
-def write_benchmarks_latex(runs):
-    headers = ['method', '2x2']
-    grids = ['no', 'view', 'yes']
-    lines, densities = regroup_runs(runs)
 
-    columns = len(headers) + len(densities)
-    print(r'\begin{tabularx}{\textwidth}{| l  r  @{\extracolsep{\fill}}'
-            + 'r ' * (columns - 2) + '| }')
+def write_table(lines, densities):
+    HEADERS = ['method', '2x2']
+
+    def wrapsize(s):
+        #  return '\\scriptsize{' + str(s) + '}'
+        return str(s)
+
+    columns = len(HEADERS) + len(densities)
+
+    column_types = ['r'] * len(densities)
+    print(r'\begin{tabularx}{\linewidth}{| l  r  @{\extracolsep{\fill}}'
+            + ' '.join(column_types) + '| }')
 
     print(r'\cline{' + '{}-{}'.format(3, columns) + '}')
-    print(r'\multicolumn{' + str(len(headers)) + '}{c}{} & '
+    print(r'\multicolumn{' + str(len(HEADERS)) + '}{c}{} & '
         + r'\multicolumn{' + str(len(densities)) + '}{|c|}{density}', end='\\\\\n')
 
     print('\\hline')
-    print(' & '.join(headers + list(map(str, densities))), end='\\\\\n')
+    print(' & '.join(HEADERS + list(map(wrapsize, densities))), end='\\\\\n')
     print('\\hline')
-    for _, counter_lines in itertools.groupby(lines, lambda li: li[headers[0]]):
+    for _, counter_lines in itertools.groupby(lines, lambda li: li[HEADERS[0]]):
         for line in counter_lines:
-            line = list(map(line.get, headers)) \
-                    + list(map(str, map(my_round, map(line.get, densities))))
+            values = [wrapsize(my_round(line[d])) for d in densities]
+            line = list(map(wrapsize, map(line.get, HEADERS))) + values
             print(' & '.join(line), end='\\\\\n')
         print('\\hline')
 
     print(r'\end{tabularx}')
+
+def write_benchmarks_latex(runs):
+    lines, densities = regroup_runs(runs)
+
+    if len(densities) < 12:
+        write_table(lines, densities)
+    else:
+        boundary = len(densities) // 2 + 1
+        write_table(lines, densities[:boundary])
+        print('\n\n\\qquad\n\n')
+        write_table(lines, densities[boundary:])
+
 
 
 if __name__ == '__main__':
