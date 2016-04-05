@@ -1,5 +1,5 @@
 \RequirePackage{amsmath}
-\documentclass{llncs}
+\documentclass[hidelinks]{llncs}
 
 \usepackage{amssymb}
 
@@ -51,6 +51,7 @@
 \DeclareMathOperator*{\argmin}{arg\,min}
 
 \renewcommand{\C}{\texttt{C} \xspace}
+\newcommand{\CXX}{\texttt{C++} \xspace}
 
 \begin{document}
 
@@ -72,15 +73,20 @@ Chelyabinsk State University, Chelyabinsk, Russia
 \maketitle              % typeset the title of the contribution
 
 \begin{abstract}
-Linear variation is a topological characteristic of a function of two variables.
-The problem of linear variation computing can be reduced to the problem
-of counting connected components in a binary image with eight-connected connectivity.
-The new hybrid method for the problem is presented.
-The method is essentially a modification of a two-scan algorithm for labeling
-that groups the pixels into $2 \times 2$ cells.
+The linear variation is a topological characteristic of the function of two variables.
+The problem of linear variation computing can be reduced to the problem of counting connected components in a binary image with eight-connected connectivity.
+%The new hybrid method for the problem is presented.
+%The method is essentially a modification of a two-scan algorithm for labeling
+%that groups the pixels into $2 \times 2$ cells.
+This is usually done through connected components labeling, and many approaches for that are known.
+This paper presents an efficient way to convert the initial binary image with 8-connectivity into a condensed (non-binary) image with new connectivity that is 2 times smaller in each dimension than the initial image.
+Most approaches for connected components labeling are still valid for the new image.
+As time and memory consumptions of conventional approaches usually depend linearly on the number of pixels,
+running them on the condensed image can be up to 4 times more efficient than running on the initial image.
+The method is essentially a modification of some known raster algorithms for labeling that groups pixels into $2 \times 2$ cells.
+A performance benchmark of the proposed  method applied to some approaches on noise images is provided.
 
-\keywords{Binary raster image, connected component labeling,
-pattern recognition}
+\keywords{Binary raster image, connected component labeling, pattern recognition}
 \end{abstract}
 
 \section{Introduction}
@@ -98,7 +104,7 @@ where $n$ is a noise?
 A common way for solving the problems \eqref{eq:imageRelation} is to use the
 variational functionals.
 One of the most widely used approaches is total variation
-regularization [1]. % TODO fix bibliography
+regularization\cite{mak1}.
 Let $J(u)$ be the following functional:
 \begin{equation}
   J(u) = \frac12 \norm{u - u_0}^2 + \lambda TV(u),
@@ -127,14 +133,14 @@ The norm and modulus of the gradient are metrical characteristic of a function o
 two variables.
 Continuous functions of two variables also have a set of topological
 characteristics referred to as linear variations.
-Kronrod [2] % TODO fix bibliography
+Kronrod\cite{mak2}
 introduced the notion of a regular component of the level set of a
 continuous function of two variables.
 The simplest topological characteristic in the linear variation theory is a number
 of regular components for all level sets of a function.
 Full information about linear variations of a function is contained in the
 one-dimensional tree of a function of two variables.
-In [3, 4, 5] % TODO fix bibliography
+In \cite{mak3,mak4,mak5}
 was discussed the necessity of the using a linear variation in the
 image restoration theory.
 
@@ -192,7 +198,7 @@ computation of $V_k(u_{i,j})$ for given k.
 This problem is equivalent to the problem of counting the number of connected
 components (CC) in a binary image with 8-connectivity.
 This is usually done through CC labeling, and many approaches for that are
-known\cite{sterzh}.
+known\cite{hechao}.
 
 This paper presents an efficient way to convert the initial binary image
 with 8-connectivity into
@@ -655,30 +661,54 @@ However this lazy approach increases the number of image lookups.
 % So, according to our benchmark, this combination is efficient only for dense
 % ($>30\%$) noise.
 
-So the benchmark tables show three levels of optimization applied to
+So the benchmark charts show three levels of optimization applied to
 DFS, SUF and SUF2:
-``no'' meaning no condensation, ``view'' meaning lazy memory-less condensation
-and ``yes'' meaning that a temporary condensed image was constructed in memory.
+just method name in legend refers to method applied to non-condensed image,
+``+view'' means lazy memory-less condensation
+and ``+2x2'' means that a temporary condensed image was constructed in memory.
 For the latter case, the construction time was included into the overall measured
 time of run.
 
+\subsection{Measurement}
+
+For measurement purposes all algorithms and optimizations were implemented by us in \CXX.
+
+The program was compiled using \texttt{g++ 5.3.0-3} compiler with \texttt{-O3} optimization flag.
+All tests were run on same machine running under Arch Linux with standard \texttt{linux 4.4.1-2} kernel,
+utilising non-overclocked \texttt{Intel(R) Core(TM) i5-2430M CPU @ 2.40GHz} (L3 cache size 3072K) processor and non-overclocked 1333MHz 8GiB Kingston RAM.
+
+The test images were generated in the following manner. At first, 
+for given density $d$, the first $4dNM$ pixels of
+the $2N \times 2M$ image were filled with object values, while rest filled with background values.
+Then all the pixels were permuted using \texttt{std::shuffle} function from \CXX standard library,
+which is an implementation of Fisher-Yates Shuffle algorithm\cite{fisher:yates}.
+
+All methods were run on same tests, which was achieved by supplying same seed to the
+\texttt{std::mt19937} Mersenne Twister\cite{mt19937} random number engine implementation from \CXX standard library before passing the engine to \texttt{std::shuffle}.
+
 \subsection{Results}
 
-some results
+Line charts with benchmarks of mentioned algorithms on different noise images are shown on
+\Cref{fig:noise400x600,fig:noise800x1200,fig:noise1200x1800,fig:noise2000x3000,fig:noise4000x6000}.
+
+The extremely bigger CPU time for SUF and DTSUF methods on
+huge images could be explained by significant increase in the number of cache-misses
+produced by Union-Find.
+The charts prove effectiveness of the $2 \times 2$ condensation optimization.  
 
 \newcommand{\inputtable}[2]{
   \begin{figure}
     \centering
     \includegraphics[height=0.45\textheight, keepaspectratio]{pics/#1x#2.eps}
-    \caption{Average CPU time per run on noise images $#1 \times #2$ px}
+    \caption{Average CPU time per run on noise images $#1 \times #2$ px.}
     \label{fig:noise#1x#2}
   \end{figure}
-  \begin{table}[p]
-    \centering
-    \input{tables/#1x#2}
-    \caption{Average CPU time per run on noise images $#1 \times #2$ px}
-    \label{tab:noise#1x#2}
-  \end{table}
+ % \begin{table}[p]
+ %   \centering
+ %   \input{tables/#1x#2}
+ %   \caption{Average CPU time per run on noise images $#1 \times #2$ px}
+ %   \label{tab:noise#1x#2}
+ % \end{table}
 }
 
 % \inputtable{200}{300}
@@ -689,19 +719,34 @@ some results
 \inputtable{4000}{6000}
 % \inputtable{5000}{7500}
 
-\section{Summary and future work}
+% \section{Summary and future work}
 
 
 \begin{thebibliography}{5}
+
+\bibitem {mak1}
+Rudin, L., Osher, S., Fatemi, E.: Nonlinear total variation based noised removal algorithms. Phys. D. 60, 259-268 (1992)
+
+\bibitem {mak2}
+Kronrod, A.: On functions of two variables ," Uspehi Mat. Nauk 5, 1(35), 24-134(1950)
+
+\bibitem {mak3}
+Makovetskii, A., Kober, V.: Image restoration based on topological properties of functions of two variables.  Proc. SPIE Applications of Digital Image Processing XXXV, 8499, 84990A (2012)
+
+\bibitem {mak4}
+4.	Makovetskii, A., Kober, V.: Modified gradient descent method for image restoration. Proc. SPIE Applications of Digital Image Processing XXXVI, 8856, 885608-1 (2013)
+
+\bibitem {mak5}
+Chochia, P., Milukova, O.: Comparison of Two-Dimensional Variations in the Context of the Digital Image Complexity Assessment.  Journal of Communications Technology and Electronics, 2015, 60, no. 12,  pp. 1432-1440
 
 \bibitem {hechao}
 He, L., Chao, Y., Suzuki, K., Wu, K.:
 Fast connected-component labeling. Pattern Recognition. v42, Pages 1977-1987. (2009)
 
-\bibitem {sterzh}
-Стержанов, М.:
-Методики выделения связных компонент в штриховых бинарных изображениях.
-Труды конференции ГрафиКон’2010. НИУ ИТМО. Санкт-Петербург. с. 169-174. (2010)
+%\bibitem {sterzh}
+%Стержанов, М.:
+%Методики выделения связных компонент в штриховых бинарных изображениях.
+%Труды конференции ГрафиКон’2010. НИУ ИТМО. Санкт-Петербург. с. 169-174. (2010)
 
 \bibitem {CLRS}
 Cormen, H., Leiserson, E., Rivest, L., Stein, C.:
@@ -711,6 +756,16 @@ Introduction to Algorithms (Second ed.), MIT Press (2001)
 Wu, K, Otoo, E., Suzuki, K.:
 Optimizing two-pass connected-component labeling algorithms.
 Pattern Anal. Appl. (2008)
+
+\bibitem {fisher:yates}
+ Fisher, A., Yates, F.:
+ Statistical tables for biological, agricultural and medical research (3rd ed.). 
+ London: Oliver \& Boyd. pp. 26–27. OCLC 14222135 (1948)
+ 
+\bibitem{mt19937}
+Matsumoto, M., Nishimura, T.:
+"Mersenne twister: a 623-dimensionally equidistributed uniform pseudo-random number generator".
+ACM Transactions on Modeling and Computer Simulation 8 (1): 3–30. (1998)
 
 \end{thebibliography}
 
