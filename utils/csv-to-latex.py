@@ -100,7 +100,7 @@ def plot_benchmarks(runs, out_file='output.eps', dpi=1200):
                 color=METHOD_COLOR[method],
                 label=method + COND_LEGEND[condensation])
 
-    plt.xlabel('Noise density, %')
+    plt.xlabel('density, %')
     plt.ylabel('CPU time, ms')
 
     if '2000' not in out_file:
@@ -160,6 +160,6 @@ if __name__ == '__main__':
     if '--dpi' in sys.argv:
         dpi = int(sys.argv[sys.argv.index('--dpi')+1])
     if '--plot' in sys.argv:
-        plot_benchmarks(runs, sys.argv[sys.argv.index('--plot')+1])
+        plot_benchmarks(runs, sys.argv[sys.argv.index('--plot')+1], dpi=dpi)
     write_benchmarks_latex(runs)
 
