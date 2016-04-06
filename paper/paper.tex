@@ -26,13 +26,18 @@
 \usepackage{graphicx}
 
 
-
-% \newcommand{\texten}[1]{}
-% \newcommand{\textru}[1]{\foreignlanguage{russian}{\emph{#1}}{}}
-
 \newcommand{\texten}[1]{#1}
-\newcommand{\textru}[1]{\\
-  \foreignlanguage{russian}{\emph{#1}}}
+\newcommand{\textru}[1]{}
+
+%% Чтобы переключиться на русский язык в некоторых секциях, можно 
+%% раскомментировать следующие две команды
+\renewcommand{\texten}[1]{}
+\renewcommand{\textru}[1]{\foreignlanguage{russian}{\emph{#1}}{}}
+
+%% Чтобы оставить оба языка, можно раскомментировать
+%% следующие две команды
+% \renewcommand{\texten}[1]{#1}
+% \renewcommand{\textru}[1]{\\ \foreignlanguage{russian}{\emph{#1}}}
 
 
 \tikzset{every picture/.append style={scale=0.5}}
