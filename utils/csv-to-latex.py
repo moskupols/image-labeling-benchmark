@@ -77,8 +77,8 @@ COND_SHAPE = {
 
 COND_LEGEND = {
     'no': '',
-    'view': '+view',
-    'yes': '+2x2'
+    'view': ' on 2x2 view',
+    'yes': ' on 2x2 copy'
 }
 
 def plot_benchmarks(runs, out_file='output.eps', dpi=1200):
