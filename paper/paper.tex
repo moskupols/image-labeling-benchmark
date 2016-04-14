@@ -61,7 +61,7 @@ Components Labeling in a Binary Image}
 \author{Fedor Alekseev\inst{1} \and Mikhail Alekseev\inst{2}\inst{3}
 \and Artyom Makovetskii\inst{2}\inst{4}}
 
-\institute{Moscow Institute of Physics and Technology State University, Dolgoprudny, Russia\\
+\institute{Moscow Institute of Physics and Technology, Dolgoprudny, Russia\\
 \email{alekseev@phystech.edu}
 \and
 Chelyabinsk State University, Chelyabinsk, Russia
@@ -73,18 +73,24 @@ Chelyabinsk State University, Chelyabinsk, Russia
 \maketitle              % typeset the title of the contribution
 
 \begin{abstract}
-The linear variation is a topological characteristic of the function of two variables.
-The problem of linear variation computing can be reduced to the problem of counting connected components in a binary image with eight-connected connectivity.
-%The new hybrid method for the problem is presented.
-%The method is essentially a modification of a two-scan algorithm for labeling
-%that groups the pixels into $2 \times 2$ cells.
-This is usually done through connected components labeling, and many approaches for that are known.
-This paper presents an efficient way to convert the initial binary image with 8-connectivity into a condensed (non-binary) image with new connectivity that is 2 times smaller in each dimension than the initial image.
-Most approaches for connected components labeling are still valid for the new image.
-As time and memory consumptions of conventional approaches usually depend linearly on the number of pixels,
-running them on the condensed image can be up to 4 times more efficient than running on the initial image.
-The method is essentially a modification of some known raster algorithms for labeling that groups pixels into $2 \times 2$ cells.
-A performance benchmark of the proposed  method applied to some approaches on noise images is provided.
+The linear variation is a topological characteristic of the function of two
+variables. The problem of linear variation computing can be reduced to the
+problem of counting connected components in a binary image with eight-connected
+connectivity.
+%The new hybrid method for the problem is presented. The method is essentially
+%a modification of a two-scan algorithm for labeling that groups the pixels
+%into $2 \times 2$ cells.
+This is usually done through connected components labeling, and many approaches
+for that are known. This paper presents an efficient way to convert the initial
+binary image with 8-connectivity into a condensed (non-binary) image with new
+connectivity that is 2 times smaller in each dimension than the initial image.
+Most approaches for connected components labeling are still valid for the new
+image. As time and memory consumptions of conventional approaches usually
+depend linearly on the number of pixels, running them on the condensed image
+can be up to 4 times more efficient than running on the initial image. The
+method is essentially a modification of some known raster algorithms for
+labeling that groups pixels into $2 \times 2$ cells. A performance benchmark of
+the proposed  method applied to some approaches on noise images is provided.
 
 \keywords{Binary raster image, connected component labeling, pattern recognition}
 \end{abstract}
@@ -129,15 +135,15 @@ Let $u_*$ be extremal function for the following variational problem:
 \end{equation}
 The \autoref{eq:ustar} is called total variation regularization problem.
 
-The norm and modulus of the gradient are metrical characteristic of a function of
-two variables.
+The norm and modulus of the gradient are metrical characteristic of a function
+of two variables.
 Continuous functions of two variables also have a set of topological
 characteristics referred to as linear variations.
 Kronrod\cite{mak2}
 introduced the notion of a regular component of the level set of a
 continuous function of two variables.
-The simplest topological characteristic in the linear variation theory is a number
-of regular components for all level sets of a function.
+The simplest topological characteristic in the linear variation theory is a
+number of regular components for all level sets of a function.
 Full information about linear variations of a function is contained in the
 one-dimensional tree of a function of two variables.
 In \cite{mak3,mak4,mak5}
@@ -152,13 +158,12 @@ The first Kronrod's linear variation is defined as
   \label{eq:KronrodVariation}
 \end{equation}
 
-Let $w$ be a binary discrete function $w=(w_{i,j})$, where $w_{i,j} \in \{0,1\}$,
-for all pairs $(i,j)$.
-A subset of such pairs $(i, j)$ when $w_{i,j}=1$ and all elements of the subset are
-connected by the 8-connectivity, is called the connected component of the binary
-function $w$.
-For a number $k \in \N$ and a discrete function $u$ we define the following
-indicator function $\chi$:
+Let $w$ be a binary discrete function $w=(w_{i,j})$, where $w_{i,j} \in
+\{0,1\}$, for all pairs $(i,j)$. A subset of such pairs $(i, j)$ when
+$w_{i,j}=1$ and all elements of the subset are connected by the 8-connectivity,
+is called the connected component of the binary function $w$. For a number $k
+\in \N$ and a discrete function $u$ we define the following indicator function
+$\chi$:
 \begin{equation}
   \chi_k (u_{i,j}) =
     \begin{cases}
@@ -169,9 +174,9 @@ indicator function $\chi$:
 \end{equation}
 
 \begin{definition}
-  The number $V_k(u_{i,j})$ of connected components for a level $k$, $k \in \N$ of
-  the discrete function $u$ is called the number of connected components of the 
-  binary discrete function $\chi_k(u_{i,j})$.
+  The number $V_k(u_{i,j})$ of connected components for a level $k$, $k \in \N$
+  of the discrete function $u$ is called the number of connected components of
+  the binary discrete function $\chi_k(u_{i,j})$.
 \end{definition}
 
 \begin{definition}
@@ -200,42 +205,42 @@ components (CC) in a binary image with 8-connectivity.
 This is usually done through CC labeling, and many approaches for that are
 known\cite{hechao}.
 
-This paper presents an efficient way to convert the initial binary image
-with 8-connectivity into
-a condensed (non-binary) image with new connectivity that is $2$ times smaller in
-each dimension than the initial image.
-Most approaches for CC labeling are still valid for the new image.
-As time and memory consumptions of conventional approaches usually depend linearly on
-the number of pixels, running them on the condensed image can be
-more efficient than running on the initial image.
+This paper presents an efficient way to convert the initial binary image with
+8-connectivity into a condensed (non-binary) image with new connectivity that
+is $2$ times smaller in each dimension than the initial image. Most approaches
+for CC labeling are still valid for the new image. As time and memory
+consumptions of conventional approaches usually depend linearly on the number
+of pixels, running them on the condensed image can be more efficient than
+running on the initial image.
 
-It is worth noting that our method exploits an important property of 8-connectivity
-that does not hold for 4-connectivity, so it is not applicable for the latter case.
+It is worth noting that our method exploits an important property of
+8-connectivity that does not hold for 4-connectivity, so it is not applicable
+for the latter case.
 
-\section{$2\times2$ condensation}
+\section{$2 \times 2$ condensation}
 
 We will use the fact that for the case of 8-connectivity all $4$ pixels of any
-$2 \times 2$ square are adjacent to each other, and so are contained in the same CC
-and should have same labels upon completion of the labeling algorithm.
-So instead of labeling single pixels we can label $2 \times 2$ groups of pixels,
-or ``cells''.
+$2 \times 2$ square are adjacent to each other, and so are contained in the
+same CC and should have same labels upon completion of the labeling algorithm.
+So instead of labeling single pixels we can label $2 \times 2$ groups of
+pixels, or ``cells''.
 
 Consider a $2N \times 2M$ binary image\footnote{
 For convenience in this paper we consider only input images with even size
 in both dimensions. If this is not the case, one can easily append a row or
 a column of background pixels to the image.}
 specified by a binary predicate $b(x, y)$,
-returning $1$ in case the pixel at the given coordinates is black (object pixel),
-and $0$ otherwise (background pixel).
-For convenience we use 0-indexation throughout the paper, so the topmost row has
-row index $y=0$, and the leftmost column has column index $x=0$.
+returning $1$ in case the pixel at the given coordinates is black (object
+pixel), and $0$ otherwise (background pixel). For convenience we use
+0-indexation throughout the paper, so the topmost row has row index $y=0$, and
+the leftmost column has column index $x=0$.
 
 The condensed image will be of size $N \times M$.
 Each pixel of the condensed image will unambiguously represent the configuration
-of the corresponding $2\times 2$ cell of pixels of the initial binary image.
+of the corresponding $2 \times 2$ cell of pixels of the initial binary image.
 So the condensed image will contain pixels of $2^4 = 16$ colors.
-We suggest the function $c(x, y)$ denoting the color of a pixel of condensed image
-to be the following:
+We suggest the function $c(x, y)$ denoting the color of a pixel of condensed
+image to be the following:
 \begin{align*}
   c(x, y) &= 2^0 b(2x, 2y)   + 2^1 b(2x+1, 2y) \\
           &+ {} 2^2 b(2x, 2y+1) + 2^3 b(2x+1,2y+1)
@@ -243,9 +248,10 @@ to be the following:
 
 So the value of each pixel of the initial image is stored in the corresponding
 bit in color of the corresponding pixel of the condensed image.
-Note that if $c(x, y) = 0$ for some $(x, y)$, then there are no object pixels in
-this cell, and no label should be assigned to this whole cell. The enumeration of
-pixels inside one cell is shown on \autoref{fig:pixelsEnumeration}.
+Note that if $c(x, y) = 0$ for some $(x, y)$, then there are no object pixels
+in this cell, and no label should be assigned to this whole cell. The
+enumeration of pixels inside one cell is shown on
+\autoref{fig:pixelsEnumeration}.
 
 \begin{figure}[t]
   \centering
@@ -308,8 +314,8 @@ a mask of pixels of each cells that are important for direct connectivity of
 this pair of cells.
 So two cells are considered directly connected, if they are nearby
 in terms of 8-connectivity and each of them contains at least one object pixel
-in the mask of important pixels corresponding to relative placement of the cells.
-The masks are shown in \autoref{fig:connectivity:masks}.
+in the mask of important pixels corresponding to relative placement of the
+cells. The masks are shown in \autoref{fig:connectivity:masks}.
 
 \begin{figure}
   \centering
@@ -364,12 +370,12 @@ way similar to how we defined $c$, we can express the predicate denoting whether
 two nearby cells
 are directly connected efficiently with just two bitwise and one logical AND
 operations.
-As an example, \autoref{fig:connectivity:code} compares possible codes in \C checking
-if the labels of the current pixel or cell and the one right on top of it
-should be same for classic 8-connectivity and for the new connectivity.
-Note that as bitwise operations are usually relatively cheap, we added only a
-little complication compared to decreasing the number of pixels to process by the 
-factor of 4.
+As an example, \autoref{fig:connectivity:code} compares possible codes in \C
+checking if the labels of the current pixel or cell and the one right on top of
+it should be same for classic $8$-connectivity and for the new connectivity. Note
+that as bitwise operations are usually relatively cheap, we added only a little
+complication compared to decreasing the number of pixels to process by the
+factor of $4$.
 
 \begin{figure}
   \centering
@@ -416,38 +422,37 @@ on input of each algorithm as $H$ and $W$.
 
 Also to avoid repeating ``pixel or cell'' we will just use the word ``pixel''
 meaning the appropriate raster for non-condensed and condensed images.
-When we mention neighbors of some pixel, we mean pixels that are directly connected
-to it in terms of appropriate connectivity.
+When we mention neighbors of some pixel, we mean pixels that are directly
+connected to it in terms of appropriate connectivity.
 
 \subsubsection{DFS}
 
-The first algorithm we chose for the benchmark is Depth First Search graph traversal.
-Graph traversal algorithms are the general approach for CC labeling in graphs, and
-DFS is arguably the most simple.
-Although not intended for image labeling and
-suboptimal in most cases, it still has linear in the number of pixels worst-case
-complexity in both time and memory.
+The first algorithm we chose for the benchmark is Depth First Search graph
+traversal. Graph traversal algorithms are the general approach for CC labeling
+in graphs, and DFS is arguably the most simple. Although not intended for image
+labeling and suboptimal in most cases, it still has linear in the number of
+pixels worst-case complexity in both time and memory.
 
-Like most approaches, the algorithm has an outer loop over all pixels of the image.
-Each time an object pixel (non-empty cell, in case it is actually a cell)
-which is not labeled yet is encountered, DFS traversal is launched from that pixel.
-The traversal labels all the object pixels of the same CC, launching recursively
-from all unlabeled neighbors of current pixel.
+Like most approaches, the algorithm has an outer loop over all pixels of the
+image. Each time an object pixel (non-empty cell, in case it is actually a
+cell) which is not labeled yet is encountered, DFS traversal is launched from
+that pixel. The traversal labels all the object pixels of the same CC,
+launching recursively from all unlabeled neighbors of current pixel.
 
 \subsubsection{SUF}
 
 Another general approach for graph CC labeling which is more popular in image
-labeling is using some kind of a data structure to maintain disjoint sets of pixels
-that are considered to be in the same CC.
+labeling is using some kind of a data structure to maintain disjoint sets of
+pixels that are considered to be in the same CC.
 
-The structure is commonly called Union-Find, as the two essential operations
-it is supposed to support are Union, which is used to merge some two of the
-disjoint sets in one, and Find, which is used to find the representative element
-of the set some element belongs to, so that we can always tell if two elements are
-in the same set.
-The structure can be implemented so that the amortized time complexity for each
-operation is $O(\alpha(HW))$, where $\alpha$ is the inverse Ackermann function,
-and $\alpha(HW) < 5$ for all remotely practical image sizes\cite{CLRS}. % TODO links
+The structure is commonly called Union-Find, as the two essential operations it
+is supposed to support are Union, which is used to merge some two of the
+disjoint sets in one, and Find, which is used to find the representative
+element of the set some element belongs to, so that we can always tell if two
+elements are in the same set. The structure can be implemented so that the
+amortized time complexity for each operation is $O(\alpha(HW))$, where $\alpha$
+is the inverse Ackermann function, and $\alpha(HW) < 5$ for all remotely
+practical image sizes\cite{CLRS}. % TODO links
 
 The approach that is named SUF (Scan plus Union-Find) in this paper follows.
 
@@ -456,18 +461,18 @@ left to right, so each row is fully processed before all rows after it.
 So for each object pixel we encounter there are at most 4 nearby pixels
 that were already processed, see \autoref{fig:suf:neighbors}.
 
-At first each object pixel is considered to belong to its own CC, so right before
-considering the neighbors we increment the CC counter.
-Moreover, it is associated with its own disjoint set in the Union-Find structure.
-More specifically, object pixel at position $x, y$ is associated with
-the set number $xW + y$ to guarantee absence of collisions.
+At first each object pixel is considered to belong to its own CC, so right
+before considering the neighbors we increment the CC counter. Moreover, it is
+associated with its own disjoint set in the Union-Find structure. More
+specifically, object pixel at position $x, y$ is associated with the set number
+$xW + y$ to guarantee absence of collisions.
 
-The possible neighbors are processed in the order shown on \autoref{fig:suf:neighbors},
-and for each neighbor that is object pixel, the Union operation is performed
-on the two sets containing the current and the neighbor pixel.
-In case the Union operation was successful, which means that the pixels
-had belonged previously to different sets and we have just found a way to merge two
-CC, the CC counter is decremented.
+The possible neighbors are processed in the order shown on
+\autoref{fig:suf:neighbors}, and for each neighbor that is object pixel, the
+Union operation is performed on the two sets containing the current and the
+neighbor pixel. In case the Union operation was successful, which means that
+the pixels had belonged previously to different sets and we have just found a
+way to merge two CC, the CC counter is decremented.
 
 \begin{figure}
   \centering
@@ -482,38 +487,39 @@ CC, the CC counter is decremented.
   \label{fig:suf:neighbors}
 \end{figure}
 
-Note that this algorithm outputs not the matrix of final labels, but only the number
-of CC.
-This is the place in which it differs from some common two-pass approaches for CC % TODO references
-labeling, as it is an algorithm not for labeling, but just for counting CC.
-The latter is exactly what is needed for the aforementioned linear variation problem.
+Note that this algorithm outputs not the matrix of final labels, but only the
+number of CC. This is the place in which it differs from some common two-pass
+approaches for CC % TODO references
+labeling, as it is an algorithm not for labeling, but just for counting CC. The
+latter is exactly what is needed for the aforementioned linear variation
+problem.
 
-Also we have to mention that for performance reasons the Union-Find internal structures
-are allocated ahead to have the size of at least $HW$ to guarantee that
-each object can be easily associated with unique starting set given only its
-coordinates. So memory consumption of SUF is linear in the number of pixels.
+Also we have to mention that for performance reasons the Union-Find internal
+structures are allocated ahead to have the size of at least $HW$ to guarantee
+that each object can be easily associated with unique starting set given only
+its coordinates. So memory consumption of SUF is linear in the number of
+pixels.
 
 \subsubsection{SUF2}
 
 This approach is a modification of SUF designed to reduce memory consumption
 and potential number of cache-misses generated by Union-Find operations.
 
-The idea is to run through each row twice: first time to establish label equivalence
-classes within row, and the second time to set unique equal label for all pixels of
-same CC.
-This gives us the opportunity to maintain just $O(W)$
-different labels at each moment, and so the Union-Find structure can be allocated
-for only $O(W)$ elements, as opposed to $WH$ elements needed for SUF.
+The idea is to run through each row twice: first time to establish label
+equivalence classes within row, and the second time to set unique equal label
+for all pixels of same CC. This gives us the opportunity to maintain just
+$O(W)$ different labels at each moment, and so the Union-Find structure can be
+allocated for only $O(W)$ elements, as opposed to $WH$ elements needed for SUF.
 
 The exact maximum number of label equivalence classes between two adjacent rows
-depends on whether the given image is condensed.
-For non-condensed images $W=2M$, and maximum number of label equivalence classes
-in two adjacent rows is $M=\frac{W}2$, as if two object pixels are both in adjacent
-rows and in adjacent columns, then they are neighbors in terms of 8-connectivity.
+depends on whether the given image is condensed. For non-condensed images
+$W=2M$, and maximum number of label equivalence classes in two adjacent rows is
+$M=\frac{W}2$, as if two object pixels are both in adjacent rows and in
+adjacent columns, then they are neighbors in terms of 8-connectivity.
 
-On the other hand, for condensed images $W=M$, and maximum number of label equivalence
-class in two adjacent rows of cells is $2W=2M$.
-See \autoref{fig:suf2:extremal} for illustration on the extremal cases.
+On the other hand, for condensed images $W=M$, and maximum number of label
+equivalence class in two adjacent rows of cells is $2W=2M$. See
+\autoref{fig:suf2:extremal} for illustration on the extremal cases.
 
 \begin{figure}
   \centering
@@ -548,29 +554,28 @@ See \autoref{fig:suf2:extremal} for illustration on the extremal cases.
 
 Our benchmarks show that, although SUF2 without condensation is generally more
 efficient on noise images than SUF without condensation, the mentioned
-consideration make the $2 \times 2$ optimization
-of SUF2 less dramatic in means of performance increase factor.
-Optimized SUF2 significantly outperforms optimized SUF only on
-huge noise images with less than 60\% density, while falling behind on
-small and medium-sized noise images.
+consideration make the $2 \times 2$ optimization of SUF2 less dramatic in means
+of performance increase factor. Optimized SUF2 significantly outperforms
+optimized SUF only on huge noise images with less than $60\%$ density, while
+falling behind on small and medium-sized noise images.
 
-Note that, while SUF2 is intended for CC counting, its memory
-consumption is only $O(W)$, which is significant for embedded systems and
-other resource-tight applications.
+Note that, while SUF2 is intended for CC counting, its memory consumption is
+only $O(W)$, which is significant for embedded systems and other resource-tight
+applications.
 
 \subsubsection{DTSUF}
 
-This modification of SUF was implemented to compare the optimization we present with
-another optimization suggested by Wu, Otoo and Suzuki\cite{wuotoo},
-namely decision tree.
-Unfortunately DTSUF (Decision Tree Scan plus Union-Find) is not
-applicable for condensed image, as it exploits similar observations on 8-connectivity.
+This modification of SUF was implemented to compare the optimization we present
+with another optimization suggested by Wu, Otoo and Suzuki\cite{wuotoo}, namely
+decision tree. Unfortunately DTSUF (Decision Tree Scan plus Union-Find) is not
+applicable for condensed image, as it exploits similar observations on
+8-connectivity.
 
-As before, the goal is to reduce the number of pixel lookup and label copy operations.
-This is achieved with careful consideration of only the necessary neighbors,
-stopping once the set of one or two label operations that are needed is
-determined. The decision tree for processing an object pixel is
-shown on \autoref{fig:dtsuf}.
+As before, the goal is to reduce the number of pixel lookup and label copy
+operations. This is achieved with careful consideration of only the necessary
+neighbors, stopping once the set of one or two label operations that are needed
+is determined. The decision tree for processing an object pixel is shown on
+\autoref{fig:dtsuf}.
 
 \begin{figure}
   \centering
@@ -651,50 +656,59 @@ shown on \autoref{fig:dtsuf}.
 
 \subsection{Condensation types}
 
+\texten{
 For memory-tight applications such as embedded systems it can be useful to
 utilise the suggested condensation in a lazy way, so that without actually
-constructing the condensed image we use a function (``view'') calculating color of
-each cell with 4 lookups to the original binary image.
-This is probably most interesting when combined with SUF2 algorithm, as it is a way
-to win some time while avoiding memory footprint increase.
-However this lazy approach increases the number of image lookups.
+constructing the condensed image we use a function (``view'') calculating color
+of each cell with 4 lookups to the original binary image. This is probably most
+interesting when combined with SUF2 algorithm, as it is a way to win some time
+while avoiding memory footprint increase. However this lazy approach increases
+the number of image lookups.
 % So, according to our benchmark, this combination is efficient only for dense
 % ($>30\%$) noise.
+}\textru{
+В некоторых случаях может быть более приемлемо использовать сжатие неявно, то
+есть вместо построения 
+}
 
-So the benchmark charts show three levels of optimization applied to
-DFS, SUF and SUF2:
-just method name in legend refers to method applied to non-condensed image,
-``+view'' means lazy memory-less condensation
-and ``+2x2'' means that a temporary condensed image was constructed in memory.
-For the latter case, the construction time was included into the overall measured
-time of run.
+So the benchmark charts show three levels of optimization applied to DFS, SUF
+and SUF2: just method name in legend refers to method applied to non-condensed
+image, ``+view'' means lazy memory-less condensation and ``+2x2'' means that a
+temporary condensed image was constructed in memory. For the latter case, the
+construction time was included into the overall measured time of run.
 
 \subsection{Measurement}
 
 For measurement purposes all algorithms and optimizations were implemented by us in \CXX.
 
-The program was compiled using \texttt{g++ 5.3.0-3} compiler with \texttt{-O3} optimization flag.
-All tests were run on same machine running under Arch Linux with standard \texttt{linux 4.4.1-2} kernel,
-utilising non-overclocked \texttt{Intel(R) Core(TM) i5-2430M CPU @ 2.40GHz} (L3 cache size 3072K) processor and non-overclocked 1333MHz 8GiB Kingston RAM.
+The program was compiled using \texttt{g++ 5.3.0-3} compiler with \texttt{-O3}
+optimization flag. All tests were run on same machine running under Arch Linux
+with standard \texttt{linux 4.4.1-2} kernel, utilising non-overclocked
+\texttt{Intel(R) Core(TM) i5-2430M CPU @ 2.40GHz} (L3 cache size 3072K)
+processor and non-overclocked 1333MHz 8GiB Kingston RAM.
 
-The test images were generated in the following manner. At first, 
-for given density $d$, the first $4dNM$ pixels of
-the $2N \times 2M$ image were filled with object values, while rest filled with background values.
-Then all the pixels were permuted using \texttt{std::shuffle} function from \CXX standard library,
-which is an implementation of Fisher-Yates Shuffle algorithm\cite{fisher:yates}.
+The test images were generated in the following manner. At first, for given
+density $d$, the first $4dNM$ pixels of the $2N \times 2M$ image were filled
+with object values, while rest filled with background values. Then all the
+pixels were permuted using \texttt{std::shuffle} function from \CXX standard
+library, which is an implementation of Fisher-Yates Shuffle
+algorithm\cite{fisher:yates}.
 
-All methods were run on same tests, which was achieved by supplying same seed to the
-\texttt{std::mt19937} Mersenne Twister\cite{mt19937} random number engine implementation from \CXX standard library before passing the engine to \texttt{std::shuffle}.
+All methods were run on same tests, which was achieved by supplying same seed
+to the \texttt{std::mt19937} Mersenne Twister\cite{mt19937} random number
+engine implementation from \CXX standard library before passing the engine to
+\texttt{std::shuffle}.
 
 \subsection{Results}
 
-Line charts with benchmarks of mentioned algorithms on different noise images are shown on
+Line charts with benchmarks of mentioned algorithms on different noise images
+are shown on
 \Cref{fig:noise400x600,fig:noise800x1200,fig:noise1200x1800,fig:noise2000x3000,fig:noise4000x6000}.
 
-The extremely bigger CPU time for SUF and DTSUF methods on
-huge images could be explained by significant increase in the number of cache-misses
-produced by Union-Find.
-The charts prove effectiveness of the $2 \times 2$ condensation optimization.  
+The extremely bigger CPU time for SUF and DTSUF methods on huge images could be
+explained by significant increase in the number of cache-misses produced by
+Union-Find. The charts prove effectiveness of the $2 \times 2$ condensation
+optimization.  
 
 \newcommand{\inputtable}[2]{
   \begin{figure}
