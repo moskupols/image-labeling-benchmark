@@ -61,7 +61,7 @@ piv.head(2)
 # In[9]:
 
 cg = [(cou, gri) 
-      for cou in ('DFS', 'SUF', 'SUF2', 'DTSUF') 
+      for cou in ('DFS', 'SUF', 'DTSUF', 'SUF2')
       for gri in ('', ' on 2x2 view', ' on 2x2 copy')
       if (cou + gri in piv.columns)]
 

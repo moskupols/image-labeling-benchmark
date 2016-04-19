@@ -762,8 +762,8 @@ other resource-tight applications.
 This modification of SUF was implemented to compare the optimization we present with
 another optimization suggested by Wu, Otoo and Suzuki\cite{wuotoo},
 namely decision tree.
-Unfortunately DTSUF (Decision Tree Scan plus Union-Find) is not
-applicable for condensed image, as it exploits similar observations on 8-connectivity.
+Unfortunately DTSUF (Decision Tree Scan plus Union-Find) is not applicable for
+condensed image, as it exploits similar observations on 8-connectivity.
 }\textru{
 Эта модификация SUF была добавлена чтобы сравнить нашу оптимизацию с
 одной из оптимизаций, предложенных Wu, Otoo и Suzuki\cite{wuotoo}, а именно с
@@ -909,6 +909,18 @@ the \texttt{std::mt19937} Mersenne Twister\cite{mt19937} random number engine
 implementation from \CXX standard library before passing the engine to
 \texttt{std::shuffle}.
 
+Benchmarks showed that for random images, the run time depends non-trivially on
+the value of density $d$, which is the ratio of object pixels in the image. On
+the one hand, this is because all of the considered algorithms pass background
+pixels without any processing, and somehow process the object pixels, so the
+exact number of operations such as Union and Find should generally grow with
+$d$. On the other hand, the greater the value of $d$, the less number of CC is
+likely to be present in the image, which reduces the number of relatively
+expensive Union operations.
+
+So benchmarks were run for several values of $d$ to achieve a picture of how the
+speedup depends on the number of object pixels in the image.
+
 It is worth noting again that for ``2x2 copy'' optimization, the apparent time
 overhead of constructing the extra condensed image  was included into the total
 run time, since we measured the total time between calling the CC counting
@@ -917,8 +929,8 @@ it.
 
 \subsection{Results}
 
-Line charts with benchmarks of mentioned algorithms on different noise images
-are shown on \Cref{fig:overall}.
+The overall benchmark line plot of all algorithms and optimizations is
+presented on \Cref{fig:overall}.
 
 \begin{figure}
   \centering
@@ -926,6 +938,14 @@ are shown on \Cref{fig:overall}.
   \caption{Average CPU time per run on random images $1200 \times 1800$ px.}
   \label{fig:overall}
 \end{figure}
+
+To show more closely how efficient the optimizations actually appear to be, we
+plotted speedup/density charts for the considered methods (\Cref{fig:normed}).
+Here the speedup of algorithm A relative to algorithm B is defined as
+$\frac{T_B}{T_A}$, where $T_A$ and $T_B$ are the total times used by the
+corresponding algorithms to count CC in all the test images of same density.
+The greater the speedup of optimized method relative to original method, the
+more efficient the optimization is considered.
 
 \newcommand{\inputnorm}[2]{
   \begin{subfigure}[t]{0.45\linewidth}
@@ -942,10 +962,43 @@ are shown on \Cref{fig:overall}.
   \inputnorm{DFS}{DFS optimizations}
   \inputnorm{SUF}{SUF optimizations}
   \inputnorm{SUF2}{SUF2 optimizations}
-  \inputnorm{DTSUF}{SUF optimizations, relative to DTSUF performance}
+  \inputnorm{DTSUF}{SUF optimizations, relative to DTSUF}
   \caption{Speedup/density charts}
   \label{fig:normed}
 \end{figure}
+
+The speedup plots on \Cref{fig:normed:DFS,fig:normed:SUF,fig:normed:SUF2}
+suggest that the ``2x2 copy'' optimization speeds up the considered methods by
+factor greater than 1 for all tested densities. On the other hand, the
+``2x2 view'' optimization is showed to be not time-efficient at all for some
+densities, slowing down DFS and SUF2 if run on images with densities less than
+38\% and 28\% respectively. Utilizing the latter optimization also does not
+speed up SUF on images on density approaching 20\%, although it does not slow
+down the algorithms either.
+
+The worst-case and best-case speedups are shown on the \autoref{tab:speedup}.
+Here we see that while ``2x2 view'' optimization is more memory-efficient than
+``2x2 copy'', it can slow down the method in some situations, and generally it
+does not give as much performance advantage.
+
+We should also mention the chart on \autoref{fig:normed:DTSUF}, featuring
+speedup of our SUF optimizations relative to DTSUF in order to compare our
+optimizations to the optimization by Wu, Otoo and Suzuki. The plot clearly shows
+that for all the densities under 80\% our ``SUF on 2x2 copy'' algorithm
+outperforms the decision-tree based approach by the factor of at least
+$1.5$, with speedup reaching $2.5$ for 2\% density.
+
+\begin{table}
+  \centering
+  \begin{tabular}{l|c|c|c|c}
+    Algorithm & worst speedup & worst speedup density & best speedup & best
+    speedup density \\
+    \hline
+    \input{tables/speedup}
+  \end{tabular}
+  \caption{The worst and the worst speedups of the considered optimizations}
+  \label{tab:speedup}
+\end{table}
 
 % \section{Summary and future work}
 
