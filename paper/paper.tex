@@ -882,67 +882,68 @@ However this lazy approach increases the number of image lookups.
 есть вместо построения 
 }
 
-So the benchmark charts show three levels of optimization applied to
-DFS, SUF and SUF2:
-just method name in legend refers to method applied to non-condensed image,
-``+view'' means lazy memory-less condensation
-and ``+2x2'' means that a temporary condensed image was constructed in memory.
-For the latter case, the construction time was included into the overall measured
-time of run.
+So the benchmark charts show three levels of optimization applied to DFS, SUF
+and SUF2: just method name in legend refers to method applied to non-condensed
+image, `` on 2x2 view'' means lazy memory-less condensation and `` on 2x2 copy''
+means that a temporary condensed image was constructed in memory. For the latter
+case, the construction time was included into the overall measured time of run.
 
 \subsection{Measurement}
 
 For measurement purposes all algorithms and optimizations were implemented by us in \CXX.
 
-The program was compiled using \texttt{g++ 5.3.0-3} compiler with \texttt{-O3} optimization flag.
-All tests were run on same machine running under Arch Linux with standard \texttt{linux 4.4.1-2} kernel,
-utilising non-overclocked \texttt{Intel(R) Core(TM) i5-2430M CPU @ 2.40GHz} (L3 cache size 3072K) processor and non-overclocked 1333MHz 8GiB Kingston RAM.
+The program was compiled using \texttt{g++ 5.3.0-3} compiler with \texttt{-O3}
+optimization flag. All tests were run on same machine running under Arch Linux
+with standard \texttt{linux 4.4.1-2} kernel, utilising non-overclocked
+\texttt{Intel(R) Core(TM) i5-2430M CPU @ 2.40GHz} (L3 cache size 3072K)
+processor and non-overclocked 1333MHz 8GiB Kingston RAM.
 
-The test images were generated in the following manner. At first, for given
-density $d$, the first $4dNM$ pixels of the $2N \times 2M$ image were filled
-with object values, while rest filled with background values. Then all the
-pixels were permuted using \texttt{std::shuffle} function from \CXX standard
-library, which is an implementation of Fisher-Yates Shuffle
-algorithm%\cite{fisher:yates}
-.
+The test images were random images, generated in the following manner. At first,
+for given density $d$, the first $4dNM$ pixels of the $2N \times 2M$ image were
+filled with object values, while rest filled with background values. Then all
+the pixels were permuted using \texttt{std::shuffle} function from \CXX standard
+library, which is an implementation of Fisher-Yates Shuffle algorithm.
 
-All methods were run on same tests, which was achieved by supplying same seed to the
-\texttt{std::mt19937} Mersenne Twister\cite{mt19937} random number engine implementation from \CXX standard library before passing the engine to \texttt{std::shuffle}.
+All methods were run on same tests, which was achieved by supplying same seed to
+the \texttt{std::mt19937} Mersenne Twister\cite{mt19937} random number engine
+implementation from \CXX standard library before passing the engine to
+\texttt{std::shuffle}.
+
+It is worth noting again that for ``2x2 copy'' optimization, the apparent time
+overhead of constructing the extra condensed image  was included into the total
+run time, since we measured the total time between calling the CC counting
+subroutine, supplied with only the original image, and returning back from
+it.
 
 \subsection{Results}
 
 Line charts with benchmarks of mentioned algorithms on different noise images
-are shown on
-\Cref{fig:overall:times}.
-
-The extremely bigger CPU time for SUF and DTSUF methods on huge images could be
-explained by significant increase in the number of cache-misses produced by
-Union-Find. The charts prove effectiveness of the $2 \times 2$ condensation
-optimization.
+are shown on \Cref{fig:overall}.
 
 \begin{figure}
   \centering
   \includegraphics[height=0.45\textheight, keepaspectratio]{pics/overall.eps}
   \caption{Average CPU time per run on random images $1200 \times 1800$ px.}
-  \label{fig:overall:times}
+  \label{fig:overall}
 \end{figure}
 
-\newcommand{\inputnorm}[1]{
+\newcommand{\inputnorm}[2]{
   \begin{subfigure}[t]{0.45\linewidth}
     \centering
     \includegraphics[width=\textwidth,
                      keepaspectratio]{pics/normed_#1.eps}
-    \caption{Some.}
+    \caption{Speedup of #2}
     \label{fig:normed:#1}
   \end{subfigure}
 }
 
 \begin{figure}
   \centering
-  \inputnorm{DFS}
-  \inputnorm{SUF}
-  \inputnorm{SUF2}
-  \inputnorm{DTSUF}
+  \inputnorm{DFS}{DFS optimizations}
+  \inputnorm{SUF}{SUF optimizations}
+  \inputnorm{SUF2}{SUF2 optimizations}
+  \inputnorm{DTSUF}{SUF optimizations, relative to DTSUF performance}
+  \caption{Speedup/density charts}
   \label{fig:normed}
 \end{figure}
 

@@ -84,32 +84,37 @@ GRID_SHAPE = {
 
 # In[67]:
 
-def add_plot(df, counter, grid):
+def add_plot(df, counter, grid, legend_prefix=''):
     name = counter + grid
     if name in df.columns:
-        df[name].plot(style=GRID_SHAPE[grid], color=METHOD_COLOR[counter], legend=name)
-    
+        df[name].plot(
+                style=GRID_SHAPE[grid],
+                color=METHOD_COLOR[counter],
+                label=legend_prefix + name)
+
 def plot_all(df, font_size=None, ylabel=None, save=None, dpi=300, save_format='eps',
+            legend_prefix='',
             legend_on_right=False, legend_loc=None):
+
     from matplotlib.font_manager import FontProperties
 
     fontP = FontProperties()
     if font_size:
         fontP.set_size(font_size)
-    
+
     for counter, grid in cg:
-        add_plot(df, counter=counter, grid=grid)
-        
+        add_plot(df, counter=counter, grid=grid, legend_prefix=legend_prefix)
+
     plt.grid(True)
     if legend_on_right:
         lgd = plt.legend(loc=2, bbox_to_anchor=(1.01, 1), prop=fontP)
     else:
         lgd = plt.legend(loc=legend_loc, prop=fontP)
-        
+
     plt.xlabel('density, %')
     if ylabel:
         plt.ylabel(ylabel)
-    
+
     if save:
         plt.savefig(os.path.join(pics_dir, save + '.' + save_format),
             bbox_extra_artists=(lgd,), bbox_inches='tight',
@@ -141,6 +146,7 @@ for cou in ('DFS', 'SUF', 'SUF2', 'DTSUF'):
         norm_by(piv, cou)[[c + g for c, g in cg if c == cou or {c, cou} == {'SUF', 'DTSUF'}]],
         save='normed_' + cou,
         ylabel='$T_{' + cou +  '}/T_A$',
+        legend_prefix='A = ',
         legend_loc=1 if cou == 'DTSUF' else 2,
         font_size='x-large')
     plt.clf()
