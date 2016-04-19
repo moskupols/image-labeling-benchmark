@@ -140,7 +140,7 @@ for cou in ('DFS', 'SUF', 'SUF2', 'DTSUF'):
     plot_all(
         norm_by(piv, cou)[[c + g for c, g in cg if c == cou or {c, cou} == {'SUF', 'DTSUF'}]],
         save='normed_' + cou,
-        ylabel='$T_A/T_{' + cou +  '}$',
+        ylabel='$T_{' + cou +  '}/T_A$',
         legend_loc=1 if cou == 'DTSUF' else 2,
         font_size='x-large')
     plt.clf()
