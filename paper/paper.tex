@@ -31,8 +31,8 @@
 
 %% Чтобы переключиться на русский язык в некоторых секциях, можно 
 %% раскомментировать следующие две команды
-\renewcommand{\texten}[1]{}
-\renewcommand{\textru}[1]{\foreignlanguage{russian}{\emph{#1}}{}}
+% \renewcommand{\texten}[1]{}
+% \renewcommand{\textru}[1]{\foreignlanguage{russian}{\emph{#1}}{}}
 
 %% Чтобы оставить оба языка, можно раскомментировать
 %% следующие две команды
@@ -867,6 +867,7 @@ shown on \autoref{fig:dtsuf}.
 
 \subsection{Condensation types}
 
+\texten{
 For memory-tight applications such as embedded systems it can be useful to
 utilise the suggested condensation in a lazy way, so that without actually
 constructing the condensed image we use a function (``view'') calculating color of
@@ -876,6 +877,10 @@ to win some time while avoiding memory footprint increase.
 However this lazy approach increases the number of image lookups.
 % So, according to our benchmark, this combination is efficient only for dense
 % ($>30\%$) noise.
+}\textru{
+В некоторых случаях может быть более приемлемо использовать сжатие неявно, то
+есть вместо построения 
+}
 
 So the benchmark charts show three levels of optimization applied to
 DFS, SUF and SUF2:
@@ -904,36 +909,40 @@ All methods were run on same tests, which was achieved by supplying same seed to
 
 \subsection{Results}
 
-Line charts with benchmarks of mentioned algorithms on different noise images are shown on
-\Cref{fig:noise400x600,fig:noise800x1200,fig:noise1200x1800,fig:noise2000x3000,fig:noise4000x6000}.
+Line charts with benchmarks of mentioned algorithms on different noise images
+are shown on
+\Cref{fig:overall:times}.
 
-The extremely bigger CPU time for SUF and DTSUF methods on
-huge images could be explained by significant increase in the number of cache-misses
-produced by Union-Find.
-The charts prove effectiveness of the $2 \times 2$ condensation optimization.  
+The extremely bigger CPU time for SUF and DTSUF methods on huge images could be
+explained by significant increase in the number of cache-misses produced by
+Union-Find. The charts prove effectiveness of the $2 \times 2$ condensation
+optimization.
 
-\newcommand{\inputtable}[2]{
-  \begin{figure}
+\begin{figure}
+  \centering
+  \includegraphics[height=0.45\textheight, keepaspectratio]{pics/overall.eps}
+  \caption{Average CPU time per run on random images $1200 \times 1800$ px.}
+  \label{fig:overall:times}
+\end{figure}
+
+\newcommand{\inputnorm}[1]{
+  \begin{subfigure}[t]{0.45\linewidth}
     \centering
-    \includegraphics[height=0.45\textheight, keepaspectratio]{pics/#1x#2.eps}
-    \caption{Average CPU time per run on noise images $#1 \times #2$ px.}
-    \label{fig:noise#1x#2}
-  \end{figure}
- % \begin{table}[p]
- %   \centering
- %   \input{tables/#1x#2}
- %   \caption{Average CPU time per run on noise images $#1 \times #2$ px}
- %   \label{tab:noise#1x#2}
- % \end{table}
+    \includegraphics[width=\textwidth,
+                     keepaspectratio]{pics/normed_#1.eps}
+    \caption{Some.}
+    \label{fig:normed:#1}
+  \end{subfigure}
 }
 
-% \inputtable{200}{300}
-\inputtable{400}{600}
-\inputtable{800}{1200}
-\inputtable{1200}{1800}
-\inputtable{2000}{3000}
-\inputtable{4000}{6000}
-% \inputtable{5000}{7500}
+\begin{figure}
+  \centering
+  \inputnorm{DFS}
+  \inputnorm{SUF}
+  \inputnorm{SUF2}
+  \inputnorm{DTSUF}
+  \label{fig:normed}
+\end{figure}
 
 % \section{Summary and future work}
 

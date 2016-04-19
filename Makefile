@@ -64,10 +64,13 @@ $(SIZE_CSVS): bench.json utils/report.py
 	mkdir -p $(SIZE_CSV_DIR)
 	utils/report.py --split-by-sizes <$<
 
-latex-figures: $(SIZE_PIC) $(SIZE_TEX)
-$(SIZE_PIC): split-sizes utils/csv-to-latex.py
-	mkdir -p $(PIC_DIR)
-	utils/csv-to-latex.py --plot $@ <$(patsubst %.eps,$(SIZE_CSV_DIR)/%.csv,$(notdir $@)) >/dev/null
+# latex-figures: $(SIZE_PIC) $(SIZE_TEX)
+# $(SIZE_PIC): split-sizes utils/csv-to-latex.py
+	# mkdir -p $(PIC_DIR)
+	# utils/csv-to-latex.py --plot $@ <$(patsubst %.eps,$(SIZE_CSV_DIR)/%.csv,$(notdir $@)) >/dev/null
+
+latex-figures: $(SIZE_TEX)
+	python utils/make_pics.py
 $(SIZE_TEX): split-sizes utils/csv-to-latex.py
 	mkdir -p $(TABLE_DIR)
 	utils/csv-to-latex.py <$(patsubst %.tex,$(SIZE_CSV_DIR)/%.csv,$(notdir $@)) >$@

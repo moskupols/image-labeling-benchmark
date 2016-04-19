@@ -107,6 +107,7 @@ def plot_benchmarks(runs, out_file='output.eps', dpi=1200):
         lgd = plt.legend(loc=2, prop=fontP)
     else:
         lgd = plt.legend(loc=2, bbox_to_anchor=(1, 1), prop=fontP)
+    plt.grid(True)
     plt.savefig(out_file,
             bbox_extra_artists=(lgd,), bbox_inches='tight',
             format=out_file[-3:], dpi=dpi)
