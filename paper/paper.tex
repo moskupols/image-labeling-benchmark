@@ -1022,16 +1022,16 @@ with speedup reaching $2.5$ for 2\% density.
 \section{Conclusion}
 
 We present an efficient way to convert the initial binary image with
-8-connectivity into a condensed (non-binary) image with new connectivity that is
-2 times smaller in each dimension than the initial image. Most approaches for
-connected components labeling are still valid for the new image. As time and
-memory consumptions of conventional approaches usually depend linearly on the
-number of pixels, running them on the condensed image can be more efficient than
+8-connectivity into a smaller condensed image with new connectivity.
+Most approaches for connected components labeling are still valid
+for the new image. As time and memory complexities of conventional
+approaches usually depend linearly on the number of pixels, running
+them on the condensed image can be more efficient than
 running on the initial image. The provided benchmark on random images showed
 worst-case speedup factor of $1.7$ for one of our optimizations of the common
 SUF approach to CC labeling. The same algorithm is shown to outperform the
-previously known decision tree optimization of SUF by at least $1.5$ factor for
-image densities less than 80\%.
+previously known decision tree optimization of SUF by at least $1.5$
+factor for images with less than 80\% density.
 
 \section{Acknowledgements}
 
