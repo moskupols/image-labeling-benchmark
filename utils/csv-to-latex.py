@@ -77,11 +77,11 @@ COND_SHAPE = {
 
 COND_LEGEND = {
     'no': '',
-    'view': '+view',
-    'yes': '+2x2'
+    'view': ' on 2x2 view',
+    'yes': ' on 2x2 copy'
 }
 
-def plot_benchmarks(runs, out_file='output.eps'):
+def plot_benchmarks(runs, out_file='output.eps', dpi=1200):
     from matplotlib import pyplot as plt
     from matplotlib.font_manager import FontProperties
 
@@ -100,16 +100,17 @@ def plot_benchmarks(runs, out_file='output.eps'):
                 color=METHOD_COLOR[method],
                 label=method + COND_LEGEND[condensation])
 
-    plt.xlabel('Noise density, %')
+    plt.xlabel('density, %')
     plt.ylabel('CPU time, ms')
 
     if '2000' not in out_file:
         lgd = plt.legend(loc=2, prop=fontP)
     else:
         lgd = plt.legend(loc=2, bbox_to_anchor=(1, 1), prop=fontP)
+    plt.grid(True)
     plt.savefig(out_file,
             bbox_extra_artists=(lgd,), bbox_inches='tight',
-            format='eps', dpi=1200)
+            format=out_file[-3:], dpi=dpi)
 
 
 def write_table(lines, densities):
@@ -156,7 +157,10 @@ def write_benchmarks_latex(runs):
 
 if __name__ == '__main__':
     runs = read_benchmarks_csv()
+    dpi = 1200
+    if '--dpi' in sys.argv:
+        dpi = int(sys.argv[sys.argv.index('--dpi')+1])
     if '--plot' in sys.argv:
-        plot_benchmarks(runs, sys.argv[sys.argv.index('--plot')+1])
+        plot_benchmarks(runs, sys.argv[sys.argv.index('--plot')+1], dpi=dpi)
     write_benchmarks_latex(runs)
 
